@@ -1,4 +1,4 @@
-package com.ighorosipov.multitimer.ui.theme
+package com.ighorosipov.multitimer.presentation.ui.theme
 
 import androidx.compose.ui.graphics.Color
 

@@ -1,4 +1,4 @@
-package com.ighorosipov.multitimer.ui.theme
+package com.ighorosipov.multitimer.presentation.ui.theme
 
 import android.app.Activity
 import android.os.Build

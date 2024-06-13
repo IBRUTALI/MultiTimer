@@ -1,3 +1,19 @@
 <resources>
+
+    <!-- BASE -->
     <string name="app_name">MultiTimer</string>
+    <string name="alarm">Будильник</string>
+    <string name="world_time_short">Мир. время</string>
+    <string name="world_time">Мировое время</string>
+    <string name="stopwatch">Секундомер</string>
+    <string name="timer">Таймер</string>
+    <!-- AlarmScreen -->
+
+    <!-- WorldTimeScreen -->
+
+    <!-- StopwatchScreen -->
+
+    <!-- TimerScreen -->
+
+
 </resources>

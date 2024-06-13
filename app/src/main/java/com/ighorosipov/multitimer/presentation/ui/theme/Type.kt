@@ -1,4 +1,4 @@
-package com.ighorosipov.multitimer.ui.theme
+package com.ighorosipov.multitimer.presentation.ui.theme
 
 import androidx.compose.material3.Typography
 import androidx.compose.ui.text.TextStyle
