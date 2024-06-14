@@ -13,7 +13,7 @@ import com.ighorosipov.multitimer.presentation.screens.world_time.WorldTimeScree
 @Composable
 fun TabNavGraph(
     modifier: Modifier = Modifier,
-    navController: NavHostController,
+    navController: NavHostController
 ) {
     NavHost(
         navController = navController,
