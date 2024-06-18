@@ -7,6 +7,8 @@
     <string name="world_time">Мировое время</string>
     <string name="stopwatch">Секундомер</string>
     <string name="timer">Таймер</string>
+    <string name="timer_active">Таймер запущен</string>
+    <string name="timer_inactive">Таймер на паузе</string>
     <!-- AlarmScreen -->
 
     <!-- WorldTimeScreen -->
