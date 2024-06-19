@@ -11,11 +11,12 @@ class StartTimerUseCase @Inject constructor(
     suspend operator fun invoke(timer: Timer) = flow {
         var startTime = timer.startTime
         while (startTime >= 0) {
-            kotlinx.coroutines.delay(1000)
+            if (startTime != timer.startTime && timer.isRunning) {
+                kotlinx.coroutines.delay(1000)
+            }
             emit(
                 timer.copy(
-                    startTime = startTime,
-                    isRunning = true
+                    startTime = startTime
                 )
             )
             startTime -= 1000

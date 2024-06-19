@@ -1,6 +1,5 @@
 package com.ighorosipov.multitimer.presentation.screens.timer
 
-import android.content.Context
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -34,7 +33,7 @@ fun TimerScreen(
     }
 
     LaunchedEffect(Unit) {
-        connection.bind(flag = Context.BIND_AUTO_CREATE)
+        connection.bind()
     }
 
     DisposableEffect(Unit) {

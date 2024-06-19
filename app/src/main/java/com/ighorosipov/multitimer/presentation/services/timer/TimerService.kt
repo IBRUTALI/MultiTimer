@@ -12,6 +12,7 @@ import android.os.Build
 import android.os.IBinder
 import androidx.core.app.NotificationCompat
 import androidx.core.app.ServiceCompat
+import androidx.core.net.toUri
 import com.ighorosipov.multitimer.R
 import com.ighorosipov.multitimer.di.IODispatcher
 import com.ighorosipov.multitimer.domain.model.Timer
@@ -19,17 +20,14 @@ import com.ighorosipov.multitimer.domain.use_case.AddTimerUseCase
 import com.ighorosipov.multitimer.domain.use_case.DeleteTimerUseCase
 import com.ighorosipov.multitimer.domain.use_case.PauseTimerUseCase
 import com.ighorosipov.multitimer.domain.use_case.StartTimerUseCase
-import com.ighorosipov.multitimer.utils.base.safeCollect
+import com.ighorosipov.multitimer.presentation.MainActivity
+import com.ighorosipov.multitimer.presentation.ui.components.navigation.Graph
+import com.ighorosipov.multitimer.presentation.ui.components.navigation.Screen
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
-import kotlinx.coroutines.cancelChildren
 import kotlinx.coroutines.ensureActive
-import kotlinx.coroutines.flow.cancellable
-import kotlinx.coroutines.flow.debounce
-import kotlinx.coroutines.flow.timeout
 import kotlinx.coroutines.flow.transform
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
@@ -60,7 +58,6 @@ class TimerService : Service() {
 
     private val binder = LocalBinder()
 
-    // Is timer active?
     private var isTimerRunning = AtomicBoolean(true)
 
     private var timerJob: Job? = null
@@ -99,7 +96,8 @@ class TimerService : Service() {
                     ServiceInfo.FOREGROUND_SERVICE_TYPE_SPECIAL_USE
                 } else {
                     0
-                })
+                }
+            )
         }
         return START_NOT_STICKY
     }
@@ -134,24 +132,55 @@ class TimerService : Service() {
     }
 
     private fun createNotification(): NotificationCompat.Builder {
-        val builder: NotificationCompat.Builder = NotificationCompat.Builder(this, CHANNEL_ID)
-            .setSmallIcon(R.drawable.ic_time)
-            .setContentTitle(this.resources.getString(R.string.timer_active))
-            .setSilent(true)
-            .setOngoing(true)
 
-        val resultIntent = Intent(
+        val routeIntent = Intent(
+            Intent.ACTION_VIEW,
+            Screen.TIMER_SCREEN_DEEP_LINK.toUri(),
             this,
-            TimerService::class.java
-        )
-        val resultPendingIntent = PendingIntent.getActivity(
+            MainActivity::class.java
+        ).apply {
+            flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
+        }
+
+        val routeFlags = PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
+
+        val startPendingIntent = PendingIntent.getService(
             this,
             0,
-            resultIntent,
-            PendingIntent.FLAG_IMMUTABLE
+            routeIntent,
+            PendingIntent.FLAG_UPDATE_CURRENT
         )
-        builder.setContentIntent(resultPendingIntent)
-        return builder
+
+        val pausePendingIntent = PendingIntent.getService(
+            this,
+            0,
+            routeIntent,
+            PendingIntent.FLAG_UPDATE_CURRENT
+        )
+
+        val stopPendingIntent = PendingIntent.getService(
+            this,
+            0,
+            routeIntent,
+            PendingIntent.FLAG_UPDATE_CURRENT
+        )
+
+        val routePendingIntent = PendingIntent.getActivity(
+            this,
+            0,
+            routeIntent,
+            routeFlags
+        )
+
+        return NotificationCompat.Builder(this, CHANNEL_ID)
+            .setSmallIcon(R.drawable.ic_time)
+            .setContentTitle(resources.getString(R.string.timer_active))
+            .setSilent(true)
+            .setOngoing(true)
+            .addAction(R.drawable.ic_play, "Start", startPendingIntent)
+            .addAction(R.drawable.ic_pause, "Pause", pausePendingIntent)
+            .addAction(R.drawable.ic_stop, "Stop", stopPendingIntent)
+            .setContentIntent(routePendingIntent)
     }
 
     private fun setTextToNotificationAndNotify(contextText: String) {

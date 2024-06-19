@@ -10,4 +10,11 @@ sealed class Screen(val route: String) {
 
     data object TimerScreen: Screen("timer_screen")
 
+    companion object {
+        val ROOT_DEEP_LINK = "https://ighor-osipov.com"
+        //val TIMER_SCREEN_DEEP_LINK = "${Graph.ROOT}://${TimerScreen.route}"
+        const val TIMER_SCREEN_DEEP_LINK = "https://ighor-osipov.com/timer_screen"
+    }
+
 }
+
