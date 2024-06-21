@@ -8,7 +8,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navDeepLink
-import com.ighorosipov.multitimer.presentation.Event
+import com.ighorosipov.multitimer.presentation.screens.State
 import com.ighorosipov.multitimer.presentation.screens.alarm.AlarmScreen
 import com.ighorosipov.multitimer.presentation.screens.stopwatch.StopwatchScreen
 import com.ighorosipov.multitimer.presentation.screens.timer.TimerScreen
@@ -18,15 +18,15 @@ import com.ighorosipov.multitimer.presentation.screens.world_time.WorldTimeScree
 fun TabNavGraph(
     modifier: Modifier = Modifier,
     navController: NavHostController,
-    event: Event
+    state: State
 ) {
 
-    LaunchedEffect(event) {
-        when (event) {
-            is Event.NavigateWithDeeplink -> {
-                navController.navigate(event.deeplink)
+    LaunchedEffect(state) {
+        when (state.navigationEvent) {
+            is NavigationEvent.NavigateWithDeeplink -> {
+                navController.navigate(state.navigationEvent.screen.deeplink)
             }
-            Event.None -> Unit
+            NavigationEvent.None -> Unit
         }
     }
 
@@ -48,7 +48,7 @@ fun TabNavGraph(
             route = Screen.TimerScreen.route,
             deepLinks = listOf(
                 navDeepLink {
-                    uriPattern = Screen.TIMER_SCREEN_DEEP_LINK
+                    uriPattern = Screen.TimerScreen.deeplink.toString()
                     action = Intent.ACTION_VIEW
                 }
             )

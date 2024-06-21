@@ -15,9 +15,13 @@ import androidx.compose.runtime.getValue
 import androidx.core.app.ActivityCompat
 import androidx.core.util.Consumer
 import androidx.navigation.compose.rememberNavController
+import com.ighorosipov.multitimer.presentation.screens.State
+import com.ighorosipov.multitimer.presentation.ui.components.navigation.NavigationEvent
 import com.ighorosipov.multitimer.presentation.ui.components.navigation.RootNavigationGraph
+import com.ighorosipov.multitimer.presentation.ui.components.navigation.Screen
 import com.ighorosipov.multitimer.presentation.ui.theme.MultiTimerTheme
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.distinctUntilChanged
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
@@ -34,18 +38,30 @@ class MainActivity : ComponentActivity() {
         )
         setContent {
             val navController = rememberNavController()
-            val event by viewModel.event.collectAsState()
+            val state by viewModel.state.collectAsState()
 
             DisposableEffect(Unit) {
                 val listener = Consumer<Intent> { intent ->
-                    intent.data?.let {
-                        viewModel.consumeEvent()
-                        viewModel.handleDeeplink(it)
+                    intent.data?.let { uri ->
+                        when(uri) {
+                            Screen.AlarmScreen.deeplink -> {
+                                viewModel.onEvent(NavigationEvent.NavigateWithDeeplink(Screen.AlarmScreen))
+                            }
+                            Screen.WorldTimeScreen.deeplink -> {
+                                viewModel.onEvent(NavigationEvent.NavigateWithDeeplink(Screen.WorldTimeScreen))
+                            }
+                            Screen.StopwatchScreen.deeplink -> {
+                                viewModel.onEvent(NavigationEvent.NavigateWithDeeplink(Screen.StopwatchScreen))
+                            }
+                            Screen.TimerScreen.deeplink -> {
+                                viewModel.onEvent(NavigationEvent.NavigateWithDeeplink(Screen.TimerScreen))
+                            }
+                        }
                     }
                 }
                 addOnNewIntentListener(listener)
                 onDispose {
-                    viewModel.consumeEvent()
+                    viewModel.onEvent(NavigationEvent.None)
                     removeOnNewIntentListener(listener)
                 }
             }
@@ -53,7 +69,7 @@ class MainActivity : ComponentActivity() {
                 Surface {
                     RootNavigationGraph(
                         navController = navController,
-                        event = event
+                        state = state
                     )
                 }
             }

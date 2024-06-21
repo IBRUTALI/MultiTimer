@@ -25,21 +25,25 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.navigation.NavController
 import com.ighorosipov.multitimer.R
-import com.ighorosipov.multitimer.presentation.Event
+import com.ighorosipov.multitimer.presentation.screens.State
+import com.ighorosipov.multitimer.presentation.ui.components.navigation.NavigationEvent
 import com.ighorosipov.multitimer.presentation.ui.components.navigation.Screen
 
 @Composable
 fun MainBottomNavigation(
     navController: NavController,
     showLabel: Boolean = true,
-    event: Event
+    state: State,
 ) {
     var selectedItemIndex by rememberSaveable {
         mutableIntStateOf(0)
     }
-    selectedItemIndex = when(event) {
-        is Event.NavigateWithDeeplink -> 3
-        Event.None -> selectedItemIndex
+    selectedItemIndex = when (state.navigationEvent) {
+        is NavigationEvent.NavigateWithDeeplink -> {
+            state.navigationEvent.screen.navBarPosition ?: selectedItemIndex
+        }
+
+        is NavigationEvent.None -> selectedItemIndex
     }
 
     NavigationBar(modifier = Modifier.statusBarsPadding()) {
@@ -81,12 +85,12 @@ fun MainBottomNavigation(
                     navController.navigate(item.route)
                 },
                 label = {
-                    if(showLabel) Text(text = item.title)
+                    if (showLabel) Text(text = item.title)
                 },
                 icon = {
                     BadgedBox(
                         badge = {
-                            if(item.hasNotification) {
+                            if (item.hasNotification) {
                                 Badge()
                             }
                         }

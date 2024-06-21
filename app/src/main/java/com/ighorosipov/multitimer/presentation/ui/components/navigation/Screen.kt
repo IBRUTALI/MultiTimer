@@ -1,19 +1,36 @@
 package com.ighorosipov.multitimer.presentation.ui.components.navigation
 
-sealed class Screen(val route: String) {
+import android.net.Uri
+import androidx.core.net.toUri
 
-    data object AlarmScreen: Screen("alarm_screen")
+sealed class Screen(val route: String, val deeplink: Uri, val navBarPosition: Int?) {
 
-    data object WorldTimeScreen: Screen("world_time_screen")
+    data object AlarmScreen : Screen(
+        "alarm_screen",
+        "${SCREEN_SCHEMA_DEEP_LINK}alarm_screen".toUri(),
+        0
+    )
 
-    data object StopwatchScreen: Screen("stopwatch_screen")
+    data object WorldTimeScreen : Screen(
+        "world_time_screen",
+        "${SCREEN_SCHEMA_DEEP_LINK}world_time_screen".toUri(),
+        1
+    )
 
-    data object TimerScreen: Screen("timer_screen")
+    data object StopwatchScreen : Screen(
+        "stopwatch_screen",
+        "${SCREEN_SCHEMA_DEEP_LINK}stopwatch_screen".toUri(),
+        2
+    )
+
+    data object TimerScreen : Screen(
+        "timer_screen",
+        "${SCREEN_SCHEMA_DEEP_LINK}timer_screen".toUri(),
+        3
+    )
 
     companion object {
-        val ROOT_DEEP_LINK = "https://ighor-osipov.com"
-        //val TIMER_SCREEN_DEEP_LINK = "${Graph.ROOT}://${TimerScreen.route}"
-        const val TIMER_SCREEN_DEEP_LINK = "https://ighor-osipov.com/timer_screen"
+        const val SCREEN_SCHEMA_DEEP_LINK= "https://ighor-osipov.com/"
     }
 
 }

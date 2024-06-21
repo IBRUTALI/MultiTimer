@@ -6,26 +6,26 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
-import com.ighorosipov.multitimer.presentation.Event
+import com.ighorosipov.multitimer.presentation.screens.State
 import com.ighorosipov.multitimer.presentation.ui.components.bottom_navigation.MainBottomNavigation
 import com.ighorosipov.multitimer.presentation.ui.components.navigation.TabNavGraph
 
 @Composable
 fun TabScreen(
     navController: NavHostController = rememberNavController(),
-    event: Event
+    state: State
 ) {
     Scaffold(
         topBar = {  },
         bottomBar = { MainBottomNavigation(
             navController = navController,
-            event = event
+            state = state
         ) }
     ) { paddingValues ->
         TabNavGraph(
             modifier = Modifier.padding(paddingValues),
             navController = navController,
-            event = event
+            state = state
         )
     }
 }

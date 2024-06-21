@@ -12,7 +12,6 @@ import android.os.Build
 import android.os.IBinder
 import androidx.core.app.NotificationCompat
 import androidx.core.app.ServiceCompat
-import androidx.core.net.toUri
 import com.ighorosipov.multitimer.R
 import com.ighorosipov.multitimer.di.IODispatcher
 import com.ighorosipov.multitimer.domain.model.Timer
@@ -21,7 +20,6 @@ import com.ighorosipov.multitimer.domain.use_case.DeleteTimerUseCase
 import com.ighorosipov.multitimer.domain.use_case.PauseTimerUseCase
 import com.ighorosipov.multitimer.domain.use_case.StartTimerUseCase
 import com.ighorosipov.multitimer.presentation.MainActivity
-import com.ighorosipov.multitimer.presentation.ui.components.navigation.Graph
 import com.ighorosipov.multitimer.presentation.ui.components.navigation.Screen
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineDispatcher
@@ -135,7 +133,7 @@ class TimerService : Service() {
 
         val routeIntent = Intent(
             Intent.ACTION_VIEW,
-            Screen.TIMER_SCREEN_DEEP_LINK.toUri(),
+            Screen.TimerScreen.deeplink,
             this,
             MainActivity::class.java
         ).apply {
