@@ -33,7 +33,10 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         ActivityCompat.requestPermissions(
             this,
-            arrayOf(Manifest.permission.POST_NOTIFICATIONS),
+            arrayOf(
+                Manifest.permission.POST_NOTIFICATIONS,
+                Manifest.permission.USE_FULL_SCREEN_INTENT
+            ),
             0
         )
         setContent {

@@ -29,7 +29,7 @@ fun TimerScreen(
         TimerServiceConnection(context)
     }
     val timerState by remember {
-        mutableStateOf(Timer(startTime = 10000))
+        mutableStateOf(Timer(time = 10000))
     }
 
     LaunchedEffect(Unit) {

@@ -20,7 +20,7 @@ class TimerServiceConnection(
 
     override fun onServiceConnected(name: ComponentName?, binder: IBinder?) {
         service = (binder as TimerService.LocalBinder).getService()
-        service?.startTimer(Timer(startTime = 10000))
+        service?.startTimer(Timer(time = 10000))
     }
 
     override fun onServiceDisconnected(name: ComponentName?) {

@@ -1,31 +1,40 @@
 package com.ighorosipov.multitimer.presentation.services.timer
 
+import android.app.AlarmManager
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.app.PendingIntent
 import android.app.Service
+import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
+import android.content.IntentFilter
 import android.content.pm.ServiceInfo
 import android.os.Binder
 import android.os.Build
 import android.os.IBinder
 import androidx.core.app.NotificationCompat
 import androidx.core.app.ServiceCompat
+import androidx.core.content.ContextCompat
 import com.ighorosipov.multitimer.R
-import com.ighorosipov.multitimer.di.IODispatcher
+import com.ighorosipov.multitimer.di.DefaultDispatcher
 import com.ighorosipov.multitimer.domain.model.Timer
+import com.ighorosipov.multitimer.domain.model.TimerEvent
 import com.ighorosipov.multitimer.domain.use_case.AddTimerUseCase
 import com.ighorosipov.multitimer.domain.use_case.DeleteTimerUseCase
 import com.ighorosipov.multitimer.domain.use_case.PauseTimerUseCase
 import com.ighorosipov.multitimer.domain.use_case.StartTimerUseCase
 import com.ighorosipov.multitimer.presentation.MainActivity
+import com.ighorosipov.multitimer.presentation.services.timer.TimerActionReceiver.Companion.TIMER_ACTION
+import com.ighorosipov.multitimer.presentation.services.timer.TimerNotificationHelper.Companion.NOTIFICATION_ID
 import com.ighorosipov.multitimer.presentation.ui.components.navigation.Screen
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.ensureActive
+import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.transform
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
@@ -35,7 +44,7 @@ import javax.inject.Inject
 @AndroidEntryPoint
 class TimerService : Service() {
 
-    @IODispatcher
+    @DefaultDispatcher
     @Inject
     lateinit var dispatcher: CoroutineDispatcher
 
@@ -51,14 +60,33 @@ class TimerService : Service() {
     @Inject
     lateinit var pauseTimerUseCase: PauseTimerUseCase
 
-    private var notificationBuilder: NotificationCompat.Builder? = null
-    private var notificationManager: NotificationManager? = null
+    private lateinit var timerNotificationHelper: TimerNotificationHelper
+
+    private var alarmManager: AlarmManager? = null
 
     private val binder = LocalBinder()
 
     private var isTimerRunning = AtomicBoolean(true)
 
     private var timerJob: Job? = null
+    private lateinit var timerReceiver: TimerActionReceiver
+//    private val timerReceiver: BroadcastReceiver = object : BroadcastReceiver() {
+//        override fun onReceive(context: Context, intent: Intent) {
+//            when (intent.action) {
+//                TimerAction.START.action -> {
+//                    pauseTimer()
+//                }
+//
+//                TimerAction.PAUSE.action -> {
+//                    pauseTimer()
+//                }
+//
+//                TimerAction.STOP.action -> {
+//                    stopTimer()
+//                }
+//            }
+//        }
+//    }
 
     inner class LocalBinder : Binder() {
         fun getService(): TimerService = this@TimerService
@@ -70,22 +98,12 @@ class TimerService : Service() {
 
     override fun onCreate() {
         super.onCreate()
-        notificationBuilder = createNotification()
-        notificationManager =
-            getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            val channel = NotificationChannel(
-                CHANNEL_ID,
-                CHANNEL_NAME,
-                NotificationManager.IMPORTANCE_HIGH
-            )
-            notificationManager?.createNotificationChannel(channel)
+        timerNotificationHelper = TimerNotificationHelper(this)
+        alarmManager = getSystemService(Context.ALARM_SERVICE) as AlarmManager
         }
 
-    }
-
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
-        notificationBuilder?.let { notificationBuilder ->
+        timerNotificationHelper.notificationBuilder?.let { notificationBuilder ->
             ServiceCompat.startForeground(
                 this,
                 NOTIFICATION_ID,
@@ -96,116 +114,62 @@ class TimerService : Service() {
                     0
                 }
             )
+            val filter = IntentFilter().apply {
+                addAction(TimerAction.START.action)
+                addAction(TimerAction.PAUSE.action)
+                addAction(TimerAction.STOP.action)
+            }
+            timerReceiver = TimerActionReceiver()
+            ContextCompat.registerReceiver(
+                this,
+                timerReceiver,
+                filter,
+                ContextCompat.RECEIVER_NOT_EXPORTED
+            )
         }
-        return START_NOT_STICKY
+        return START_STICKY
     }
 
     fun startTimer(timer: Timer) {
         timerJob?.cancel()
         timerJob = CoroutineScope(dispatcher).launch {
             startTimerUseCase(timer)
-                .transform {
-                    if (isTimerRunning.get()) {
-                        emit(it.copy(isRunning = true))
+                .transform { mTimer ->
+                    if (mTimer.event is TimerEvent.Overtime) {
+                        emit(mTimer)
+                        delay(1000)
+                    } else if (isTimerRunning()) {
+                        emit(mTimer.copy(event = TimerEvent.Count))
+                        delay(1000)
                     }
-                    if (!isTimerRunning.get()) {
-                        while (!isTimerRunning.get() && isActive) {
-                            emit(it.copy(isRunning = false))
+                    if (!isTimerRunning() && mTimer.event !is TimerEvent.Overtime) {
+                        while (!isTimerRunning() && isActive) {
+                            emit(mTimer.copy(event = TimerEvent.Pause))
                         }
                     }
                 }
-                .collect {
+                .distinctUntilChanged()
+                .collect { mTimer ->
                     ensureActive()
-                    setTextToNotificationAndNotify(it.timeString)
+                    timerNotificationHelper.updateNotificationAndNotify(mTimer)
                 }
         }
     }
 
     fun pauseTimer() {
-        isTimerRunning.set(!isTimerRunning.get())
+        isTimerRunning.set(!isTimerRunning())
     }
 
     fun stopTimer() {
         timerJob?.cancel()
     }
 
-    private fun createNotification(): NotificationCompat.Builder {
-
-        val routeIntent = Intent(
-            Intent.ACTION_VIEW,
-            Screen.TimerScreen.deeplink,
-            this,
-            MainActivity::class.java
-        ).apply {
-            flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
-        }
-
-        val routeFlags = PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
-
-        val startPendingIntent = PendingIntent.getService(
-            this,
-            0,
-            routeIntent,
-            PendingIntent.FLAG_UPDATE_CURRENT
-        )
-
-        val pausePendingIntent = PendingIntent.getService(
-            this,
-            0,
-            routeIntent,
-            PendingIntent.FLAG_UPDATE_CURRENT
-        )
-
-        val stopPendingIntent = PendingIntent.getService(
-            this,
-            0,
-            routeIntent,
-            PendingIntent.FLAG_UPDATE_CURRENT
-        )
-
-        val routePendingIntent = PendingIntent.getActivity(
-            this,
-            0,
-            routeIntent,
-            routeFlags
-        )
-
-        return NotificationCompat.Builder(this, CHANNEL_ID)
-            .setSmallIcon(R.drawable.ic_time)
-            .setContentTitle(resources.getString(R.string.timer_active))
-            .setSilent(true)
-            .setOngoing(true)
-            .addAction(R.drawable.ic_play, "Start", startPendingIntent)
-            .addAction(R.drawable.ic_pause, "Pause", pausePendingIntent)
-            .addAction(R.drawable.ic_stop, "Stop", stopPendingIntent)
-            .setContentIntent(routePendingIntent)
-    }
-
-    private fun setTextToNotificationAndNotify(contextText: String) {
-        if (isTimerRunning.get()) {
-            notificationBuilder?.setContentTitle(this.resources.getString(R.string.timer_active))
-        }
-        if (!isTimerRunning.get()) {
-            notificationBuilder?.setContentTitle(this.resources.getString(R.string.timer_inactive))
-        }
-        notificationBuilder?.setContentText(contextText)
-        notificationManager?.notify(NOTIFICATION_ID, notificationBuilder?.build())
-    }
-
-    private fun removeNotification() {
-        notificationManager?.cancel(NOTIFICATION_ID)
-    }
+    private fun isTimerRunning() = isTimerRunning.get()
 
     override fun onDestroy() {
         super.onDestroy()
         timerJob = null
-        removeNotification()
-    }
-
-    companion object {
-        const val NOTIFICATION_ID = 101
-        const val CHANNEL_ID = "MULTI_TIMER_CHANNEL_TIMER"
-        const val CHANNEL_NAME = "MULTI_TIMER_NAME_TIMER"
+        unregisterReceiver(timerReceiver)
     }
 
 }

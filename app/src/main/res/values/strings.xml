@@ -9,6 +9,7 @@
     <string name="timer">Таймер</string>
     <string name="timer_active">Таймер запущен</string>
     <string name="timer_inactive">Таймер на паузе</string>
+    <string name="time_is_up">Время истекло</string>
     <!-- AlarmScreen -->
 
     <!-- WorldTimeScreen -->
