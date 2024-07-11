@@ -1,9 +1,6 @@
 package com.ighorosipov.multitimer.presentation.services.timer
 
 import android.app.AlarmManager
-import android.app.NotificationChannel
-import android.app.NotificationManager
-import android.app.PendingIntent
 import android.app.Service
 import android.content.BroadcastReceiver
 import android.content.Context
@@ -13,10 +10,8 @@ import android.content.pm.ServiceInfo
 import android.os.Binder
 import android.os.Build
 import android.os.IBinder
-import androidx.core.app.NotificationCompat
 import androidx.core.app.ServiceCompat
 import androidx.core.content.ContextCompat
-import com.ighorosipov.multitimer.R
 import com.ighorosipov.multitimer.di.DefaultDispatcher
 import com.ighorosipov.multitimer.domain.model.Timer
 import com.ighorosipov.multitimer.domain.model.TimerEvent
@@ -24,10 +19,7 @@ import com.ighorosipov.multitimer.domain.use_case.AddTimerUseCase
 import com.ighorosipov.multitimer.domain.use_case.DeleteTimerUseCase
 import com.ighorosipov.multitimer.domain.use_case.PauseTimerUseCase
 import com.ighorosipov.multitimer.domain.use_case.StartTimerUseCase
-import com.ighorosipov.multitimer.presentation.MainActivity
-import com.ighorosipov.multitimer.presentation.services.timer.TimerActionReceiver.Companion.TIMER_ACTION
 import com.ighorosipov.multitimer.presentation.services.timer.TimerNotificationHelper.Companion.NOTIFICATION_ID
-import com.ighorosipov.multitimer.presentation.ui.components.navigation.Screen
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
@@ -69,24 +61,26 @@ class TimerService : Service() {
     private var isTimerRunning = AtomicBoolean(true)
 
     private var timerJob: Job? = null
-    private lateinit var timerReceiver: TimerActionReceiver
-//    private val timerReceiver: BroadcastReceiver = object : BroadcastReceiver() {
-//        override fun onReceive(context: Context, intent: Intent) {
-//            when (intent.action) {
-//                TimerAction.START.action -> {
-//                    pauseTimer()
-//                }
-//
-//                TimerAction.PAUSE.action -> {
-//                    pauseTimer()
-//                }
-//
-//                TimerAction.STOP.action -> {
-//                    stopTimer()
-//                }
-//            }
-//        }
-//    }
+
+    private val timerReceiver: BroadcastReceiver = object : BroadcastReceiver() {
+
+        override fun onReceive(context: Context, intent: Intent) {
+            when (intent.action) {
+                TimerAction.START.action -> {
+                    pauseTimer()
+                }
+
+                TimerAction.PAUSE.action -> {
+                    pauseTimer()
+                }
+
+                TimerAction.STOP.action -> {
+                    stopTimer()
+                }
+            }
+        }
+
+    }
 
     inner class LocalBinder : Binder() {
         fun getService(): TimerService = this@TimerService
@@ -100,7 +94,7 @@ class TimerService : Service() {
         super.onCreate()
         timerNotificationHelper = TimerNotificationHelper(this)
         alarmManager = getSystemService(Context.ALARM_SERVICE) as AlarmManager
-        }
+    }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         timerNotificationHelper.notificationBuilder?.let { notificationBuilder ->
@@ -119,12 +113,12 @@ class TimerService : Service() {
                 addAction(TimerAction.PAUSE.action)
                 addAction(TimerAction.STOP.action)
             }
-            timerReceiver = TimerActionReceiver()
+
             ContextCompat.registerReceiver(
                 this,
                 timerReceiver,
                 filter,
-                ContextCompat.RECEIVER_NOT_EXPORTED
+                ContextCompat.RECEIVER_EXPORTED
             )
         }
         return START_STICKY
@@ -162,6 +156,7 @@ class TimerService : Service() {
 
     fun stopTimer() {
         timerJob?.cancel()
+        stopSelf()
     }
 
     private fun isTimerRunning() = isTimerRunning.get()

@@ -7,6 +7,7 @@ import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
 import android.os.Build
+import android.widget.RemoteViews
 import androidx.annotation.RequiresApi
 import androidx.core.app.NotificationCompat
 import com.ighorosipov.multitimer.R
@@ -15,7 +16,9 @@ import com.ighorosipov.multitimer.domain.model.TimerEvent
 import com.ighorosipov.multitimer.presentation.MainActivity
 import com.ighorosipov.multitimer.presentation.ui.components.navigation.Screen
 
-class TimerNotificationHelper(private val context: Context) {
+class TimerNotificationHelper(
+    private val context: Context
+) {
 
     var notificationBuilder: NotificationCompat.Builder? = null
         private set
@@ -30,8 +33,6 @@ class TimerNotificationHelper(private val context: Context) {
 
     @RequiresApi(Build.VERSION_CODES.O)
     private fun createChannel() {
-        notificationManager =
-            context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
         val channel = NotificationChannel(
             CHANNEL_ID,
             CHANNEL_NAME,
@@ -41,6 +42,8 @@ class TimerNotificationHelper(private val context: Context) {
     }
 
     private fun createNotification(): NotificationCompat.Builder {
+        notificationManager =
+            context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
 
         val routeIntent = Intent(
             Intent.ACTION_VIEW,
@@ -67,14 +70,34 @@ class TimerNotificationHelper(private val context: Context) {
             PendingIntent.FLAG_IMMUTABLE
         )
 
+        // Get the layouts to use in the custom notification.
+        val notificationLayout = RemoteViews(context.packageName, R.layout.notification_small)
+        val notificationLayoutExpanded = RemoteViews(context.packageName, R.layout.notification_big)
+
+        notificationLayoutExpanded.setOnClickPendingIntent(
+            R.id.notification_play, timerNotificationAction(TimerAction.START)
+        )
+        notificationLayoutExpanded.setOnClickPendingIntent(
+            R.id.notification_pause, timerNotificationAction(TimerAction.PAUSE)
+        )
+        notificationLayoutExpanded.setOnClickPendingIntent(
+            R.id.notification_stop, timerNotificationAction(TimerAction.STOP)
+        )
+
+        notificationLayoutExpanded.setTextViewText(
+            R.id.notification_title, context.resources.getString(R.string.timer_active)
+        )
+
         return NotificationCompat.Builder(context, CHANNEL_ID)
             .setSmallIcon(R.drawable.ic_time)
             .setContentTitle(context.resources.getString(R.string.timer_active))
             .setSilent(true)
-            .addAction(R.drawable.ic_pause, "Pause/Start", timerNotificationAction(TimerAction.PAUSE))
-            .addAction(R.drawable.ic_stop, "Stop", timerNotificationAction(TimerAction.STOP))
+            .setStyle(NotificationCompat.DecoratedCustomViewStyle())
+            .setCustomContentView(notificationLayout)
+            .setCustomBigContentView(notificationLayoutExpanded)
+//            .addAction(R.drawable.ic_pause, "Pause/Start", timerNotificationAction(TimerAction.PAUSE))
+//            .addAction(R.drawable.ic_stop, "Stop", timerNotificationAction(TimerAction.STOP))
             .setContentIntent(routePendingIntent)
-            .setFullScreenIntent(fullScreenPendingIntent, true)
     }
 
 
@@ -116,19 +139,19 @@ class TimerNotificationHelper(private val context: Context) {
         notificationBuilder?.let {
             it.setContentTitle(contentTitle)
             it.setOngoing(setOngoing)
-            if (isOvertime) {
-                it.mActions.clear()
-                it.addAction(R.drawable.ic_stop, "Stop", timerNotificationAction(TimerAction.STOP))
-            } else {
-                it.mActions[0] = action
-            }
+//            if (isOvertime) {
+//                it.mActions.clear()
+//                it.addAction(R.drawable.ic_stop, "Stop", timerNotificationAction(TimerAction.STOP))
+//            } else {
+//                it.mActions[0] = action
+//            }
 
         }
 
     }
 
     private fun timerNotificationAction(timerAction: TimerAction): PendingIntent? {
-        val intent = Intent(context, TimerActionReceiver::class.java)
+        val intent = Intent()
         when (timerAction) {
             TimerAction.START, TimerAction.PAUSE, TimerAction.STOP -> {
                 intent.action = timerAction.action

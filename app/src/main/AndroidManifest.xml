@@ -49,7 +49,6 @@
             android:exported="false"
             android:foregroundServiceType="specialUse">
         </service>
-<!--        <receiver android:name=".presentation.services.timer.TimerActionReceiver" />-->
     </application>
 
 </manifest>
