@@ -20,16 +20,25 @@ class TimerServiceConnection(
 
     override fun onServiceConnected(name: ComponentName?, binder: IBinder?) {
         service = (binder as TimerService.LocalBinder).getService()
-        service?.startTimer(Timer(time = 10000))
     }
 
     override fun onServiceDisconnected(name: ComponentName?) {
         service = null
     }
 
-    fun startTimer(timer: Timer) {
-        startService()
-        bind()
+    fun startOrResumeTimer(timer: Timer) {
+        if (isBound) {
+            resumeTimer()
+        } else {
+            startService()
+            bind()
+        }
+
+    }
+
+    fun resumeTimer() {
+        service?.resumeTimer()
+
     }
 
     fun pauseTimer() {

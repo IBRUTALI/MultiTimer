@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!--  Notification button style  -->
+    <style name="NotificationButton" parent="">
+        <item name="android:background">@drawable/remote_view_shape_transparent</item>
+        <item name="android:tint">@color/elem_main</item>
+    </style>
+
+</resources>

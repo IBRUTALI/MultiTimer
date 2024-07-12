@@ -25,12 +25,7 @@ import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.ensureActive
-import kotlinx.coroutines.flow.distinctUntilChanged
-import kotlinx.coroutines.flow.transform
-import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
-import java.util.concurrent.atomic.AtomicBoolean
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -58,16 +53,24 @@ class TimerService : Service() {
 
     private val binder = LocalBinder()
 
-    private var isTimerRunning = AtomicBoolean(true)
-
     private var timerJob: Job? = null
 
+    private var timerState = Timer(time = 10000)
+
+
+    /**
+     * Receives notifications when the user presses the Start, Pause, Stop buttons in the notification
+     * Reacts to incoming intents depending on the type
+     * [TimerAction.START.action] when the user wants to start the timer
+     * [TimerAction.PAUSE.action] when the user wants to pause the timer
+     * [TimerAction.STOP.action] wants to stop the timer completely
+     */
     private val timerReceiver: BroadcastReceiver = object : BroadcastReceiver() {
 
         override fun onReceive(context: Context, intent: Intent) {
             when (intent.action) {
                 TimerAction.START.action -> {
-                    pauseTimer()
+                    resumeTimer()
                 }
 
                 TimerAction.PAUSE.action -> {
@@ -120,46 +123,57 @@ class TimerService : Service() {
                 filter,
                 ContextCompat.RECEIVER_EXPORTED
             )
+            startTimer(Timer(time = 10000))
         }
         return START_STICKY
     }
 
-    fun startTimer(timer: Timer) {
+    private fun startTimer(timer: Timer) {
         timerJob?.cancel()
         timerJob = CoroutineScope(dispatcher).launch {
             startTimerUseCase(timer)
-                .transform { mTimer ->
-                    if (mTimer.event is TimerEvent.Overtime) {
-                        emit(mTimer)
-                        delay(1000)
-                    } else if (isTimerRunning()) {
-                        emit(mTimer.copy(event = TimerEvent.Count))
-                        delay(1000)
-                    }
-                    if (!isTimerRunning() && mTimer.event !is TimerEvent.Overtime) {
-                        while (!isTimerRunning() && isActive) {
-                            emit(mTimer.copy(event = TimerEvent.Pause))
-                        }
-                    }
-                }
-                .distinctUntilChanged()
                 .collect { mTimer ->
-                    ensureActive()
+                    timerState = mTimer
                     timerNotificationHelper.updateNotificationAndNotify(mTimer)
+                    delay(300)
                 }
         }
     }
 
+    /**
+     * Starts the timer depending on the state of [timerJob].
+     * Updates the data in the notification if [timerJob] is cancelled.
+     */
+    fun resumeTimer() {
+        if (timerJob?.isActive == false) {
+            timerState = timerState.copy(
+                event = TimerEvent.Count
+            )
+            startTimer(timerState)
+            timerNotificationHelper.updateNotificationAndNotify(timerState)
+        }
+
+
+    }
+
+    /**
+     * Stops the timer depending on the state of [timerJob].
+     * Updates the data in the notification if [timerJob] is active.
+     */
     fun pauseTimer() {
-        isTimerRunning.set(!isTimerRunning())
+        if (timerJob?.isActive == true) {
+            timerJob?.cancel()
+            timerState = timerState.copy(
+                event = TimerEvent.Pause
+            )
+            timerNotificationHelper.updateNotificationAndNotify(timerState)
+        }
     }
 
     fun stopTimer() {
         timerJob?.cancel()
-        stopSelf()
+        stopForeground(STOP_FOREGROUND_REMOVE)
     }
-
-    private fun isTimerRunning() = isTimerRunning.get()
 
     override fun onDestroy() {
         super.onDestroy()

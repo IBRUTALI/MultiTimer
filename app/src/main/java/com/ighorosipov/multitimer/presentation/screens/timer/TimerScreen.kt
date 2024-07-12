@@ -49,7 +49,7 @@ fun TimerScreen(
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Button(onClick = {
-            connection.startTimer(timerState)
+            connection.startOrResumeTimer(timerState)
             viewModel.onEvent(TimerScreenEvent.StartTimer)
         }) {
             Text("START")

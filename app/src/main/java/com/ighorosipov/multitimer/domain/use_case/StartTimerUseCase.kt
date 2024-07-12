@@ -2,7 +2,6 @@ package com.ighorosipov.multitimer.domain.use_case
 
 import com.ighorosipov.multitimer.domain.model.Timer
 import com.ighorosipov.multitimer.domain.model.TimerEvent
-import kotlinx.coroutines.flow.cancellable
 import kotlinx.coroutines.flow.flow
 import javax.inject.Inject
 
@@ -13,14 +12,15 @@ class StartTimerUseCase @Inject constructor() {
         while (startTime >= 0) {
             emit(
                 timer.copy(
-                    time = startTime
+                    time = startTime,
+                    event = TimerEvent.Count
                 )
             )
-            startTime -= 1000
+            startTime -= 300
         }
         startTime = 0
-        while(true) {
-            startTime += 1000
+        while (true) {
+            startTime += 300
             emit(
                 timer.copy(
                     time = startTime,
@@ -28,6 +28,6 @@ class StartTimerUseCase @Inject constructor() {
                 )
             )
         }
-    }.cancellable()
+    }
 
 }
