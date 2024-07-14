@@ -7,14 +7,14 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import javax.inject.Inject
 
-class DeleteTimerUseCase @Inject constructor(
+class GetTimerByIdUseCase @Inject constructor(
     private val repository: TimerRepository
 ) {
 
-    operator fun invoke(timer: Timer): Flow<Resource<Unit>> {
+    operator fun invoke(timerId: String): Flow<Resource<Timer>> {
         return flow {
             emit(Resource.Loading())
-            emit(repository.deleteTimer(timer = timer))
+            emit(repository.getTimerById(timerId = timerId))
         }
     }
 

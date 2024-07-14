@@ -1,8 +1,10 @@
 package com.ighorosipov.multitimer.domain.model
 
+import java.util.UUID
 import java.util.concurrent.TimeUnit
 
 data class Timer(
+    val id: String = UUID.randomUUID().toString(),
     val time: Long = 0,
     val event: TimerEvent = TimerEvent.Count
 ) {

@@ -15,9 +15,8 @@ import androidx.core.content.ContextCompat
 import com.ighorosipov.multitimer.di.DefaultDispatcher
 import com.ighorosipov.multitimer.domain.model.Timer
 import com.ighorosipov.multitimer.domain.model.TimerEvent
-import com.ighorosipov.multitimer.domain.use_case.AddTimerUseCase
 import com.ighorosipov.multitimer.domain.use_case.DeleteTimerUseCase
-import com.ighorosipov.multitimer.domain.use_case.PauseTimerUseCase
+import com.ighorosipov.multitimer.domain.use_case.GetTimersUseCase
 import com.ighorosipov.multitimer.domain.use_case.StartTimerUseCase
 import com.ighorosipov.multitimer.presentation.services.timer.TimerNotificationHelper.Companion.NOTIFICATION_ID
 import dagger.hilt.android.AndroidEntryPoint
@@ -36,16 +35,13 @@ class TimerService : Service() {
     lateinit var dispatcher: CoroutineDispatcher
 
     @Inject
-    lateinit var addTimerUseCase: AddTimerUseCase
-
-    @Inject
     lateinit var deleteTimerUseCase: DeleteTimerUseCase
 
     @Inject
     lateinit var startTimerUseCase: StartTimerUseCase
 
     @Inject
-    lateinit var pauseTimerUseCase: PauseTimerUseCase
+    lateinit var getTimersUseCase: GetTimersUseCase
 
     private lateinit var timerNotificationHelper: TimerNotificationHelper
 
@@ -55,7 +51,9 @@ class TimerService : Service() {
 
     private var timerJob: Job? = null
 
-    private var timerState = Timer(time = 10000)
+    private var timers = emptyList<Timer>()
+
+    private var currentTimer = Timer(time = 10000)
 
 
     /**
@@ -133,7 +131,7 @@ class TimerService : Service() {
         timerJob = CoroutineScope(dispatcher).launch {
             startTimerUseCase(timer)
                 .collect { mTimer ->
-                    timerState = mTimer
+                    currentTimer = mTimer
                     timerNotificationHelper.updateNotificationAndNotify(mTimer)
                     delay(300)
                 }
@@ -146,14 +144,12 @@ class TimerService : Service() {
      */
     fun resumeTimer() {
         if (timerJob?.isActive == false) {
-            timerState = timerState.copy(
+            currentTimer = currentTimer.copy(
                 event = TimerEvent.Count
             )
-            startTimer(timerState)
-            timerNotificationHelper.updateNotificationAndNotify(timerState)
+            startTimer(currentTimer)
+            timerNotificationHelper.updateNotificationAndNotify(currentTimer)
         }
-
-
     }
 
     /**
@@ -163,10 +159,10 @@ class TimerService : Service() {
     fun pauseTimer() {
         if (timerJob?.isActive == true) {
             timerJob?.cancel()
-            timerState = timerState.copy(
+            currentTimer = currentTimer.copy(
                 event = TimerEvent.Pause
             )
-            timerNotificationHelper.updateNotificationAndNotify(timerState)
+            timerNotificationHelper.updateNotificationAndNotify(currentTimer)
         }
     }
 

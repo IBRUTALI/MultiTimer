@@ -14,6 +14,7 @@ hiltAndroid = "2.49"
 hiltAndroidCompiler = "2.49"
 hiltLifecycleViewmodel = "1.2.0"
 ksp = "1.9.0-1.0.13"
+room-runtime = "2.6.1"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -35,6 +36,9 @@ androidx-material-icons-extended = { module = "androidx.compose.material:materia
 androidx-navigation-compose = { module = "androidx.navigation:navigation-compose", version.ref = "navigationCompose" }
 hilt-android = { module = "com.google.dagger:hilt-android", version.ref = "hiltAndroid" }
 hilt-android-compiler = { module = "com.google.dagger:hilt-android-compiler", version.ref = "hiltAndroidCompiler" }
+room-compiler = { module = "androidx.room:room-compiler", version.ref = "room-runtime" }
+room-ktx = { module = "androidx.room:room-ktx", version.ref = "room-runtime" }
+room-runtime = { module = "androidx.room:room-runtime", version.ref = "room-runtime" }
 
 [plugins]
 androidApplication = { id = "com.android.application", version.ref = "agp" }
