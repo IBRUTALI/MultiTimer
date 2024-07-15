@@ -6,7 +6,6 @@ import android.content.Intent
 import android.content.ServiceConnection
 import android.os.Build
 import android.os.IBinder
-import com.ighorosipov.multitimer.domain.model.Timer
 
 class TimerServiceConnection(
     private val context: Context,
@@ -26,19 +25,17 @@ class TimerServiceConnection(
         service = null
     }
 
-    fun startOrResumeTimer(timer: Timer) {
+    fun startTimer() {
         if (isBound) {
-            resumeTimer()
-        } else {
-            startService()
-            bind()
+            unbind()
+            stopService()
         }
-
+        bind()
+        startService()
     }
 
     fun resumeTimer() {
         service?.resumeTimer()
-
     }
 
     fun pauseTimer() {

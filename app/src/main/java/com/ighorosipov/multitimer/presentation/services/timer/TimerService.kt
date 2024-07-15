@@ -127,12 +127,15 @@ class TimerService : Service() {
     }
 
     private fun startTimer(timer: Timer) {
+        val updateIntent = Intent(INTENT_UPDATE_TIMER)
         timerJob?.cancel()
         timerJob = CoroutineScope(dispatcher).launch {
             startTimerUseCase(timer)
                 .collect { mTimer ->
                     currentTimer = mTimer
                     timerNotificationHelper.updateNotificationAndNotify(mTimer)
+                    updateIntent.putExtra(INTENT_UPDATE_TIMER, mTimer.time)
+                    sendBroadcast(updateIntent)
                     delay(300)
                 }
         }
@@ -173,8 +176,13 @@ class TimerService : Service() {
 
     override fun onDestroy() {
         super.onDestroy()
+        timerJob?.cancel()
         timerJob = null
         unregisterReceiver(timerReceiver)
+    }
+
+    companion object {
+        const val INTENT_UPDATE_TIMER = "com.ighorosipov.multitimer.COUNTDOWN_UPDATED"
     }
 
 }
