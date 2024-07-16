@@ -25,7 +25,7 @@
         android:theme="@style/Theme.MultiTimer"
         tools:targetApi="31">
         <activity
-            android:name=".presentation.MainActivity"
+            android:name=".feature.timer.presentation.MainActivity"
             android:exported="true"
 
             android:theme="@style/Theme.MultiTimer">
@@ -45,7 +45,7 @@
             </intent-filter>
         </activity>
         <service
-            android:name=".presentation.services.timer.TimerService"
+            android:name=".feature.timer.presentation.services.timer.TimerService"
             android:exported="false"
             android:foregroundServiceType="specialUse">
         </service>

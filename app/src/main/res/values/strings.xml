@@ -13,6 +13,7 @@
     <string name="start">Start</string>
     <string name="pause">Pause</string>
     <string name="stop">Stop</string>
+
     <!-- AlarmScreen -->
 
     <!-- WorldTimeScreen -->
@@ -20,6 +21,12 @@
     <!-- StopwatchScreen -->
 
     <!-- TimerScreen -->
+    <string name="timer_details">Таймер</string>
+
+    <!-- AddTimerScreen -->
+    <string name="add_timer">Добавить таймер</string>
+
+    <!-- TimerDetailsScreen -->
 
 
 </resources>

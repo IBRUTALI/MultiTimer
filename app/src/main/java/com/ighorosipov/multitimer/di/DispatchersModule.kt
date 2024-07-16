@@ -1,6 +1,6 @@
 package com.ighorosipov.multitimer.di
 
-import com.ighorosipov.multitimer.domain.use_case.StartTimerUseCase
+import com.ighorosipov.multitimer.feature.timer.domain.use_case.StartTimerUseCase
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn

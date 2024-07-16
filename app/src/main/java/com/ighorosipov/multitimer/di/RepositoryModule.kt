@@ -1,8 +1,8 @@
 package com.ighorosipov.multitimer.di
 
-import com.ighorosipov.multitimer.data.repository.TimerRepositoryImpl
-import com.ighorosipov.multitimer.data.room.TimerDao
-import com.ighorosipov.multitimer.domain.repository.TimerRepository
+import com.ighorosipov.multitimer.feature.timer.data.repository.TimerRepositoryImpl
+import com.ighorosipov.multitimer.feature.timer.data.room.TimerDao
+import com.ighorosipov.multitimer.feature.timer.domain.repository.TimerRepository
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
