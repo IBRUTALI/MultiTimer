@@ -40,7 +40,18 @@ fun MainBottomNavigation(
     }
     selectedItemIndex = when (state.navigationEvent) {
         is NavigationEvent.NavigateWithDeeplink -> {
-            state.navigationEvent.screen.navBarPosition ?: selectedItemIndex
+            when(val screen = state.navigationEvent.screen) {
+                is Screen.AlarmGraph -> {screen.navBarPosition}
+                is Screen.WorldTimeGraph -> {screen.navBarPosition}
+                is Screen.StopwatchGraph -> {screen.navBarPosition}
+                is Screen.TimerGraph -> {screen.navBarPosition}
+                is Screen.TimerGraph.Timer -> {selectedItemIndex}
+                is Screen.TimerGraph.AddTimer -> {selectedItemIndex}
+                is Screen.TimerGraph.TimerDetails -> {selectedItemIndex}
+                is Screen.AlarmGraph.Alarm -> {selectedItemIndex}
+                is Screen.StopwatchGraph.Stopwatch -> {selectedItemIndex}
+                is Screen.WorldTimeGraph.WorldTime -> {selectedItemIndex}
+            }
         }
 
         is NavigationEvent.None -> selectedItemIndex
@@ -50,28 +61,28 @@ fun MainBottomNavigation(
         val items = listOf(
             BottomNavigationItem(
                 title = stringResource(R.string.alarm),
-                route = Screen.Alarm().route,
+                route = Screen.AlarmGraph().route,
                 selectedIcon = Icons.Filled.Alarm,
                 unselectedIcon = Icons.Outlined.Alarm,
                 hasNotification = false,
             ),
             BottomNavigationItem(
                 title = stringResource(R.string.world_time_short),
-                route = Screen.WorldTime().route,
+                route = Screen.WorldTimeGraph().route,
                 selectedIcon = Icons.Filled.CameraAlt,
                 unselectedIcon = Icons.Outlined.CameraAlt,
                 hasNotification = false,
             ),
             BottomNavigationItem(
                 title = stringResource(R.string.stopwatch),
-                route = Screen.Stopwatch().route,
+                route = Screen.StopwatchGraph().route,
                 selectedIcon = Icons.Filled.Timer,
                 unselectedIcon = Icons.Outlined.Timer,
                 hasNotification = false,
             ),
             BottomNavigationItem(
                 title = stringResource(R.string.timer),
-                route = Screen.Timer().route,
+                route = Screen.TimerGraph().route,
                 selectedIcon = Icons.Filled.AvTimer,
                 unselectedIcon = Icons.Outlined.AvTimer,
                 hasNotification = false,

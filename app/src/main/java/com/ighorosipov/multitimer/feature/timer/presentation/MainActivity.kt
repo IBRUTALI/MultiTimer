@@ -16,8 +16,8 @@ import androidx.core.app.ActivityCompat
 import androidx.core.util.Consumer
 import androidx.navigation.compose.rememberNavController
 import com.ighorosipov.multitimer.ui.components.navigation.NavigationEvent
-import com.ighorosipov.multitimer.ui.components.navigation.RootNavigationGraph
 import com.ighorosipov.multitimer.ui.components.navigation.Screen
+import com.ighorosipov.multitimer.ui.components.navigation.tab_nav_graphs.RootNavigationGraph
 import com.ighorosipov.multitimer.ui.theme.MultiTimerTheme
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -38,24 +38,26 @@ class MainActivity : ComponentActivity() {
             0
         )
         setContent {
-            val navController = rememberNavController()
             val state by viewModel.state.collectAsState()
 
             DisposableEffect(Unit) {
                 val listener = Consumer<Intent> { intent ->
                     intent.data?.let { uri ->
-                        when(uri) {
-                            Screen.Alarm().deeplink -> {
-                                viewModel.onEvent(NavigationEvent.NavigateWithDeeplink(Screen.Alarm()))
+                        when (uri) {
+                            Screen.AlarmGraph.Alarm().deeplink -> {
+                                viewModel.onEvent(NavigationEvent.NavigateWithDeeplink(Screen.AlarmGraph.Alarm()))
                             }
-                            Screen.WorldTime().deeplink -> {
-                                viewModel.onEvent(NavigationEvent.NavigateWithDeeplink(Screen.WorldTime()))
+
+                            Screen.WorldTimeGraph.WorldTime().deeplink -> {
+                                viewModel.onEvent(NavigationEvent.NavigateWithDeeplink(Screen.WorldTimeGraph.WorldTime()))
                             }
-                            Screen.Stopwatch().deeplink -> {
-                                viewModel.onEvent(NavigationEvent.NavigateWithDeeplink(Screen.Stopwatch()))
+
+                            Screen.StopwatchGraph.Stopwatch().deeplink -> {
+                                viewModel.onEvent(NavigationEvent.NavigateWithDeeplink(Screen.StopwatchGraph.Stopwatch()))
                             }
-                            Screen.Timer().deeplink -> {
-                                viewModel.onEvent(NavigationEvent.NavigateWithDeeplink(Screen.Timer()))
+
+                            Screen.TimerGraph.TimerDetails().deeplink -> {
+                                viewModel.onEvent(NavigationEvent.NavigateWithDeeplink(Screen.TimerGraph.TimerDetails()))
                             }
                         }
                     }
@@ -69,7 +71,7 @@ class MainActivity : ComponentActivity() {
             MultiTimerTheme {
                 Surface {
                     RootNavigationGraph(
-                        navController = navController,
+                        navController = rememberNavController(),
                         state = state
                     )
                 }

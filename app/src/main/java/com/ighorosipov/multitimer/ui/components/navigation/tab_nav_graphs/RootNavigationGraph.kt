@@ -1,11 +1,12 @@
-package com.ighorosipov.multitimer.ui.components.navigation
+package com.ighorosipov.multitimer.ui.components.navigation.tab_nav_graphs
 
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import com.ighorosipov.multitimer.ui.State
+import androidx.navigation.compose.rememberNavController
 import com.ighorosipov.multitimer.feature.tab.TabScreen
+import com.ighorosipov.multitimer.ui.State
 
 @Composable
 fun RootNavigationGraph(
@@ -20,7 +21,10 @@ fun RootNavigationGraph(
         composable(
             route = Graph.TAB
         ) {
-            TabScreen(state = state)
+            TabScreen(
+                navController = rememberNavController(),
+                state = state
+            )
         }
     }
 }

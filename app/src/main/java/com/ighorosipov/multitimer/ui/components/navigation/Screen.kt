@@ -7,57 +7,51 @@ import com.ighorosipov.multitimer.R
 
 sealed class Screen(
     val route: String,
-    val deeplink: Uri,
-    val navBarPosition: Int?,
 ) {
 
-    data class Alarm(
-        @StringRes val labelStringId: Int = R.string.alarm
-    ) : Screen(
-        route ="alarm_screen",
-        deeplink = "${SCREEN_SCHEMA_DEEP_LINK}alarm_screen".toUri(),
-        navBarPosition = 0
-    )
+    data class AlarmGraph(
+        val navBarPosition: Int = 0,
+    ) : Screen(route = "alarm_graph") {
+        data class Alarm(
+            @StringRes val labelStringId: Int = R.string.alarm,
+            val deeplink: Uri = "${SCREEN_SCHEMA_DEEP_LINK}alarm_screen".toUri(),
+        ) : Screen(route = "alarm_screen")
+    }
 
-    data class WorldTime(
-        @StringRes val labelStringId: Int = R.string.world_time
-    ) : Screen(
-        route = "world_time_screen",
-        deeplink = "${SCREEN_SCHEMA_DEEP_LINK}world_time_screen".toUri(),
-        navBarPosition = 1
-    )
+    data class WorldTimeGraph(
+        val navBarPosition: Int = 1,
+    ) : Screen(route = "world_time_graph") {
+        data class WorldTime(
+            @StringRes val labelStringId: Int = R.string.world_time,
+            val deeplink: Uri = "${SCREEN_SCHEMA_DEEP_LINK}world_time_screen".toUri(),
+        ) : Screen(route = "world_time_screen")
+    }
 
-    data class Stopwatch(
-        @StringRes val labelStringId: Int = R.string.stopwatch
-    ) : Screen(
-        route = "stopwatch_screen",
-        deeplink = "${SCREEN_SCHEMA_DEEP_LINK}stopwatch_screen".toUri(),
-        navBarPosition = 2
-    )
+    data class StopwatchGraph(
+        val navBarPosition: Int = 2,
+    ) : Screen(route = "stopwatch_graph") {
+        data class Stopwatch(
+            @StringRes val labelStringId: Int = R.string.stopwatch,
+            val deeplink: Uri = "${SCREEN_SCHEMA_DEEP_LINK}stopwatch_screen".toUri(),
+        ) : Screen(route = "stopwatch_screen")
+    }
 
-    data class Timer(
-        @StringRes val labelStringId: Int = R.string.timer
-    ) : Screen(
-        route = "timer_screen",
-        deeplink = "${SCREEN_SCHEMA_DEEP_LINK}timer_screen".toUri(),
-        navBarPosition = 3
-    )
+    data class TimerGraph(
+        val navBarPosition: Int = 3,
+    ) : Screen(route = "timer_graph") {
+        data class Timer(
+            @StringRes val labelStringId: Int = R.string.timer,
+        ) : Screen(route = "timer_screen")
 
-    data class AddTimer(
-        @StringRes val labelStringId: Int = R.string.add_timer,
-    ) : Screen(
-        route = "add_timer_screen",
-        deeplink = "${SCREEN_SCHEMA_DEEP_LINK}add_timer_screen".toUri(),
-        navBarPosition = null
-    )
+        data class AddTimer(
+            @StringRes val labelStringId: Int = R.string.add_timer,
+        ) : Screen(route = "add_timer_screen")
 
-    data class TimerDetails(
-        @StringRes val labelStringId: Int = R.string.timer_details,
-    ) : Screen(
-        route = "timer_details_screen",
-        deeplink = "${SCREEN_SCHEMA_DEEP_LINK}timer_details_screen".toUri(),
-        navBarPosition = null
-    )
+        data class TimerDetails(
+            @StringRes val labelStringId: Int = R.string.timer_details,
+            val deeplink: Uri = "${SCREEN_SCHEMA_DEEP_LINK}timer_details_screen".toUri(),
+        ) : Screen(route = "timer_details_screen")
+    }
 
     companion object {
         const val SCREEN_SCHEMA_DEEP_LINK = "https://ighor-osipov.com/"

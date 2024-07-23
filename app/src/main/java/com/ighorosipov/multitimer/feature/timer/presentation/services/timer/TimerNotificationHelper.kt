@@ -52,7 +52,7 @@ class TimerNotificationHelper(
 
         val routeIntent = Intent(
             Intent.ACTION_VIEW,
-            Screen.Timer().deeplink,
+            Screen.TimerGraph.TimerDetails().deeplink,
             context,
             MainActivity::class.java
         ).apply {

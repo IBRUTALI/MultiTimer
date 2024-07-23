@@ -78,7 +78,7 @@ fun TimerScreen(
                     ItemTimer(
                         time = timer.timeString,
                         onItemClick = {
-                            navController.navigate(Screen.TimerDetails().route)
+                            navController.navigate(Screen.TimerGraph.TimerDetails().route)
                         },
                         onPlayClick = {
                             connection.startTimer()
@@ -102,7 +102,7 @@ fun TimerScreen(
                 .padding(6.dp),
             imageVector = Icons.Filled.Add,
             onClick = {
-                navController.navigate(Screen.AddTimer().route)
+                navController.navigate(Screen.TimerGraph.AddTimer().route)
             }
         )
     }
