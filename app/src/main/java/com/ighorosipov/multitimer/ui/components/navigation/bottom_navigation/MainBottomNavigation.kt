@@ -18,44 +18,24 @@ import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableIntStateOf
-import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.navigation.NavController
+import androidx.navigation.NavDestination.Companion.hierarchy
+import androidx.navigation.NavGraph.Companion.findStartDestination
+import androidx.navigation.compose.currentBackStackEntryAsState
 import com.ighorosipov.multitimer.R
 import com.ighorosipov.multitimer.ui.State
-import com.ighorosipov.multitimer.ui.components.navigation.NavigationEvent
 import com.ighorosipov.multitimer.ui.components.navigation.Screen
 
 @Composable
 fun MainBottomNavigation(
     navController: NavController,
     showLabel: Boolean = true,
-    state: State,
+    state: State
 ) {
-    var selectedItemIndex by rememberSaveable {
-        mutableIntStateOf(0)
-    }
-    selectedItemIndex = when (state.navigationEvent) {
-        is NavigationEvent.NavigateWithDeeplink -> {
-            when(val screen = state.navigationEvent.screen) {
-                is Screen.AlarmGraph -> {screen.navBarPosition}
-                is Screen.WorldTimeGraph -> {screen.navBarPosition}
-                is Screen.StopwatchGraph -> {screen.navBarPosition}
-                is Screen.TimerGraph -> {screen.navBarPosition}
-                is Screen.TimerGraph.Timer -> {selectedItemIndex}
-                is Screen.TimerGraph.AddTimer -> {selectedItemIndex}
-                is Screen.TimerGraph.TimerDetails -> {selectedItemIndex}
-                is Screen.AlarmGraph.Alarm -> {selectedItemIndex}
-                is Screen.StopwatchGraph.Stopwatch -> {selectedItemIndex}
-                is Screen.WorldTimeGraph.WorldTime -> {selectedItemIndex}
-            }
-        }
-
-        is NavigationEvent.None -> selectedItemIndex
-    }
+    val navBackStackEntry by navController.currentBackStackEntryAsState()
+    val currentDestination = navBackStackEntry?.destination
 
     NavigationBar(modifier = Modifier.statusBarsPadding()) {
         val items = listOf(
@@ -89,11 +69,25 @@ fun MainBottomNavigation(
             )
         )
         items.forEachIndexed { index, item ->
+            val isCurrentDestination: Boolean = currentDestination?.hierarchy?.any {
+                it.route == item.route
+            } == true
             NavigationBarItem(
-                selected = selectedItemIndex == index,
+                selected = isCurrentDestination,
                 onClick = {
-                    selectedItemIndex = index
-                    navController.navigate(item.route)
+                    navController.navigate(item.route) {
+                        // Pop up to the start destination of the graph to
+                        // avoid building up a large stack of destinations
+                        // on the back stack as users select items
+                        popUpTo(navController.graph.findStartDestination().id) {
+                            saveState = true
+                        }
+                        // Avoid multiple copies of the same destination when
+                        // reselecting the same item
+                        launchSingleTop = true
+                        // Restore state when reselecting a previously selected item
+                        restoreState = true
+                    }
                 },
                 label = {
                     if (showLabel) Text(text = item.title)
@@ -107,7 +101,7 @@ fun MainBottomNavigation(
                         }
                     ) {
                         Icon(
-                            imageVector = if (index == selectedItemIndex) {
+                            imageVector = if (isCurrentDestination) {
                                 item.selectedIcon
                             } else {
                                 item.unselectedIcon

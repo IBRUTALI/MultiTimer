@@ -20,6 +20,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
+import androidx.navigation.NavGraph.Companion.findStartDestination
 import com.ighorosipov.multitimer.feature.timer.presentation.components.ItemTimer
 import com.ighorosipov.multitimer.feature.timer.presentation.services.timer.TimerService.Companion.INTENT_UPDATE_TIMER
 import com.ighorosipov.multitimer.feature.timer.presentation.services.timer.TimerServiceConnection
@@ -78,7 +79,19 @@ fun TimerScreen(
                     ItemTimer(
                         time = timer.timeString,
                         onItemClick = {
-                            navController.navigate(Screen.TimerGraph.TimerDetails().route)
+                            navController.navigate(Screen.TimerGraph.TimerDetails().route) {
+                                // Pop up to the start destination of the graph to
+                                // avoid building up a large stack of destinations
+                                // on the back stack as users select items
+                                popUpTo(navController.graph.findStartDestination().id) {
+                                    saveState = true
+                                }
+                                // Avoid multiple copies of the same destination when
+                                // reselecting the same item
+                                launchSingleTop = true
+                                // Restore state when reselecting a previously selected item
+                                restoreState = true
+                            }
                         },
                         onPlayClick = {
                             connection.startTimer()

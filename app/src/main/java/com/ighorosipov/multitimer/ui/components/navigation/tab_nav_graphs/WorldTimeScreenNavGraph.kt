@@ -25,7 +25,7 @@ import com.ighorosipov.multitimer.ui.components.navigation.Screen
 @Composable
 fun WorldTimeScreenNavGraph(
     modifier: Modifier = Modifier,
-    navController: NavHostController = rememberNavController(),
+    navController: NavHostController = rememberNavController()
 ) {
     val context = LocalContext.current
     Scaffold(
@@ -40,8 +40,6 @@ fun WorldTimeScreenNavGraph(
                                 Screen.WorldTimeGraph.WorldTime().labelStringId
                             )
                         }
-                        //TODO Сделать систему автоматической подстановки экранов по типу графа
-
                         else -> null
                     }
                     title?.let { Text(it) }

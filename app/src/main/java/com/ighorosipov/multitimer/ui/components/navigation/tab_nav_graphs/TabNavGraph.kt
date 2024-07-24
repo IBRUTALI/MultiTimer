@@ -1,14 +1,12 @@
 package com.ighorosipov.multitimer.ui.components.navigation.tab_nav_graphs
 
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.navigation
 import com.ighorosipov.multitimer.ui.State
-import com.ighorosipov.multitimer.ui.components.navigation.NavigationEvent
 import com.ighorosipov.multitimer.ui.components.navigation.Screen
 
 @Composable
@@ -18,23 +16,23 @@ fun TabNavGraph(
     state: State,
 ) {
 
-    LaunchedEffect(state) {
-        when (state.navigationEvent) {
-            is NavigationEvent.NavigateWithDeeplink -> {
-//                navController.navigate(state.navigationEvent.screen.deeplink)
-            }
-
-            is NavigationEvent.None -> Unit
-        }
-    }
+//    LaunchedEffect(state) {
+//        when (state.navigationEvent) {
+//            is NavigationEvent.NavigateWithDeeplink -> {
+////                navController.navigate(state.navigationEvent.screen.deeplink)
+//            }
+//
+//            is NavigationEvent.None -> Unit
+//        }
+//    }
 
     NavHost(
         navController = navController,
-        startDestination = Graph.TAB
+        startDestination = Screen.TabGraph.route
     ) {
         navigation(
             startDestination = Screen.AlarmGraph().route,
-            route = Graph.TAB
+            route = Screen.TabGraph.route
         ) {
             composable(route = Screen.AlarmGraph().route) {
                 AlarmScreenNavGraph(modifier = modifier)
@@ -46,12 +44,8 @@ fun TabNavGraph(
                 StopwatchScreenNavGraph(modifier = modifier)
             }
             composable(route = Screen.TimerGraph().route) {
-                TimerScreenNavHost(
-                    modifier = modifier,
-                    state = state
-                )
+                TimerScreenNavHost(modifier = modifier)
             }
-
         }
     }
 }

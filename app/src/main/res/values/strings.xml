@@ -25,6 +25,7 @@
 
     <!-- AddTimerScreen -->
     <string name="add_timer">Добавить таймер</string>
+    <string name="tab">Вкладка</string>
 
     <!-- TimerDetailsScreen -->
 

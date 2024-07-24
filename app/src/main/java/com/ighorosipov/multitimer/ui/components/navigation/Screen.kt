@@ -9,6 +9,14 @@ sealed class Screen(
     val route: String,
 ) {
 
+    data object RootGraph : Screen(route = "root_graph")
+
+    data object TabGraph : Screen(route = "tab_graph") {
+        data class Tab(
+            @StringRes val labelStringId: Int = R.string.tab,
+        ) : Screen(route = "tab_screen")
+    }
+
     data class AlarmGraph(
         val navBarPosition: Int = 0,
     ) : Screen(route = "alarm_graph") {
