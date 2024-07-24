@@ -1,15 +1,19 @@
 package com.ighorosipov.multitimer.ui.components.navigation.tab_nav_graphs
 
 import android.content.Intent
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
@@ -29,7 +33,7 @@ import com.ighorosipov.multitimer.ui.components.navigation.Screen
 @Composable
 fun TimerScreenNavHost(
     modifier: Modifier = Modifier,
-    navController: NavHostController = rememberNavController()
+    navController: NavHostController = rememberNavController(),
 ) {
     val context = LocalContext.current
     val navBackStackEntry by navController.currentBackStackEntryAsState()
@@ -44,11 +48,13 @@ fun TimerScreenNavHost(
                                 Screen.TimerGraph.Timer().labelStringId
                             )
                         }
+
                         Screen.TimerGraph.AddTimer().route -> {
                             context.resources.getString(
                                 Screen.TimerGraph.AddTimer().labelStringId
                             )
                         }
+
                         Screen.TimerGraph.TimerDetails().route -> {
                             context.resources.getString(
                                 Screen.TimerGraph.TimerDetails().labelStringId
@@ -68,18 +74,23 @@ fun TimerScreenNavHost(
                             )
                         }
                     }
-                }
+                },
+                colors = TopAppBarDefaults.smallTopAppBarColors(containerColor = MaterialTheme.colorScheme.background)
             )
         }
     ) { paddingValues ->
         NavHost(
             navController = navController,
             route = Screen.TimerGraph().route,
-            startDestination = Screen.TimerGraph.Timer().route
+            startDestination = Screen.TimerGraph.Timer().route,
+            enterTransition = {
+                fadeIn()
+            },
+            exitTransition = {
+                fadeOut()
+            }
         ) {
-            composable(
-                route = Screen.TimerGraph.Timer().route
-            ) {
+            composable(route = Screen.TimerGraph.Timer().route) {
                 TimerScreen(
                     modifier = modifier.padding(paddingValues),
                     navController = navController

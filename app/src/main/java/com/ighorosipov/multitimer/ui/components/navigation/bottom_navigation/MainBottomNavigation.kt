@@ -1,5 +1,7 @@
 package com.ighorosipov.multitimer.ui.components.navigation.bottom_navigation
 
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Alarm
@@ -13,6 +15,7 @@ import androidx.compose.material.icons.outlined.Timer
 import androidx.compose.material3.Badge
 import androidx.compose.material3.BadgedBox
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Text
@@ -20,6 +23,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.NavGraph.Companion.findStartDestination
@@ -27,17 +31,23 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import com.ighorosipov.multitimer.R
 import com.ighorosipov.multitimer.ui.State
 import com.ighorosipov.multitimer.ui.components.navigation.Screen
+import com.ighorosipov.multitimer.ui.theme.Grey
 
 @Composable
 fun MainBottomNavigation(
     navController: NavController,
     showLabel: Boolean = true,
-    state: State
+    state: State,
 ) {
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentDestination = navBackStackEntry?.destination
 
-    NavigationBar(modifier = Modifier.statusBarsPadding()) {
+    NavigationBar(
+        modifier = Modifier
+            .statusBarsPadding()
+            .height(60.dp),
+        containerColor = MaterialTheme.colorScheme.secondary
+    ) {
         val items = listOf(
             BottomNavigationItem(
                 title = stringResource(R.string.alarm),
@@ -73,6 +83,11 @@ fun MainBottomNavigation(
                 it.route == item.route
             } == true
             NavigationBarItem(
+                modifier = Modifier.padding(0.dp),
+                colors = androidx.compose.material3.NavigationBarItemDefaults
+                    .colors(
+                        indicatorColor = MaterialTheme.colorScheme.secondary
+                    ),
                 selected = isCurrentDestination,
                 onClick = {
                     navController.navigate(item.route) {
@@ -90,7 +105,14 @@ fun MainBottomNavigation(
                     }
                 },
                 label = {
-                    if (showLabel) Text(text = item.title)
+                    if (showLabel) Text(
+                        text = item.title,
+                        color = if (isCurrentDestination) {
+                            MaterialTheme.colorScheme.onSurface
+                        } else {
+                            Grey
+                        }
+                    )
                 },
                 icon = {
                     BadgedBox(
@@ -105,6 +127,11 @@ fun MainBottomNavigation(
                                 item.selectedIcon
                             } else {
                                 item.unselectedIcon
+                            },
+                            tint = if (isCurrentDestination) {
+                                MaterialTheme.colorScheme.onSurface
+                            } else {
+                                Grey
                             },
                             contentDescription = item.title
                         )
