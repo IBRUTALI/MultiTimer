@@ -17,16 +17,19 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import androidx.navigation.NavGraph.Companion.findStartDestination
+import com.ighorosipov.multitimer.R
 import com.ighorosipov.multitimer.feature.timer.presentation.components.ItemTimer
 import com.ighorosipov.multitimer.feature.timer.presentation.services.timer.TimerService.Companion.INTENT_UPDATE_TIMER
 import com.ighorosipov.multitimer.feature.timer.presentation.services.timer.TimerServiceConnection
 import com.ighorosipov.multitimer.ui.components.SystemBroadcastReceiver
 import com.ighorosipov.multitimer.ui.components.button.BaseActionButton
 import com.ighorosipov.multitimer.ui.components.navigation.Screen
+import com.ighorosipov.multitimer.ui.theme.Typography
 
 @Composable
 fun TimerScreen(
@@ -66,9 +69,9 @@ fun TimerScreen(
     ) {
         if (state.timers.isEmpty()) {
             Text(
-                modifier = Modifier
-                    .align(Alignment.Center),
-                text = "Нет таймеров"
+                modifier = Modifier.align(Alignment.Center),
+                text = stringResource(R.string.no_timers),
+                style = Typography.bodyLarge
             )
         } else {
             LazyColumn(

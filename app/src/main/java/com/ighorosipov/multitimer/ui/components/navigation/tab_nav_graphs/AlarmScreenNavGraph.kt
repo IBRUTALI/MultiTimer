@@ -22,6 +22,7 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.ighorosipov.multitimer.feature.alarm.AlarmScreen
 import com.ighorosipov.multitimer.ui.components.navigation.Screen
+import com.ighorosipov.multitimer.ui.theme.Typography
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -45,7 +46,12 @@ fun AlarmScreenNavGraph(
 
                         else -> null
                     }
-                    title?.let { Text(it) }
+                    title?.let {
+                        Text(
+                            text = title,
+                            style = Typography.titleLarge
+                        )
+                    }
                 },
                 navigationIcon = {
                     if (navController.previousBackStackEntry != null) {

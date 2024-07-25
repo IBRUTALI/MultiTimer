@@ -28,6 +28,7 @@ import com.ighorosipov.multitimer.feature.timer.presentation.screens.add_timer.A
 import com.ighorosipov.multitimer.feature.timer.presentation.screens.timer.TimerScreen
 import com.ighorosipov.multitimer.feature.timer.presentation.screens.timer_details.TimerDetailsScreen
 import com.ighorosipov.multitimer.ui.components.navigation.Screen
+import com.ighorosipov.multitimer.ui.theme.Typography
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -63,7 +64,12 @@ fun TimerScreenNavHost(
 
                         else -> null
                     }
-                    title?.let { Text(it) }
+                    title?.let {
+                        Text(
+                            text = title,
+                            style = Typography.titleLarge
+                        )
+                    }
                 },
                 navigationIcon = {
                     if (navController.previousBackStackEntry != null) {

@@ -3,15 +3,6 @@ package com.ighorosipov.multitimer.ui.components.navigation.bottom_navigation
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.statusBarsPadding
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Alarm
-import androidx.compose.material.icons.filled.AvTimer
-import androidx.compose.material.icons.filled.CameraAlt
-import androidx.compose.material.icons.filled.Timer
-import androidx.compose.material.icons.outlined.Alarm
-import androidx.compose.material.icons.outlined.AvTimer
-import androidx.compose.material.icons.outlined.CameraAlt
-import androidx.compose.material.icons.outlined.Timer
 import androidx.compose.material3.Badge
 import androidx.compose.material3.BadgedBox
 import androidx.compose.material3.Icon
@@ -22,7 +13,9 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.NavDestination.Companion.hierarchy
@@ -32,6 +25,7 @@ import com.ighorosipov.multitimer.R
 import com.ighorosipov.multitimer.ui.State
 import com.ighorosipov.multitimer.ui.components.navigation.Screen
 import com.ighorosipov.multitimer.ui.theme.Grey
+import com.ighorosipov.multitimer.ui.theme.Typography
 
 @Composable
 fun MainBottomNavigation(
@@ -52,33 +46,33 @@ fun MainBottomNavigation(
             BottomNavigationItem(
                 title = stringResource(R.string.alarm),
                 route = Screen.AlarmGraph().route,
-                selectedIcon = Icons.Filled.Alarm,
-                unselectedIcon = Icons.Outlined.Alarm,
+                selectedIcon = ImageVector.vectorResource(R.drawable.ic_alarm_fill),
+                unselectedIcon = ImageVector.vectorResource(R.drawable.ic_alarm_outline),
                 hasNotification = false,
             ),
             BottomNavigationItem(
                 title = stringResource(R.string.world_time_short),
                 route = Screen.WorldTimeGraph().route,
-                selectedIcon = Icons.Filled.CameraAlt,
-                unselectedIcon = Icons.Outlined.CameraAlt,
+                selectedIcon = ImageVector.vectorResource(R.drawable.ic_earth_fill),
+                unselectedIcon = ImageVector.vectorResource(R.drawable.ic_earth_outline),
                 hasNotification = false,
             ),
             BottomNavigationItem(
                 title = stringResource(R.string.stopwatch),
                 route = Screen.StopwatchGraph().route,
-                selectedIcon = Icons.Filled.Timer,
-                unselectedIcon = Icons.Outlined.Timer,
+                selectedIcon = ImageVector.vectorResource(R.drawable.ic_stopwatch_fill),
+                unselectedIcon = ImageVector.vectorResource(R.drawable.ic_stopwatch_outline),
                 hasNotification = false,
             ),
             BottomNavigationItem(
                 title = stringResource(R.string.timer),
                 route = Screen.TimerGraph().route,
-                selectedIcon = Icons.Filled.AvTimer,
-                unselectedIcon = Icons.Outlined.AvTimer,
+                selectedIcon = ImageVector.vectorResource(R.drawable.ic_timer_fill),
+                unselectedIcon = ImageVector.vectorResource(R.drawable.ic_timer_outline),
                 hasNotification = false,
             )
         )
-        items.forEachIndexed { index, item ->
+        items.forEach { item ->
             val isCurrentDestination: Boolean = currentDestination?.hierarchy?.any {
                 it.route == item.route
             } == true
@@ -107,10 +101,11 @@ fun MainBottomNavigation(
                 label = {
                     if (showLabel) Text(
                         text = item.title,
-                        color = if (isCurrentDestination) {
-                            MaterialTheme.colorScheme.onSurface
-                        } else {
+                        style = Typography.bodySmall,
+                        color = if (!isCurrentDestination) {
                             Grey
+                        } else {
+                            MaterialTheme.colorScheme.onPrimary
                         }
                     )
                 },
