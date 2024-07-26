@@ -1,8 +1,10 @@
 package com.ighorosipov.multitimer.feature.timer.presentation.screens.add_timer
 
 data class AddTimerState(
-    val timerName: String,
-    val timerDuration: Long,
+    val timerName: String = "",
+    val customDurationEnabled: Boolean = false,
+    val customDurationText: String = "",
+    val time: Long = 0,
     val color: Int,
-    val tone: String? = null
+    val tone: String? = null,
 )

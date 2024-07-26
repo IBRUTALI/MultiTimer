@@ -29,6 +29,8 @@
     <string name="no_timers">Нет таймеров</string>
     <string name="timer_name">Имя таймера</string>
     <string name="timer_duration">Длительность таймера</string>
+    <string name="set_custom_duration">Установить свое время</string>
+    <string name="time_in_minutes">Время в минутах</string>
 
     <!-- TimerDetailsScreen -->
 
