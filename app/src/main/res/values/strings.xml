@@ -31,6 +31,9 @@
     <string name="timer_duration">Длительность таймера</string>
     <string name="set_custom_duration">Установить свое время</string>
     <string name="time_in_minutes">Время в минутах</string>
+    <string name="h">Ч</string>
+    <string name="m">М</string>
+    <string name="s">С</string>
 
     <!-- TimerDetailsScreen -->
 

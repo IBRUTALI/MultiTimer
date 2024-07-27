@@ -15,10 +15,14 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
 import com.ighorosipov.multitimer.R
+import com.ighorosipov.multitimer.feature.timer.presentation.components.TimerWidget
 import com.ighorosipov.multitimer.ui.components.BaseCheckBox
 import com.ighorosipov.multitimer.ui.components.edit_field.BaseEditField
 import com.ighorosipov.multitimer.ui.theme.Typography
@@ -92,6 +96,44 @@ fun AddTimerScreen(
             modifier = Modifier.padding(16.dp),
             style = Typography.bodyLarge
         )
+        TimerWidget(
+            limitItems = 3,
+            hoursText = {
+                Text(
+                    text = stringResource(R.string.h),
+                    modifier = Modifier
+                        .padding(top = 10.dp),
+                    textAlign = TextAlign.Center,
+                    style = Typography.bodySmall
+                )
+            },
+            minutesText = {
+                Text(
+                    text = stringResource(R.string.m),
+                    modifier = Modifier
+                        .padding(top = 10.dp),
+                    textAlign = TextAlign.Center,
+                    style = Typography.bodySmall
+                )
+            },
+            secondsText = {
+                Text(
+                    text = stringResource(R.string.s),
+                    modifier = Modifier
+                        .padding(top = 10.dp),
+                    textAlign = TextAlign.Center,
+                    style = Typography.bodySmall
+                )
+            }
+        )
 
     }
+}
+
+@Preview(
+    showBackground = true
+)
+@Composable
+fun AddTimerScreenPreview(modifier: Modifier = Modifier) {
+    AddTimerScreen(navController = rememberNavController())
 }
