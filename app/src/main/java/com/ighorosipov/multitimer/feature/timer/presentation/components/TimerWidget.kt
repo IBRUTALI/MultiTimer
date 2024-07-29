@@ -30,6 +30,8 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.text.style.TextAlign
@@ -113,7 +115,8 @@ fun TimerList(
     numbers: List<Int>,
     limitItems: Int,
 ) {
-    val listState = rememberLazyListState(Int.MAX_VALUE / 2 - (Int.MAX_VALUE / 2) % numbers.size - 1)
+    val listState =
+        rememberLazyListState(Int.MAX_VALUE / 2 - (Int.MAX_VALUE / 2) % numbers.size - 1)
     val snapFlingBehavior = rememberSnapFlingBehavior(lazyListState = listState)
     var itemHeightPixels by remember { mutableIntStateOf(0) }
     val itemCount = numbers.size
@@ -130,6 +133,7 @@ fun TimerList(
                 title = numbers[actualIndex].toString(),
                 state = listState,
                 index = item,
+                rotation = 50f,
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(45.dp)
@@ -146,36 +150,65 @@ fun TimerItem(
     title: String,
     state: LazyListState,
     index: Int,
+    rotation: Float,
     modifier: Modifier = Modifier,
 ) {
     val focusTextColor = MaterialTheme.colorScheme.onBackground
     val noFocusTextColor = MaterialTheme.colorScheme.tertiary
-    val textColor by remember {
+    val itemState by remember {
         derivedStateOf {
-
-            val layoutInfo = state.layoutInfo
-            val visibleItemsInfo = layoutInfo.visibleItemsInfo
-            val itemInfo = visibleItemsInfo.firstOrNull { it.index == index }
-
-            itemInfo?.let {
-                val delta = it.size / 2 //use your custom logic
-                val center = state.layoutInfo.viewportEndOffset / 2
-                val childCenter = it.offset + it.size / 2
-                val target = childCenter - center
-                if (target in -delta..delta) return@derivedStateOf focusTextColor
-            }
-            noFocusTextColor
+            calculateItemChanges(
+                state = state,
+                index = index,
+                rotation = rotation,
+                focusColor = focusTextColor,
+                noFocusColor = noFocusTextColor
+            )
         }
     }
 
     Text(
         text = title,
-        modifier = modifier,
+        modifier = modifier
+            .graphicsLayer {
+                rotationX = itemState.rotation
+            },
         textAlign = TextAlign.Center,
-        color = textColor,
+        color = itemState.textColor,
         style = Typography.titleLarge
     )
 }
 
 @Composable
 private fun pixelsToDp(pixels: Int) = with(LocalDensity.current) { pixels.toDp() }
+
+private fun calculateItemChanges(
+    state: LazyListState,
+    index: Int,
+    rotation: Float,
+    focusColor: Color,
+    noFocusColor: Color,
+): TimerItemState {
+    var textColor = noFocusColor
+    var defaultRotation = 1f
+    val layoutInfo = state.layoutInfo
+    val visibleItemsInfo = layoutInfo.visibleItemsInfo
+    val itemInfo = visibleItemsInfo.firstOrNull { it.index == index }
+
+    itemInfo?.let {
+        val delta = it.size / 2
+        val center = state.layoutInfo.viewportEndOffset / 2
+        val childCenter = it.offset + it.size / 2
+        val target = childCenter - center
+        if (target in -delta..delta) {
+            textColor = focusColor
+            defaultRotation = 1f
+        } else {
+            defaultRotation = rotation
+        }
+    }
+    return TimerItemState(
+        textColor = textColor,
+        rotation = defaultRotation
+    )
+}
