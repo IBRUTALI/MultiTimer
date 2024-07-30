@@ -46,10 +46,13 @@ fun TimerWidget(
     minutesText: @Composable (() -> Unit)? = null,
     secondsText: @Composable (() -> Unit)? = null,
 ) {
-    Column {
+    Column(
+        modifier = modifier
+        .fillMaxWidth()
+    ) {
         Box(contentAlignment = Alignment.Center) {
             Row(
-                modifier = modifier
+                modifier = Modifier
                     .fillMaxWidth()
                     .height(IntrinsicSize.Max),
                 horizontalArrangement = Arrangement.SpaceEvenly
@@ -90,7 +93,7 @@ fun TimerWidget(
             )
         }
         Row(
-            modifier = modifier
+            modifier = Modifier
                 .fillMaxWidth(),
             horizontalArrangement = Arrangement.SpaceAround
         ) {
@@ -133,7 +136,7 @@ fun TimerList(
                 title = numbers[actualIndex].toString(),
                 state = listState,
                 index = item,
-                rotation = 50f,
+                rotation = 40f,
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(45.dp)

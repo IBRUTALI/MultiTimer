@@ -34,6 +34,8 @@
     <string name="h">Ч</string>
     <string name="m">М</string>
     <string name="s">С</string>
+    <string name="color">Цвет</string>
+    <string name="notification_sound">Звук уведомления</string>
 
     <!-- TimerDetailsScreen -->
 

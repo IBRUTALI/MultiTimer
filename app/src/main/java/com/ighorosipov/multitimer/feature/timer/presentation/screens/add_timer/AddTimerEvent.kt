@@ -10,4 +10,6 @@ sealed class AddTimerEvent {
 
     data class ChangeTimerDuration(val value: Long): AddTimerEvent()
 
+    data class ChangeTimerColor(val index: Int): AddTimerEvent()
+
 }

@@ -41,6 +41,12 @@ class AddTimerViewModel @Inject constructor(
                     time = event.value
                 )
             }
+
+            is AddTimerEvent.ChangeTimerColor -> {
+                _state.value = state.value.copy(
+                    selectedColorIndex = event.index
+                )
+            }
         }
     }
 
