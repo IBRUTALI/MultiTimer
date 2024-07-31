@@ -26,6 +26,7 @@ import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.ighorosipov.multitimer.R
 import com.ighorosipov.multitimer.feature.timer.presentation.components.ItemColor
+import com.ighorosipov.multitimer.feature.timer.presentation.components.ItemRingtone
 import com.ighorosipov.multitimer.feature.timer.presentation.components.TimerWidget
 import com.ighorosipov.multitimer.ui.components.BaseCheckBox
 import com.ighorosipov.multitimer.ui.components.edit_field.BaseEditField
@@ -164,15 +165,15 @@ fun AddTimerScreen(
                 .padding(bottom = 5.dp),
             horizontalArrangement = Arrangement.spacedBy(8.dp)
         ) {
-            itemsIndexed(colors) {i, item ->
+            itemsIndexed(colors) { i, item ->
                 ItemColor(
                     modifier = Modifier
                         .padding(start = 15.dp)
                         .size(50.dp),
                     color = item,
-                    borderColor = if(state.selectedColorIndex == i) {
+                    borderColor = if (state.selectedColorIndex == i) {
                         MaterialTheme.colorScheme.onBackground
-                    } else item,
+                    } else MaterialTheme.colorScheme.background,
                     onItemClick = {
                         viewModel.onEvent(AddTimerEvent.ChangeTimerColor(i))
                     }
@@ -194,8 +195,24 @@ fun AddTimerScreen(
                 .padding(bottom = 5.dp),
             horizontalArrangement = Arrangement.spacedBy(8.dp)
         ) {
-            itemsIndexed(colors) {i, item ->
-
+            itemsIndexed(state.ringtones) { i, item ->
+                ItemRingtone(
+                    title = item.title,
+                    modifier = Modifier,
+                    checkedState = state.selectedRingtoneIndex == i,
+                    borderColor = if (state.selectedRingtoneIndex == i) {
+                        MaterialTheme.colorScheme.onBackground
+                    } else MaterialTheme.colorScheme.background,
+                    onItemClick = {
+                        viewModel.onEvent(AddTimerEvent.PlayPauseRingtone(item.uri))
+                        viewModel.onEvent(
+                            AddTimerEvent.ChangeRingtone(
+                                index = i,
+                                uri = item.uri
+                            )
+                        )
+                    }
+                )
             }
         }
     }
