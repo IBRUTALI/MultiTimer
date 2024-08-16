@@ -12,6 +12,7 @@ import javax.inject.Singleton
 @InstallIn(SingletonComponent::class)
 interface MusicPlayerModule {
 
+
     companion object {
 
         @Provides
