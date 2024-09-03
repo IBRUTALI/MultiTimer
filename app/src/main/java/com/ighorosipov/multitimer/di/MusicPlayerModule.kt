@@ -1,7 +1,10 @@
 package com.ighorosipov.multitimer.di
 
+import android.content.Context
 import android.media.AudioAttributes
 import android.media.MediaPlayer
+import com.ighorosipov.multitimer.feature.player.PlayerImpl
+import com.ighorosipov.multitimer.feature.player.domain.Player
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -22,6 +25,12 @@ interface MusicPlayerModule {
                 isLooping = false
                 setAudioAttributes(audioAttributes)
             }
+        }
+
+        @Provides
+        @Singleton
+        fun providePlayer(context: Context, mediaPlayer: MediaPlayer): Player {
+            return PlayerImpl(context, mediaPlayer)
         }
 
         @Provides

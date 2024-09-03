@@ -1,6 +1,6 @@
-package com.ighorosipov.multitimer.feature.player.domain.repository
+package com.ighorosipov.multitimer.feature.player.domain
 
-interface PlayerRepository {
+interface Player {
 
     suspend fun play(uri: String)
 

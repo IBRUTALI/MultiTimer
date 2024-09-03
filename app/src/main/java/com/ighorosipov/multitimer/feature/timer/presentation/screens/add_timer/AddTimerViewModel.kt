@@ -60,21 +60,36 @@ class AddTimerViewModel @Inject constructor(
                 )
             }
 
-            is AddTimerEvent.ChangeRingtone -> {
-                _state.value = state.value.copy(
-                    selectedRingtoneIndex = event.index,
-                    selectedRingtoneUri = event.uri
-                )
-            }
-
-            is AddTimerEvent.PlayPauseRingtone -> {
+            is AddTimerEvent.RingtoneCheck -> {
                 viewModelScope.launch(Dispatchers.Default) {
-                    if (state.value.selectedRingtoneUri == event.uri) {
+                    if (state.value.selectedRingtoneUri == event.uri &&
+                        state.value.playingRingtone.first.uri == event.uri &&
+                        state.value.playingRingtone.second
+                    ) {
                         stopUseCase()
-                    } else {
+                        _state.value = state.value.copy(
+                            playingRingtone = state.value.ringtones[event.index] to false
+                        )
+                    } else if (state.value.selectedRingtoneUri == event.uri &&
+                        state.value.playingRingtone.first.uri == event.uri &&
+                        !state.value.playingRingtone.second
+                    ) {
                         playUseCase(event.uri)
+                        _state.value = state.value.copy(
+                            playingRingtone = state.value.ringtones[event.index] to true
+                        )
+                    }
+                    if (state.value.selectedRingtoneUri != event.uri) {
+                        playUseCase(event.uri)
+                        _state.value = state.value.copy(
+                            playingRingtone = state.value.ringtones[event.index] to true
+                        )
                     }
 
+                    _state.value = state.value.copy(
+                        selectedRingtoneIndex = event.index,
+                        selectedRingtoneUri = event.uri
+                    )
                 }
             }
         }
