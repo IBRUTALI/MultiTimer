@@ -209,7 +209,6 @@ fun AddTimerScreen(
                         false
                     },
                     onItemClick = {
-                        viewModel.onEvent(AddTimerEvent.PlayPauseRingtone(item.uri))
                         viewModel.onEvent(
                             AddTimerEvent.RingtoneCheck(
                                 index = i,

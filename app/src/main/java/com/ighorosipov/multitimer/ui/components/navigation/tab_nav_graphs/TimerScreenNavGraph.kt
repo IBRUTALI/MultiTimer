@@ -17,13 +17,16 @@ import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.vectorResource
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navDeepLink
+import com.ighorosipov.multitimer.R
 import com.ighorosipov.multitimer.feature.timer.presentation.screens.add_timer.AddTimerScreen
 import com.ighorosipov.multitimer.feature.timer.presentation.screens.timer.TimerScreen
 import com.ighorosipov.multitimer.feature.timer.presentation.screens.timer_details.TimerDetailsScreen
@@ -71,57 +74,74 @@ fun TimerScreenNavHost(
                         )
                     }
                 },
-                navigationIcon = {
-                    if (navController.previousBackStackEntry != null) {
-                        IconButton(onClick = { navController.navigateUp() }) {
-                            Icon(
-                                imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                                contentDescription = "Back"
-                            )
+                actions = {
+                    when (currentDestination) {
+                        Screen.TimerGraph.AddTimer().route -> {
+                            IconButton(onClick = {  }) {
+                                Icon(
+                                    imageVector = ImageVector.vectorResource(id = R.drawable.ic_apply),
+                                    contentDescription = "Save"
+                                )
+                            }
                         }
                     }
-                },
-                colors = TopAppBarDefaults.smallTopAppBarColors(containerColor = MaterialTheme.colorScheme.background)
+        },
+        navigationIcon = {
+            if (navController.previousBackStackEntry != null) {
+                IconButton(onClick = { navController.navigateUp() }) {
+                    Icon(
+                        imageVector = if (currentDestination == Screen.TimerGraph.AddTimer().route) {
+                            ImageVector.vectorResource(id = R.drawable.ic_cancel)
+                        } else {
+                            Icons.AutoMirrored.Filled.ArrowBack
+                        },
+                        contentDescription = "Back"
+                    )
+                }
+            }
+        },
+        colors = TopAppBarDefaults.smallTopAppBarColors(containerColor = MaterialTheme.colorScheme.background)
+    )
+}
+) {
+    paddingValues ->
+    NavHost(
+        navController = navController,
+        route = Screen.TimerGraph().route,
+        startDestination = Screen.TimerGraph.Timer().route,
+        enterTransition = {
+            fadeIn()
+        },
+        exitTransition = {
+            fadeOut()
+        }
+    ) {
+        composable(route = Screen.TimerGraph.Timer().route) {
+            TimerScreen(
+                modifier = modifier.padding(paddingValues),
+                navController = navController
             )
         }
-    ) { paddingValues ->
-        NavHost(
-            navController = navController,
-            route = Screen.TimerGraph().route,
-            startDestination = Screen.TimerGraph.Timer().route,
-            enterTransition = {
-                fadeIn()
-            },
-            exitTransition = {
-                fadeOut()
-            }
+        composable(route = Screen.TimerGraph.AddTimer().route) {
+            AddTimerScreen(
+                modifier = modifier.padding(paddingValues),
+                navController = navController
+            )
+        }
+        composable(
+            route = Screen.TimerGraph.TimerDetails().route,
+            deepLinks = listOf(
+                navDeepLink {
+                    uriPattern = Screen.TimerGraph.TimerDetails().deeplink.toString()
+                    action = Intent.ACTION_VIEW
+                }
+            )
         ) {
-            composable(route = Screen.TimerGraph.Timer().route) {
-                TimerScreen(
-                    modifier = modifier.padding(paddingValues),
-                    navController = navController
-                )
-            }
-            composable(route = Screen.TimerGraph.AddTimer().route) {
-                AddTimerScreen(
-                    modifier = modifier.padding(paddingValues),
-                    navController = navController
-                )
-            }
-            composable(
-                route = Screen.TimerGraph.TimerDetails().route,
-                deepLinks = listOf(
-                    navDeepLink {
-                        uriPattern = Screen.TimerGraph.TimerDetails().deeplink.toString()
-                        action = Intent.ACTION_VIEW
-                    }
-                )
-            ) {
-                TimerDetailsScreen(
-                    modifier = modifier.padding(paddingValues),
-                    navController = navController
-                )
-            }
+            TimerDetailsScreen(
+                modifier = modifier.padding(paddingValues),
+                navController = navController
+            )
         }
     }
+}
 }

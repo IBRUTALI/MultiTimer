@@ -92,10 +92,6 @@ class AddTimerViewModel @Inject constructor(
                     )
                 }
             }
-
-            is AddTimerEvent.PlayPauseRingtone -> {
-
-            }
         }
     }
 
