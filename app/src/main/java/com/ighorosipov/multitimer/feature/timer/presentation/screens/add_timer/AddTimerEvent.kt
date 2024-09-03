@@ -12,7 +12,7 @@ sealed class AddTimerEvent {
 
     data class ChangeTimerColor(val index: Int): AddTimerEvent()
 
-    data class ChangeRingtone(val index: Int, val uri: String): AddTimerEvent()
+    data class RingtoneCheck(val index: Int, val uri: String): AddTimerEvent()
 
     data class PlayPauseRingtone(val uri: String): AddTimerEvent()
 

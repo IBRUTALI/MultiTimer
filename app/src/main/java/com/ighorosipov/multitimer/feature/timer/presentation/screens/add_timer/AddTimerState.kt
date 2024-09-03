@@ -13,4 +13,8 @@ data class AddTimerState(
     val ringtones: List<Ringtone> = emptyList(),
     val selectedRingtoneIndex: Int = 0,
     val selectedRingtoneUri: String = "",
+    val playingRingtone: Pair<Ringtone, Boolean> = Ringtone(
+        title = "",
+        uri = ""
+    ) to false
 )

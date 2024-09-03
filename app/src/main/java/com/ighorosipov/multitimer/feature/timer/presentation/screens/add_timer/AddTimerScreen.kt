@@ -203,10 +203,15 @@ fun AddTimerScreen(
                     borderColor = if (state.selectedRingtoneIndex == i) {
                         MaterialTheme.colorScheme.onBackground
                     } else MaterialTheme.colorScheme.background,
+                    isPlaying = if (state.selectedRingtoneIndex == i){
+                        state.playingRingtone.second
+                    } else {
+                        false
+                    },
                     onItemClick = {
                         viewModel.onEvent(AddTimerEvent.PlayPauseRingtone(item.uri))
                         viewModel.onEvent(
-                            AddTimerEvent.ChangeRingtone(
+                            AddTimerEvent.RingtoneCheck(
                                 index = i,
                                 uri = item.uri
                             )

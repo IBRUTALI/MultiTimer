@@ -36,6 +36,7 @@ fun ItemRingtone(
     title: String,
     checkedState: Boolean,
     borderColor: Color,
+    isPlaying: Boolean,
     onItemClick: () -> Unit,
 ) {
     Column(
@@ -54,7 +55,11 @@ fun ItemRingtone(
                 .background(MaterialTheme.colorScheme.surface)
         ) {
             Icon(
-                painter = painterResource(id = R.drawable.ic_play),
+                painter = if(isPlaying) {
+                    painterResource(id = R.drawable.ic_pause)
+                } else {
+                    painterResource(id = R.drawable.ic_play)
+                },
                 modifier = Modifier.align(Alignment.Center),
                 contentDescription = "play"
             )
