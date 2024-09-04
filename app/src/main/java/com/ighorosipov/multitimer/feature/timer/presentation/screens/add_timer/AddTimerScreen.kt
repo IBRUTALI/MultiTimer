@@ -39,6 +39,7 @@ import com.ighorosipov.multitimer.feature.timer.presentation.components.ItemColo
 import com.ighorosipov.multitimer.feature.timer.presentation.components.ItemRingtone
 import com.ighorosipov.multitimer.feature.timer.presentation.components.TimerWidget
 import com.ighorosipov.multitimer.ui.components.BaseCheckBox
+import com.ighorosipov.multitimer.ui.components.animation.AnimateContent
 import com.ighorosipov.multitimer.ui.components.edit_field.BaseEditField
 import com.ighorosipov.multitimer.ui.components.navigation.Screen
 import com.ighorosipov.multitimer.ui.theme.Blue
@@ -140,25 +141,25 @@ fun AddTimerScreen(
                     viewModel.onEvent(event = AddTimerEvent.ChangeCustomDurationCheck(isChecked = it))
                 }
             )
-            if (state.customDurationEnabled) {
-                BaseEditField(
-                    inputValue = state.customDurationText,
-                    modifier = Modifier.padding(start = 16.dp, end = 16.dp, bottom = 16.dp),
-                    placeholder = stringResource(R.string.time_in_minutes),
-                    keyboardType = KeyboardType.Number,
-                    onValueChange = {
-                        viewModel.onEvent(
-                            event = AddTimerEvent.ChangeCustomTimerText(
-                                it
+                AnimateContent(show = state.customDurationEnabled) {
+                    BaseEditField(
+                        inputValue = state.customDurationText,
+                        modifier = Modifier.padding(start = 16.dp, end = 16.dp, bottom = 16.dp, top = 5.dp),
+                        placeholder = stringResource(R.string.time_in_minutes),
+                        keyboardType = KeyboardType.Number,
+                        onValueChange = {
+                            viewModel.onEvent(
+                                event = AddTimerEvent.ChangeCustomTimerText(
+                                    it
+                                )
                             )
-                        )
-                        viewModel.onEvent(
-                            event = AddTimerEvent.ChangeTimerDuration(
-                                it.toTimeMinutesInMillis()
+                            viewModel.onEvent(
+                                event = AddTimerEvent.ChangeTimerDuration(
+                                    it.toTimeMinutesInMillis()
+                                )
                             )
-                        )
-                    }
-                )
+                        }
+                    )
             }
             HorizontalDivider(
                 modifier = Modifier.padding(vertical = 5.dp),
