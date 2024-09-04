@@ -8,15 +8,23 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
@@ -30,6 +38,7 @@ import com.ighorosipov.multitimer.feature.timer.presentation.components.ItemRing
 import com.ighorosipov.multitimer.feature.timer.presentation.components.TimerWidget
 import com.ighorosipov.multitimer.ui.components.BaseCheckBox
 import com.ighorosipov.multitimer.ui.components.edit_field.BaseEditField
+import com.ighorosipov.multitimer.ui.components.navigation.Screen
 import com.ighorosipov.multitimer.ui.theme.Blue
 import com.ighorosipov.multitimer.ui.theme.Green
 import com.ighorosipov.multitimer.ui.theme.GreenYellow
@@ -43,15 +52,16 @@ import com.ighorosipov.multitimer.ui.theme.Typography
 import com.ighorosipov.multitimer.ui.theme.Yellow
 import com.ighorosipov.multitimer.utils.base.toTimeMinutesInMillis
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AddTimerScreen(
     modifier: Modifier = Modifier,
     navController: NavController,
     viewModel: AddTimerViewModel = hiltViewModel(),
 ) {
+    val context = LocalContext.current
     val state by viewModel.state.collectAsState()
-
-    val colors = listOf<Color>(
+    val colors = listOf(
         Red,
         Blue,
         Green,
@@ -63,163 +73,203 @@ fun AddTimerScreen(
         Pink,
         Grey
     )
-    Column(modifier = modifier.fillMaxSize()) {
-        BaseEditField(
-            inputValue = state.timerName,
-            modifier = Modifier.padding(16.dp),
-            placeholder = stringResource(R.string.timer_name),
-            keyboardType = KeyboardType.Text,
-            onValueChange = {
-                viewModel.onEvent(event = AddTimerEvent.ChangeTimerName(it))
-            }
-        )
-        HorizontalDivider(
-            modifier = Modifier.padding(vertical = 5.dp),
-            color = MaterialTheme.colorScheme.tertiary
-        )
-        BaseCheckBox(
-            title = {
-                Text(
-                    text = stringResource(R.string.set_custom_duration),
-                    style = Typography.bodyLarge
-                )
-            },
-            modifier = Modifier.padding(16.dp),
-            checkedState = state.customDurationEnabled,
-            onStateChange = {
-                viewModel.onEvent(event = AddTimerEvent.ChangeCustomDurationCheck(isChecked = it))
-            }
-        )
-        if (state.customDurationEnabled) {
-            BaseEditField(
-                inputValue = state.customDurationText,
-                modifier = Modifier.padding(start = 16.dp, end = 16.dp, bottom = 16.dp),
-                placeholder = stringResource(R.string.time_in_minutes),
-                keyboardType = KeyboardType.Number,
-                onValueChange = {
-                    viewModel.onEvent(
-                        event = AddTimerEvent.ChangeCustomTimerText(
-                            it
-                        )
+    Scaffold(
+        topBar = {
+            TopAppBar(
+                title = {
+                    Text(
+                        text = context.resources.getString(
+                            Screen.TimerGraph.AddTimer().labelStringId
+                        ),
+                        style = Typography.titleLarge
                     )
-                    viewModel.onEvent(
-                        event = AddTimerEvent.ChangeTimerDuration(
-                            it.toTimeMinutesInMillis()
+                },
+                actions = {
+                    IconButton(onClick = { viewModel.onEvent(AddTimerEvent.SaveTimer) }) {
+                        Icon(
+                            imageVector = ImageVector.vectorResource(id = R.drawable.ic_apply),
+                            contentDescription = "Save"
                         )
-                    )
-                }
+                    }
+                },
+                navigationIcon = {
+                    if (navController.previousBackStackEntry != null) {
+                        IconButton(onClick = { navController.navigateUp() }) {
+                            Icon(
+                                imageVector =
+                                ImageVector.vectorResource(id = R.drawable.ic_cancel),
+                                contentDescription = "Back"
+                            )
+                        }
+                    }
+                },
+                colors = TopAppBarDefaults.smallTopAppBarColors(containerColor = MaterialTheme.colorScheme.background)
             )
         }
-        HorizontalDivider(
-            modifier = Modifier.padding(vertical = 5.dp),
-            color = MaterialTheme.colorScheme.tertiary
-        )
-        Text(
-            text = stringResource(R.string.timer_duration),
-            modifier = Modifier.padding(vertical = 15.dp, horizontal = 18.dp),
-            style = Typography.bodyLarge
-        )
-        TimerWidget(
-            modifier = Modifier.padding(horizontal = 10.dp),
-            limitItems = 3,
-            hoursText = {
-                Text(
-                    text = stringResource(R.string.h),
-                    modifier = Modifier
-                        .padding(top = 10.dp),
-                    textAlign = TextAlign.Center,
-                    style = Typography.bodySmall
-                )
-            },
-            minutesText = {
-                Text(
-                    text = stringResource(R.string.m),
-                    modifier = Modifier
-                        .padding(top = 10.dp),
-                    textAlign = TextAlign.Center,
-                    style = Typography.bodySmall
-                )
-            },
-            secondsText = {
-                Text(
-                    text = stringResource(R.string.s),
-                    modifier = Modifier
-                        .padding(top = 10.dp),
-                    textAlign = TextAlign.Center,
-                    style = Typography.bodySmall
-                )
-            }
-        )
-        HorizontalDivider(
-            modifier = Modifier.padding(top = 15.dp, bottom = 5.dp),
-            color = MaterialTheme.colorScheme.tertiary
-        )
-        Text(
-            text = stringResource(R.string.color),
-            modifier = Modifier.padding(vertical = 15.dp, horizontal = 18.dp),
-            style = Typography.bodyLarge
-        )
-        LazyRow(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(bottom = 5.dp),
-            horizontalArrangement = Arrangement.spacedBy(8.dp)
+    ) { paddingValues ->
+        Column(
+            modifier = modifier
+                .padding(paddingValues)
+                .fillMaxSize()
         ) {
-            itemsIndexed(colors) { i, item ->
-                ItemColor(
-                    modifier = Modifier
-                        .padding(start = 15.dp)
-                        .size(50.dp),
-                    color = item,
-                    borderColor = if (state.selectedColorIndex == i) {
-                        MaterialTheme.colorScheme.onBackground
-                    } else MaterialTheme.colorScheme.background,
-                    onItemClick = {
-                        viewModel.onEvent(AddTimerEvent.ChangeTimerColor(i))
-                    }
-                )
-            }
-        }
-        HorizontalDivider(
-            modifier = Modifier.padding(top = 15.dp, bottom = 5.dp),
-            color = MaterialTheme.colorScheme.tertiary
-        )
-        Text(
-            text = stringResource(R.string.notification_sound),
-            modifier = Modifier.padding(vertical = 15.dp, horizontal = 18.dp),
-            style = Typography.bodyLarge
-        )
-        LazyRow(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(bottom = 5.dp),
-            horizontalArrangement = Arrangement.spacedBy(8.dp)
-        ) {
-            itemsIndexed(state.ringtones) { i, item ->
-                ItemRingtone(
-                    title = item.title,
-                    modifier = Modifier,
-                    checkedState = state.selectedRingtoneIndex == i,
-                    borderColor = if (state.selectedRingtoneIndex == i) {
-                        MaterialTheme.colorScheme.onBackground
-                    } else MaterialTheme.colorScheme.background,
-                    isPlaying = if (state.selectedRingtoneIndex == i){
-                        state.playingRingtone.second
-                    } else {
-                        false
-                    },
-                    onItemClick = {
+            BaseEditField(
+                inputValue = state.timerName,
+                modifier = Modifier.padding(16.dp),
+                placeholder = stringResource(R.string.timer_name),
+                keyboardType = KeyboardType.Text,
+                onValueChange = {
+                    viewModel.onEvent(event = AddTimerEvent.ChangeTimerName(it))
+                }
+            )
+            HorizontalDivider(
+                modifier = Modifier.padding(vertical = 5.dp),
+                color = MaterialTheme.colorScheme.tertiary
+            )
+            BaseCheckBox(
+                title = {
+                    Text(
+                        text = stringResource(R.string.set_custom_duration),
+                        style = Typography.bodyLarge
+                    )
+                },
+                modifier = Modifier.padding(16.dp),
+                checkedState = state.customDurationEnabled,
+                onStateChange = {
+                    viewModel.onEvent(event = AddTimerEvent.ChangeCustomDurationCheck(isChecked = it))
+                }
+            )
+            if (state.customDurationEnabled) {
+                BaseEditField(
+                    inputValue = state.customDurationText,
+                    modifier = Modifier.padding(start = 16.dp, end = 16.dp, bottom = 16.dp),
+                    placeholder = stringResource(R.string.time_in_minutes),
+                    keyboardType = KeyboardType.Number,
+                    onValueChange = {
                         viewModel.onEvent(
-                            AddTimerEvent.RingtoneCheck(
-                                index = i,
-                                uri = item.uri
+                            event = AddTimerEvent.ChangeCustomTimerText(
+                                it
+                            )
+                        )
+                        viewModel.onEvent(
+                            event = AddTimerEvent.ChangeTimerDuration(
+                                it.toTimeMinutesInMillis()
                             )
                         )
                     }
                 )
             }
+            HorizontalDivider(
+                modifier = Modifier.padding(vertical = 5.dp),
+                color = MaterialTheme.colorScheme.tertiary
+            )
+            Text(
+                text = stringResource(R.string.timer_duration),
+                modifier = Modifier.padding(vertical = 15.dp, horizontal = 18.dp),
+                style = Typography.bodyLarge
+            )
+            TimerWidget(
+                modifier = Modifier.padding(horizontal = 10.dp),
+                limitItems = 3,
+                hoursText = {
+                    Text(
+                        text = stringResource(R.string.h),
+                        modifier = Modifier
+                            .padding(top = 10.dp),
+                        textAlign = TextAlign.Center,
+                        style = Typography.bodySmall
+                    )
+                },
+                minutesText = {
+                    Text(
+                        text = stringResource(R.string.m),
+                        modifier = Modifier
+                            .padding(top = 10.dp),
+                        textAlign = TextAlign.Center,
+                        style = Typography.bodySmall
+                    )
+                },
+                secondsText = {
+                    Text(
+                        text = stringResource(R.string.s),
+                        modifier = Modifier
+                            .padding(top = 10.dp),
+                        textAlign = TextAlign.Center,
+                        style = Typography.bodySmall
+                    )
+                }
+            )
+            HorizontalDivider(
+                modifier = Modifier.padding(top = 15.dp, bottom = 5.dp),
+                color = MaterialTheme.colorScheme.tertiary
+            )
+            Text(
+                text = stringResource(R.string.color),
+                modifier = Modifier.padding(vertical = 15.dp, horizontal = 18.dp),
+                style = Typography.bodyLarge
+            )
+            LazyRow(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(bottom = 5.dp),
+                horizontalArrangement = Arrangement.spacedBy(8.dp)
+            ) {
+                itemsIndexed(colors) { i, item ->
+                    ItemColor(
+                        modifier = Modifier
+                            .padding(start = 15.dp)
+                            .size(50.dp),
+                        color = item,
+                        borderColor = if (state.selectedColorIndex == i) {
+                            MaterialTheme.colorScheme.onBackground
+                        } else MaterialTheme.colorScheme.background,
+                        onItemClick = {
+                            viewModel.onEvent(AddTimerEvent.ChangeTimerColor(i))
+                        }
+                    )
+                }
+            }
+            HorizontalDivider(
+                modifier = Modifier.padding(top = 15.dp, bottom = 5.dp),
+                color = MaterialTheme.colorScheme.tertiary
+            )
+            Text(
+                text = stringResource(R.string.notification_sound),
+                modifier = Modifier.padding(vertical = 15.dp, horizontal = 18.dp),
+                style = Typography.bodyLarge
+            )
+            LazyRow(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(bottom = 5.dp),
+                horizontalArrangement = Arrangement.spacedBy(8.dp)
+            ) {
+                itemsIndexed(state.ringtones) { i, item ->
+                    ItemRingtone(
+                        title = item.title,
+                        modifier = Modifier,
+                        checkedState = state.selectedRingtoneIndex == i,
+                        borderColor = if (state.selectedRingtoneIndex == i) {
+                            MaterialTheme.colorScheme.onBackground
+                        } else MaterialTheme.colorScheme.background,
+                        isPlaying = if (state.selectedRingtoneIndex == i) {
+                            state.playingRingtone.second
+                        } else {
+                            false
+                        },
+                        onItemClick = {
+                            viewModel.onEvent(
+                                AddTimerEvent.RingtoneCheck(
+                                    index = i,
+                                    uri = item.uri
+                                )
+                            )
+                        }
+                    )
+                }
+            }
         }
     }
+
 }
 
 @Preview(
