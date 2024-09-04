@@ -92,6 +92,10 @@ class AddTimerViewModel @Inject constructor(
                     )
                 }
             }
+
+            AddTimerEvent.SaveTimer -> {
+
+            }
         }
     }
 

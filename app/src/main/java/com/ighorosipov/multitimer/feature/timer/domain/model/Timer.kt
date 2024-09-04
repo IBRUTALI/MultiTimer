@@ -1,5 +1,6 @@
 package com.ighorosipov.multitimer.feature.timer.domain.model
 
+import com.ighorosipov.multitimer.feature.ringtone.domain.model.Ringtone
 import java.util.Locale
 import java.util.UUID
 import java.util.concurrent.TimeUnit
@@ -8,6 +9,8 @@ data class Timer(
     val id: String = UUID.randomUUID().toString(),
     val name: String = "",
     val time: Long = 0,
+    val color: Int,
+    val ringtone: Ringtone,
     val event: TimerEvent = TimerEvent.Count
 ) {
     val timeString: String

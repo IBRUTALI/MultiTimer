@@ -1,7 +1,7 @@
 package com.ighorosipov.multitimer.feature.timer.data.repository
 
+import com.ighorosipov.multitimer.core.room.TimerDao
 import com.ighorosipov.multitimer.feature.timer.data.mapper.TimerMapper
-import com.ighorosipov.multitimer.feature.timer.data.room.TimerDao
 import com.ighorosipov.multitimer.feature.timer.domain.model.Timer
 import com.ighorosipov.multitimer.feature.timer.domain.repository.TimerRepository
 import com.ighorosipov.multitimer.utils.Resource

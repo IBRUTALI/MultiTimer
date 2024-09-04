@@ -4,7 +4,7 @@ import android.media.RingtoneManager
 import com.ighorosipov.multitimer.feature.ringtone.data.repository.RingtoneRepositoryImpl
 import com.ighorosipov.multitimer.feature.ringtone.domain.repository.RingtoneRepository
 import com.ighorosipov.multitimer.feature.timer.data.repository.TimerRepositoryImpl
-import com.ighorosipov.multitimer.feature.timer.data.room.TimerDao
+import com.ighorosipov.multitimer.core.room.TimerDao
 import com.ighorosipov.multitimer.feature.timer.domain.repository.TimerRepository
 import dagger.Module
 import dagger.Provides

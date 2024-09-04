@@ -14,7 +14,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.material3.Checkbox
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -27,6 +26,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.ighorosipov.multitimer.R
+import com.ighorosipov.multitimer.ui.components.BaseCheckBox
 import com.ighorosipov.multitimer.ui.theme.Typography
 
 @OptIn(ExperimentalFoundationApi::class)
@@ -55,7 +55,7 @@ fun ItemRingtone(
                 .background(MaterialTheme.colorScheme.surface)
         ) {
             Icon(
-                painter = if(isPlaying) {
+                painter = if (isPlaying) {
                     painterResource(id = R.drawable.ic_pause)
                 } else {
                     painterResource(id = R.drawable.ic_play)
@@ -74,10 +74,9 @@ fun ItemRingtone(
             maxLines = 1,
             style = Typography.bodyMedium
         )
-        Spacer(modifier = Modifier.height(10.dp))
-        Checkbox(
-            checked = checkedState,
-            onCheckedChange = null
+        BaseCheckBox(
+            checkedState = checkedState,
+            onStateChange = { onItemClick() }
         )
     }
 }

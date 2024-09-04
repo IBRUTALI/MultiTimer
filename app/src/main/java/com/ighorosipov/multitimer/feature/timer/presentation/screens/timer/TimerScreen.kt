@@ -6,8 +6,16 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
@@ -31,13 +39,13 @@ import com.ighorosipov.multitimer.ui.components.button.BaseActionButton
 import com.ighorosipov.multitimer.ui.components.navigation.Screen
 import com.ighorosipov.multitimer.ui.theme.Typography
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun TimerScreen(
-    modifier: Modifier,
+    modifier: Modifier = Modifier,
     navController: NavController,
     viewModel: TimerViewModel = hiltViewModel(),
 ) {
-
     val context = LocalContext.current
     val connection = remember {
         TimerServiceConnection(context)
@@ -54,6 +62,94 @@ fun TimerScreen(
             connection.unbind()
         }
     }
+    Scaffold(
+        topBar = {
+            TopAppBar(
+                title = {
+                    Text(
+                        text = context.resources.getString(
+                            Screen.TimerGraph.Timer().labelStringId
+                        ),
+                        style = Typography.titleLarge
+                    )
+                },
+                actions = {},
+                navigationIcon = {
+                    if (navController.previousBackStackEntry != null) {
+                        IconButton(onClick = { navController.navigateUp() }) {
+                            Icon(
+                                imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                                contentDescription = "Back"
+                            )
+                        }
+                    }
+                },
+                colors = TopAppBarDefaults.smallTopAppBarColors(containerColor = MaterialTheme.colorScheme.background)
+
+            )
+        }
+    ) { paddingValues ->
+        Box(
+            modifier = modifier
+                .padding(paddingValues)
+                .fillMaxSize()
+        ) {
+            if (state.timers.isEmpty()) {
+                Text(
+                    modifier = Modifier.align(Alignment.Center),
+                    text = stringResource(R.string.no_timers),
+                    style = Typography.bodyLarge
+                )
+            } else {
+                LazyColumn(
+                    modifier = Modifier
+                        .align(Alignment.Center)
+                ) {
+                    items(state.timers) { timer ->
+                        ItemTimer(
+                            time = timer.timeString,
+                            onItemClick = {
+                                navController.navigate(Screen.TimerGraph.TimerDetails().route) {
+                                    // Pop up to the start destination of the graph to
+                                    // avoid building up a large stack of destinations
+                                    // on the back stack as users select items
+                                    popUpTo(navController.graph.findStartDestination().id) {
+                                        saveState = true
+                                    }
+                                    // Avoid multiple copies of the same destination when
+                                    // reselecting the same item
+                                    launchSingleTop = true
+                                    // Restore state when reselecting a previously selected item
+                                    restoreState = true
+                                }
+                            },
+                            onPlayClick = {
+                                connection.startTimer()
+                                viewModel.onEvent(TimerScreenEvent.StartTimer)
+                            },
+                            onPauseClick = {
+                                connection.pauseTimer(timer.id)
+                                viewModel.onEvent(TimerScreenEvent.PauseTimer)
+                            },
+                            onStopClick = {
+                                connection.stopTimer(timer.id)
+                                viewModel.onEvent(TimerScreenEvent.StartTimer)
+                            }
+                        )
+                    }
+                }
+            }
+            BaseActionButton(
+                modifier = Modifier
+                    .align(Alignment.BottomCenter)
+                    .padding(6.dp),
+                imageVector = Icons.Filled.Add,
+                onClick = {
+                    navController.navigate(Screen.TimerGraph.AddTimer().route)
+                }
+            )
+        }
+    }
 
     SystemBroadcastReceiver(systemAction = INTENT_UPDATE_TIMER) { intent ->
         if (intent?.action == INTENT_UPDATE_TIMER) {
@@ -61,66 +157,6 @@ fun TimerScreen(
             val time = extras?.getLong(INTENT_UPDATE_TIMER) ?: 0
             viewModel.onEvent(TimerScreenEvent.UpdateTimer(time))
         }
-    }
-
-    Box(
-        modifier = modifier
-            .fillMaxSize()
-    ) {
-        if (state.timers.isEmpty()) {
-            Text(
-                modifier = Modifier.align(Alignment.Center),
-                text = stringResource(R.string.no_timers),
-                style = Typography.bodyLarge
-            )
-        } else {
-            LazyColumn(
-                modifier = Modifier
-                    .align(Alignment.Center)
-            ) {
-                items(state.timers) { timer ->
-                    ItemTimer(
-                        time = timer.timeString,
-                        onItemClick = {
-                            navController.navigate(Screen.TimerGraph.TimerDetails().route) {
-                                // Pop up to the start destination of the graph to
-                                // avoid building up a large stack of destinations
-                                // on the back stack as users select items
-                                popUpTo(navController.graph.findStartDestination().id) {
-                                    saveState = true
-                                }
-                                // Avoid multiple copies of the same destination when
-                                // reselecting the same item
-                                launchSingleTop = true
-                                // Restore state when reselecting a previously selected item
-                                restoreState = true
-                            }
-                        },
-                        onPlayClick = {
-                            connection.startTimer()
-                            viewModel.onEvent(TimerScreenEvent.StartTimer)
-                        },
-                        onPauseClick = {
-                            connection.pauseTimer(timer.id)
-                            viewModel.onEvent(TimerScreenEvent.PauseTimer)
-                        },
-                        onStopClick = {
-                            connection.stopTimer(timer.id)
-                            viewModel.onEvent(TimerScreenEvent.StartTimer)
-                        }
-                    )
-                }
-            }
-        }
-        BaseActionButton(
-            modifier = Modifier
-                .align(Alignment.BottomCenter)
-                .padding(6.dp),
-            imageVector = Icons.Filled.Add,
-            onClick = {
-                navController.navigate(Screen.TimerGraph.AddTimer().route)
-            }
-        )
     }
 
 }

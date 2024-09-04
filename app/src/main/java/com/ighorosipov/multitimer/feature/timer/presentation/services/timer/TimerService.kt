@@ -13,6 +13,7 @@ import android.os.IBinder
 import androidx.core.app.ServiceCompat
 import androidx.core.content.ContextCompat
 import com.ighorosipov.multitimer.di.DefaultDispatcher
+import com.ighorosipov.multitimer.feature.ringtone.domain.model.Ringtone
 import com.ighorosipov.multitimer.feature.timer.domain.model.Timer
 import com.ighorosipov.multitimer.feature.timer.domain.model.TimerEvent
 import com.ighorosipov.multitimer.feature.timer.domain.use_case.DeleteTimerUseCase
@@ -53,7 +54,7 @@ class TimerService : Service() {
 
     private var timers = emptyList<Timer>()
 
-    private var currentTimer = Timer(time = 10000)
+    private var currentTimer = Timer(time = 10000, color = 0, ringtone = Ringtone("",""))
 
 
     /**
@@ -121,7 +122,7 @@ class TimerService : Service() {
                 filter,
                 ContextCompat.RECEIVER_EXPORTED
             )
-            startTimer(Timer(time = 10000))
+            startTimer(Timer(time = 10000, color = 0, ringtone = Ringtone("","")))
         }
         return START_STICKY
     }

@@ -14,4 +14,6 @@ sealed class AddTimerEvent {
 
     data class RingtoneCheck(val index: Int, val uri: String): AddTimerEvent()
 
+    data object SaveTimer: AddTimerEvent()
+
 }
