@@ -37,6 +37,7 @@ import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.ighorosipov.multitimer.ui.theme.Typography
+import java.util.concurrent.TimeUnit
 
 @Composable
 fun TimerWidget(
@@ -45,10 +46,23 @@ fun TimerWidget(
     hoursText: @Composable (() -> Unit)? = null,
     minutesText: @Composable (() -> Unit)? = null,
     secondsText: @Composable (() -> Unit)? = null,
+    onTimeChange: (Long) -> Unit,
 ) {
+    var hours by remember { mutableIntStateOf(0) }
+    var minutes by remember { mutableIntStateOf(0) }
+    var seconds by remember { mutableIntStateOf(0) }
+    val time by remember {
+        derivedStateOf {
+            TimeUnit.HOURS.toMillis(hours.toLong()) +
+                    TimeUnit.MINUTES.toMillis(minutes.toLong()) +
+                    TimeUnit.SECONDS.toMillis(seconds.toLong())
+        }
+    }
+
+    onTimeChange(time)
     Column(
         modifier = modifier
-        .fillMaxWidth()
+            .fillMaxWidth()
     ) {
         Box(contentAlignment = Alignment.Center) {
             Row(
@@ -59,7 +73,10 @@ fun TimerWidget(
             ) {
                 TimerList(
                     numbers = (0..99).toList(),
-                    limitItems = limitItems
+                    limitItems = limitItems,
+                    onTimeChange = {
+                        hours = it
+                    }
                 )
                 Spacer(
                     modifier = Modifier
@@ -69,7 +86,10 @@ fun TimerWidget(
                 )
                 TimerList(
                     numbers = (0..59).toList(),
-                    limitItems = limitItems
+                    limitItems = limitItems,
+                    onTimeChange = {
+                        minutes = it
+                    }
                 )
                 Spacer(
                     modifier = Modifier
@@ -79,7 +99,10 @@ fun TimerWidget(
                 )
                 TimerList(
                     numbers = (0..59).toList(),
-                    limitItems = limitItems
+                    limitItems = limitItems,
+                    onTimeChange = {
+                        seconds = it
+                    }
                 )
             }
             Box(
@@ -117,6 +140,7 @@ fun TimerList(
     modifier: Modifier = Modifier,
     numbers: List<Int>,
     limitItems: Int,
+    onTimeChange: (Int) -> Unit,
 ) {
     val listState =
         rememberLazyListState(Int.MAX_VALUE / 2 - (Int.MAX_VALUE / 2) % numbers.size - 1)
@@ -141,7 +165,10 @@ fun TimerList(
                     .fillMaxWidth()
                     .height(45.dp)
                     .onSizeChanged { size -> itemHeightPixels = size.height }
-                    .wrapContentHeight(align = Alignment.CenterVertically)
+                    .wrapContentHeight(align = Alignment.CenterVertically),
+                getSelectedTimeIndex = {
+                    onTimeChange(numbers[it % itemCount])
+                }
             )
         }
 
@@ -155,6 +182,7 @@ fun TimerItem(
     index: Int,
     rotation: Float,
     modifier: Modifier = Modifier,
+    getSelectedTimeIndex: (Int) -> Unit,
 ) {
     val focusTextColor = MaterialTheme.colorScheme.onBackground
     val noFocusTextColor = MaterialTheme.colorScheme.tertiary
@@ -165,7 +193,10 @@ fun TimerItem(
                 index = index,
                 rotation = rotation,
                 focusColor = focusTextColor,
-                noFocusColor = noFocusTextColor
+                noFocusColor = noFocusTextColor,
+                getSelectedTimeIndex = {
+                    getSelectedTimeIndex(it)
+                }
             )
         }
     }
@@ -191,6 +222,7 @@ private fun calculateItemChanges(
     rotation: Float,
     focusColor: Color,
     noFocusColor: Color,
+    getSelectedTimeIndex: (Int) -> Unit,
 ): TimerItemState {
     var textColor = noFocusColor
     var defaultRotation = 1f
@@ -206,6 +238,7 @@ private fun calculateItemChanges(
         if (target in -delta..delta) {
             textColor = focusColor
             defaultRotation = 1f
+            getSelectedTimeIndex(index)
         } else {
             defaultRotation = rotation
         }

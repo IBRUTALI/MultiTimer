@@ -1,6 +1,6 @@
 package com.ighorosipov.multitimer.feature.timer.data.mapper
 
-import com.ighorosipov.multitimer.feature.timer.data.room.model.TimerEntity
+import com.ighorosipov.multitimer.feature.timer.data.db.model.TimerEntity
 import com.ighorosipov.multitimer.feature.timer.domain.model.Timer
 import com.ighorosipov.multitimer.feature.timer.domain.model.TimerEvent
 
@@ -10,6 +10,9 @@ class TimerMapper {
         return Timer(
             id = timerEntity.id,
             time = timerEntity.time,
+            name = timerEntity.name,
+            color = timerEntity.color,
+            ringtone = timerEntity.ringtone,
             event = TimerEvent.Pause
         )
     }
@@ -17,7 +20,10 @@ class TimerMapper {
     fun timerToTimerEntity(timer: Timer): TimerEntity {
         return TimerEntity(
             id = timer.id,
-            time = timer.time
+            time = timer.time,
+            name = timer.name,
+            color = timer.color,
+            ringtone = timer.ringtone,
         )
     }
 

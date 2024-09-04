@@ -198,6 +198,9 @@ fun AddTimerScreen(
                         textAlign = TextAlign.Center,
                         style = Typography.bodySmall
                     )
+                },
+                onTimeChange = {
+                    viewModel.onEvent(AddTimerEvent.ChangeTimerDuration(it))
                 }
             )
             HorizontalDivider(

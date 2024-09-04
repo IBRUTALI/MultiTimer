@@ -15,6 +15,7 @@ hiltAndroidCompiler = "2.49"
 hiltLifecycleViewmodel = "1.2.0"
 ksp = "1.9.0-1.0.13"
 room-runtime = "2.6.1"
+gson = "2.8.5"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -39,6 +40,8 @@ hilt-android-compiler = { module = "com.google.dagger:hilt-android-compiler", ve
 room-compiler = { module = "androidx.room:room-compiler", version.ref = "room-runtime" }
 room-ktx = { module = "androidx.room:room-ktx", version.ref = "room-runtime" }
 room-runtime = { module = "androidx.room:room-runtime", version.ref = "room-runtime" }
+gson = { module = "com.google.code.gson:gson", version.ref = "gson" }
+
 
 [plugins]
 androidApplication = { id = "com.android.application", version.ref = "agp" }

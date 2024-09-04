@@ -1,11 +1,11 @@
-package com.ighorosipov.multitimer.feature.timer.data.room
+package com.ighorosipov.multitimer.core.room
 
 import androidx.room.Dao
 import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
-import com.ighorosipov.multitimer.feature.timer.data.room.model.TimerEntity
+import com.ighorosipov.multitimer.feature.timer.data.db.model.TimerEntity
 
 @Dao
 interface TimerDao {
