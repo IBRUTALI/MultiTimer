@@ -1,0 +1,44 @@
+<resources>
+
+    <!-- BASE -->
+    <string name="app_name">MultiTimer</string>
+    <string name="alarm">Будильник</string>
+    <string name="world_time_short">Мир. время</string>
+    <string name="world_time">Мировое время</string>
+    <string name="stopwatch">Секундомер</string>
+    <string name="timer">Таймер</string>
+    <string name="timer_active">Таймер запущен</string>
+    <string name="timer_inactive">Таймер на паузе</string>
+    <string name="time_is_up">Время истекло</string>
+    <string name="start">Start</string>
+    <string name="pause">Pause</string>
+    <string name="stop">Stop</string>
+    <string name="ok" translatable="false">OK</string>
+
+    <!-- AlarmScreen -->
+
+    <!-- WorldTimeScreen -->
+
+    <!-- StopwatchScreen -->
+
+    <!-- TimerScreen -->
+    <string name="timer_details">Таймер</string>
+
+    <!-- AddTimerScreen -->
+    <string name="add_timer">Добавить таймер</string>
+    <string name="tab">Вкладка</string>
+    <string name="no_timers">Нет таймеров</string>
+    <string name="timer_name">Имя таймера</string>
+    <string name="timer_duration">Длительность таймера</string>
+    <string name="set_custom_duration">Установить свое время</string>
+    <string name="time_in_minutes">Время в минутах</string>
+    <string name="h">Ч</string>
+    <string name="m">М</string>
+    <string name="s">С</string>
+    <string name="color">Цвет</string>
+    <string name="notification_sound">Звук уведомления</string>
+
+    <!-- TimerDetailsScreen -->
+
+
+</resources>

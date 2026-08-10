@@ -1,21 +1,27 @@
 [versions]
-agp = "8.3.1"
-kotlin = "1.9.0"
-coreKtx = "1.13.1"
+agp = "8.12.3"
+kotlin = "2.2.21"
+coreKtx = "1.15.0"
 junit = "4.13.2"
 junitVersion = "1.1.5"
 espressoCore = "3.5.1"
-lifecycleRuntimeKtx = "2.8.1"
-activityCompose = "1.9.0"
-composeBom = "2024.06.00"
-materialIconsExtended = "1.6.8"
-navigationCompose = "2.7.7"
-hiltAndroid = "2.49"
-hiltAndroidCompiler = "2.49"
+lifecycleRuntimeKtx = "2.10.0"
+activityCompose = "1.11.0"
+composeBom = "2025.11.00"
+materialIconsExtended = "1.7.8"
+navigationCompose = "2.8.4"
+serialization = "1.6.3"
+hiltAndroid = "2.58"
+hiltAndroidCompiler = "2.58"
 hiltLifecycleViewmodel = "1.2.0"
-ksp = "1.9.0-1.0.13"
-room-runtime = "2.6.1"
-gson = "2.8.5"
+ksp = "2.2.21-2.0.5"
+room-runtime = "2.8.4"
+gson = "2.10.1"
+desugar_jdk_libs = "2.1.2"
+jetbrainsKotlinJvm = "2.2.21"
+appcompat = "1.7.1"
+material = "1.13.0"
+coreSplashscreen = "1.0.1"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -35,17 +41,28 @@ androidx-material3 = { group = "androidx.compose.material3", name = "material3" 
 androidx-hilt-navigation-compose = { module = "androidx.hilt:hilt-navigation-compose", version.ref = "hiltLifecycleViewmodel" }
 androidx-material-icons-extended = { module = "androidx.compose.material:material-icons-extended", version.ref = "materialIconsExtended" }
 androidx-navigation-compose = { module = "androidx.navigation:navigation-compose", version.ref = "navigationCompose" }
+kotlinx-serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "serialization" }
 hilt-android = { module = "com.google.dagger:hilt-android", version.ref = "hiltAndroid" }
 hilt-android-compiler = { module = "com.google.dagger:hilt-android-compiler", version.ref = "hiltAndroidCompiler" }
 room-compiler = { module = "androidx.room:room-compiler", version.ref = "room-runtime" }
 room-ktx = { module = "androidx.room:room-ktx", version.ref = "room-runtime" }
 room-runtime = { module = "androidx.room:room-runtime", version.ref = "room-runtime" }
 gson = { module = "com.google.code.gson:gson", version.ref = "gson" }
+desugar_jdk_libs = { module = "com.android.tools:desugar_jdk_libs", version.ref = "desugar_jdk_libs" }
+androidx-appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "appcompat" }
+material = { group = "com.google.android.material", name = "material", version.ref = "material" }
+androidx-material-icons-core = { group = "androidx.compose.material", name = "material-icons-core" }
+androidx-material3-window-size = { group = "androidx.compose.material3", name = "material3-window-size-class" }
+androidx-core-splashscreen = { module = "androidx.core:core-splashscreen", version.ref = "coreSplashscreen" }
 
 
 [plugins]
-androidApplication = { id = "com.android.application", version.ref = "agp" }
-jetbrainsKotlinAndroid = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
+android-application = { id = "com.android.application", version.ref = "agp" }
+android-library = { id = "com.android.library", version.ref = "agp" }
+jetbrains-kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
+kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
 ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
 hilt = { id = "com.google.dagger.hilt.android", version.ref = "hiltAndroid" }
+compose-compiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
+jetbrains-kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "jetbrainsKotlinJvm" }
 

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:tools="http://schemas.android.com/tools">
+
+    <style name="Theme.MultiTimer" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="android:forceDarkAllowed" tools:targetApi="q">false</item>
+    </style>
+
+    <style name="Theme.App.Starting" parent="Theme.SplashScreen">
+        <item name="android:windowActionBar">false</item>
+        <item name="android:windowNoTitle">true</item>
+        <item name="windowSplashScreenBackground">@color/mainWindowBackground</item>
+        <item name="windowSplashScreenAnimatedIcon">@drawable/main_logo_splash</item>
+        <item name="postSplashScreenTheme">@style/Theme.MultiTimer</item>
+    </style>
+</resources>
