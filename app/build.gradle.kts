@@ -1,18 +1,20 @@
 plugins {
-    alias(libs.plugins.androidApplication)
-    alias(libs.plugins.jetbrainsKotlinAndroid)
-    alias(libs.plugins.ksp)
+    alias(libs.plugins.android.application)
+    alias(libs.plugins.jetbrains.kotlin.android)
+    alias(libs.plugins.kotlin.serialization)
+    alias(libs.plugins.compose.compiler)
     alias(libs.plugins.hilt)
+    alias(libs.plugins.ksp)
 }
 
 android {
     namespace = "com.ighorosipov.multitimer"
-    compileSdk = 34
+    compileSdk = 36
 
     defaultConfig {
         applicationId = "com.ighorosipov.multitimer"
-        minSdk = 24
-        targetSdk = 34
+        minSdk = 27
+        targetSdk = 35
         versionCode = 1
         versionName = "1.0"
 
@@ -31,19 +33,31 @@ android {
             )
         }
     }
-    compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_1_8
-        targetCompatibility = JavaVersion.VERSION_1_8
+
+    flavorDimensions.add("app")
+
+    productFlavors {
+        create("multitimer") {
+            isDefault = true
+            dimension = "app"
+            applicationId = "com.ighorosipov.multitimer"
+        }
     }
+
+    compileOptions {
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
+        isCoreLibraryDesugaringEnabled = true
+    }
+
     kotlinOptions {
-        jvmTarget = "1.8"
+        jvmTarget = "17"
+        freeCompilerArgs = listOf("-XXLanguage:+PropertyParamAnnotationDefaultTargetMode")
     }
     buildFeatures {
         compose = true
     }
-    composeOptions {
-        kotlinCompilerExtensionVersion = "1.5.1"
-    }
+
     packaging {
         resources {
             excludes += "/META-INF/{AL2.0,LGPL2.1}"
@@ -52,6 +66,18 @@ android {
 }
 
 dependencies {
+
+    // Module
+    implementation(project(":data"))
+    implementation(project(":domain"))
+    implementation(project(":utils"))
+    implementation(project(":core_presentation"))
+    implementation(project(":feature:timer"))
+    implementation(project(":feature:alarm"))
+    implementation(project(":feature:player"))
+    implementation(project(":feature:ringtone"))
+    implementation(project(":feature:stopwatch"))
+    implementation(project(":feature:world_time"))
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
@@ -69,7 +95,9 @@ dependencies {
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
 
+    // Navigation
     implementation(libs.androidx.navigation.compose)
+    implementation(libs.kotlinx.serialization.json)
 
     implementation(libs.androidx.material.icons.extended)
 
@@ -78,10 +106,9 @@ dependencies {
     ksp( libs.hilt.android.compiler)
     implementation(libs.androidx.hilt.navigation.compose)
 
-    //Room
-    implementation(libs.room.runtime)
-    implementation(libs.room.ktx)
-    ksp(libs.room.compiler)
+    // Desugaring
+    coreLibraryDesugaring(libs.desugar.jdk.libs)
 
-    implementation(libs.gson)
+    // Splash API
+    implementation(libs.androidx.core.splashscreen)
 }

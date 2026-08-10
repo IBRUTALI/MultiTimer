@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="statusBarColor">#04171C</color>
+    <color name="mainWindowBackground">#04171C</color>
+    <color name="iconBackground">#04171C</color>
+
+    <color name="notificationCard">#FF042A38</color>
+    <color name="notificationPrimary">#FF95E3FA</color>
+    <color name="notificationRed">#FFE75D5D</color>
+    <color name="notificationGreen">#FF22FF00</color>
+    <color name="notificationText">#FFFFFFFF</color>
+    <color name="elem_main">#FFFFFF</color>
+</resources>
