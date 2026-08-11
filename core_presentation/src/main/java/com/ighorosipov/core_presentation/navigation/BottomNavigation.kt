@@ -24,8 +24,8 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavDestination.Companion.hasRoute
 import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.compose.currentBackStackEntryAsState
-import com.ighorosipov.core_presentation.theme.LocalCustomColorsPalette
 import com.ighorosipov.core_presentation.components.MainAppState
+import com.ighorosipov.core_presentation.theme.LocalCustomColorsPalette
 
 @Composable
 fun BottomNavigation(
@@ -74,7 +74,7 @@ fun BottomNavigation(
         if (isVisible) {
             NavigationBar(
                 modifier = modifier,
-                containerColor = LocalCustomColorsPalette.current.white,
+                containerColor = LocalCustomColorsPalette.current.surfaceContainerLow,
                 tonalElevation = 0.dp
             ) {
 
@@ -88,10 +88,10 @@ fun BottomNavigation(
 
                     LaunchedEffect(isSelected) {
                         if (isSelected) {
-                            scaleState.animateTo(1.2f, tween(100))
-                            scaleState.animateTo(1f, tween(100))
+                            scaleState.animateTo(1.2f, tween(50))
+                            scaleState.animateTo(1f, tween(50))
                         } else {
-                            scaleState.animateTo(1f, tween(100))
+                            scaleState.animateTo(1f, tween(50))
                         }
                     }
 
@@ -101,14 +101,14 @@ fun BottomNavigation(
                             Icon(
                                 imageVector = ImageVector.vectorResource(id = item.icon),
                                 contentDescription = null,
-                                modifier = Modifier.size(32.dp)
+                                modifier = Modifier.size(28.dp)
                             )
                         },
                         selected = isSelected,
                         colors = NavigationBarItemDefaults.colors(
-                            indicatorColor = LocalCustomColorsPalette.current.white,
-                            selectedIconColor = LocalCustomColorsPalette.current.white,
-                            unselectedIconColor = LocalCustomColorsPalette.current.white
+                            indicatorColor = LocalCustomColorsPalette.current.inversePrimary,
+                            selectedIconColor = LocalCustomColorsPalette.current.onPrimaryContainer,
+                            unselectedIconColor = LocalCustomColorsPalette.current.onSurface
                         ),
                         onClick = {
                             appState.navController.navigateToTab(

@@ -1,6 +1,7 @@
 package com.ighorosipov.timer.screen.timer
 
 import android.content.Context
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -25,7 +26,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.ighorosipov.core_presentation.components.BaseActionButton
 import com.ighorosipov.core_presentation.components.MainAppState
 import com.ighorosipov.core_presentation.components.handleGlobalIntent
-import com.ighorosipov.timer.components.ItemTimer
+import com.ighorosipov.timer.components.TimerCard
 import com.ighorosipov.timer.viewmodel.TimerViewModel
 import com.ighorosipov.utils.R
 
@@ -75,21 +76,24 @@ fun TimerScreen(
         } else {
             LazyColumn(
                 modifier = Modifier
-                    .align(Alignment.Center)
+                    .align(Alignment.TopStart),
+                verticalArrangement = Arrangement.spacedBy(10.dp)
             ) {
                 items(state.timers) { timer ->
-                    ItemTimer(
+                    TimerCard(
+                        timerName = timer.name,
                         time = timer.timeString,
-                        onItemClick = {
-                            // todo
-                        },
-                        onPlayClick = {
-                            // todo
-                        },
-                        onPauseClick = {
-                            // todo
+                        isPlaying = true,
+                        onPlayPauseClick = {
+                            //todo
                         },
                         onStopClick = {
+                            // todo
+                        },
+                        onDeleteClick = { false
+                            // todo
+                        },
+                        onEditClick = {
                             // todo
                         }
                     )
