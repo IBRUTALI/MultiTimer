@@ -155,7 +155,7 @@ fun TimerList(
     ) {
         items(Int.MAX_VALUE) { item ->
             val actualIndex = item % itemCount
-            TimerItem(
+            TimerCard(
                 title = numbers[actualIndex].toString(),
                 state = listState,
                 index = item,
@@ -175,7 +175,7 @@ fun TimerList(
 }
 
 @Composable
-fun TimerItem(
+fun TimerCard(
     title: String,
     state: LazyListState,
     index: Int,

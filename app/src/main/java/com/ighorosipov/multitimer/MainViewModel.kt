@@ -12,6 +12,16 @@ class MainViewModel @Inject constructor(
     initialState = MainState()
 ) {
 
+    init {
+        startSplashCondition()
+    }
 
+    private fun startSplashCondition() {
+        updateState {
+            state.value.copy(
+                splashCondition = false
+            )
+        }
+    }
 
 }
