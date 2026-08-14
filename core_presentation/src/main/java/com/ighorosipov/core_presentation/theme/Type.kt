@@ -22,51 +22,63 @@ private val FontBold = FontFamily(
 val BaseTypography = Typography(
     headlineLarge = TextStyle(
         fontFamily = FontMedium,
-        fontSize = 24.sp
+        fontSize = 24.sp,
+        fontFeatureSettings = "liga 0"
     ),
     headlineMedium = TextStyle(
         fontFamily = FontBold,
-        fontSize = 22.sp
+        fontSize = 22.sp,
+        fontFeatureSettings = "liga 0"
     ),
     headlineSmall = TextStyle(
         fontFamily = FontBold,
-        fontSize = 16.sp
+        fontSize = 16.sp,
+        fontFeatureSettings = "liga 0"
     ),
     titleLarge = TextStyle(
         fontFamily = FontMedium,
-        fontSize = 20.sp
+        fontSize = 20.sp,
+        fontFeatureSettings = "liga 0"
     ),
     titleMedium = TextStyle(
         fontFamily = FontLight,
-        fontSize = 18.sp
+        fontSize = 18.sp,
+        fontFeatureSettings = "liga 0"
     ),
     titleSmall = TextStyle(
         fontFamily = FontLight,
-        fontSize = 16.sp
+        fontSize = 16.sp,
+        fontFeatureSettings = "liga 0"
     ),
     bodyLarge = TextStyle(
         fontFamily = FontBold,
-        fontSize = 15.sp
+        fontSize = 15.sp,
+        fontFeatureSettings = "liga 0"
     ),
     bodyMedium = TextStyle(
         fontFamily = FontBold,
-        fontSize = 14.sp
+        fontSize = 14.sp,
+        fontFeatureSettings = "liga 0"
     ),
     bodySmall = TextStyle(
         fontFamily = FontLight,
-        fontSize = 13.sp
+        fontSize = 13.sp,
+        fontFeatureSettings = "liga 0"
     ),
     labelLarge = TextStyle(
         fontFamily = FontLight,
-        fontSize = 15.sp
+        fontSize = 15.sp,
+        fontFeatureSettings = "liga 0"
     ),
     labelMedium = TextStyle(
         fontFamily = FontLight,
-        fontSize = 14.sp
+        fontSize = 14.sp,
+        fontFeatureSettings = "liga 0"
     ),
     labelSmall = TextStyle(
         fontFamily = FontLight,
-        fontSize = 12.sp
+        fontSize = 12.sp,
+        fontFeatureSettings = "liga 0"
     )
 )
 

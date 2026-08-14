@@ -13,4 +13,6 @@ interface BaseUIIntent {
         val text: UiText,
         val routesToShow: List<KClass<out Routes>>? = null
     ) : BaseUIIntent
+
+    data object NavigateBack: BaseUIIntent
 }

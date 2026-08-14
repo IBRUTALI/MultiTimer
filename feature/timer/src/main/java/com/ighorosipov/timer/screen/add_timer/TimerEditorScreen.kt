@@ -30,6 +30,8 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.ighorosipov.core_presentation.components.BaseCheckBox
 import com.ighorosipov.core_presentation.components.BaseEditField
+import com.ighorosipov.core_presentation.components.BaseToolbar
+import com.ighorosipov.core_presentation.components.IconParams
 import com.ighorosipov.core_presentation.components.MainAppState
 import com.ighorosipov.core_presentation.components.handleGlobalIntent
 import com.ighorosipov.core_presentation.theme.LocalCustomColorsPalette
@@ -37,14 +39,14 @@ import com.ighorosipov.timer.components.ItemColor
 import com.ighorosipov.timer.components.ItemRingtone
 import com.ighorosipov.timer.components.TimerWidget
 import com.ighorosipov.timer.components.getTimerColors
-import com.ighorosipov.timer.viewmodel.AddTimerViewModel
+import com.ighorosipov.timer.viewmodel.TimerEditorViewModel
 import com.ighorosipov.utils.R
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun AddTimerScreen(
+fun TimerEditorScreen(
     appState: MainAppState,
-    viewModel: AddTimerViewModel = hiltViewModel(),
+    viewModel: TimerEditorViewModel = hiltViewModel(),
     showSnackbar: (
         String,
         SnackbarDuration,
@@ -83,6 +85,14 @@ fun AddTimerScreen(
             .verticalScroll(rememberScrollState())
             .fillMaxSize()
     ) {
+        BaseToolbar(
+            iconParams = IconParams(
+                icon = R.drawable.outline_arrow_back,
+                iconSize = 24
+            ),
+            title = stringResource(R.string.timer),
+            onIconClick = viewModel::onBackClick
+        )
         BaseEditField(
             inputValue = state.timerName,
             modifier = Modifier.padding(16.dp),
@@ -232,7 +242,7 @@ fun AddTimerScreen(
 private fun handleIntent(
     appState: MainAppState,
     context: Context,
-    intent: AddTimerScreenIntent
+    intent: TimerEditorScreenIntent
 ) {
     //todo
 }

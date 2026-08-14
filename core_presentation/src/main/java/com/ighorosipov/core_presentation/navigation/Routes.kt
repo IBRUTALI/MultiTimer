@@ -3,6 +3,7 @@ package com.ighorosipov.core_presentation.navigation
 import android.os.Bundle
 import androidx.annotation.DrawableRes
 import com.ighorosipov.utils.R
+import com.ighorosipov.utils.TimerEditorScreenType
 import kotlinx.serialization.Serializable
 
 sealed class BottomNavItems(
@@ -59,7 +60,7 @@ sealed class Routes {
     @Serializable
     data object TimerScreen : Routes()
     @Serializable
-    data object AddTimerScreen : Routes()
+    data class TimerEditorScreen(val screenType: TimerEditorScreenType) : Routes()
     @Serializable
     data object TimerDetailsScreen : Routes()
 
