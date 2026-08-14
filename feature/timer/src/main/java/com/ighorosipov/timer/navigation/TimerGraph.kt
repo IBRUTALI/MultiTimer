@@ -6,7 +6,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.navigation
 import com.ighorosipov.core_presentation.components.MainAppState
 import com.ighorosipov.core_presentation.navigation.Routes
-import com.ighorosipov.timer.screen.add_timer.AddTimerScreen
+import com.ighorosipov.timer.screen.add_timer.TimerEditorScreen
 import com.ighorosipov.timer.screen.timer.TimerScreen
 import com.ighorosipov.timer.screen.timer_details.TimerDetailsScreen
 
@@ -30,8 +30,8 @@ fun NavGraphBuilder.timerGraph(
             )
         }
 
-        composable<Routes.AddTimerScreen> {
-            AddTimerScreen(
+        composable<Routes.TimerEditorScreen> {
+            TimerEditorScreen(
                 appState = appState,
                 showSnackbar = showSnackbar
             )

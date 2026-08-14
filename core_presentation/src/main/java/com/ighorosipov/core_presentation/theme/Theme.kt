@@ -20,7 +20,9 @@ import androidx.compose.ui.platform.LocalWindowInfo
 import androidx.compose.ui.unit.DpSize
 import androidx.compose.ui.unit.dp
 
-private val DarkColorScheme = darkColorScheme()
+private val DarkColorScheme = darkColorScheme(
+    background = Color(0xFF161312)
+)
 
 private val LightColorScheme = lightColorScheme()
 

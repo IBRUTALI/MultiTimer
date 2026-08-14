@@ -3,6 +3,7 @@ package com.ighorosipov.core_presentation.components
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.IconButtonDefaults
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.scale
@@ -18,14 +19,15 @@ fun BaseActionButton(
     IconButton(
         modifier = modifier
             .scale(1.2f),
-        colors = IconButtonDefaults.iconButtonColors(containerColor = LocalCustomColorsPalette.current.red),
+        shape = MaterialTheme.shapes.small,
+        colors = IconButtonDefaults.iconButtonColors(containerColor = LocalCustomColorsPalette.current.primary),
         onClick = {
             onClick()
         }
     ) {
         Icon(
             imageVector = imageVector,
-            tint = LocalCustomColorsPalette.current.white,
+            tint = LocalCustomColorsPalette.current.onPrimary,
             contentDescription = null
         )
     }

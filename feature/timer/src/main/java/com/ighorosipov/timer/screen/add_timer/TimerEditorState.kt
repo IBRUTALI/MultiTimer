@@ -1,8 +1,10 @@
 package com.ighorosipov.timer.screen.add_timer
 
 import com.ighorosipov.domain.model.Ringtone
+import com.ighorosipov.utils.TimerEditorScreenType
 
-data class AddTimerState(
+data class TimerEditorState(
+    val screenType: TimerEditorScreenType = TimerEditorScreenType.AddType,
     val timerName: String = "",
     val customDurationEnabled: Boolean = false,
     val customDurationText: String = "",
@@ -19,6 +21,6 @@ data class AddTimerState(
     ) to false
 )
 
-sealed class AddTimerScreenIntent {
+sealed class TimerEditorScreenIntent {
     // todo
 }

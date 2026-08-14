@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -34,14 +35,18 @@ import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.ighorosipov.core_presentation.components.NotificationIconButton
+import com.ighorosipov.core_presentation.components.RetryIconButton
 import com.ighorosipov.core_presentation.theme.LocalCustomColorsPalette
 import com.ighorosipov.core_presentation.theme.MultiTimerTheme
 import com.ighorosipov.utils.R
+import com.ighorosipov.utils.TimeFormat
+import com.ighorosipov.utils.formatTime
 
 @Composable
 fun TimerCard(
     timerName: String,
-    time: String,
+    time: Long,
     modifier: Modifier = Modifier,
     isPlaying: Boolean,
     onPlayPauseClick: () -> Unit,
@@ -108,7 +113,7 @@ fun TimerCard(
 @Composable
 fun ItemTimerContent(
     timerName: String,
-    time: String,
+    time: Long,
     isPlaying: Boolean,
     onPlayPauseClick: () -> Unit,
     onStopClick: () -> Unit,
@@ -126,29 +131,44 @@ fun ItemTimerContent(
             modifier = Modifier
                 .padding(horizontal = 12.dp, vertical = 8.dp)
         ) {
-            if (timerName.isNotBlank()) {
-                Text(
-                    text = timerName,
-                    color = LocalCustomColorsPalette.current.onSurface,
-                    style = MaterialTheme.typography.headlineLarge
-                )
-            }
             Row(
                 modifier = Modifier
                     .fillMaxWidth(),
                 verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.SpaceBetween
+            ) {
+                Text(
+                    text = timerName,
+                    color = LocalCustomColorsPalette.current.onSurface,
+                    style = MaterialTheme.typography.titleLarge
+                )
+                IconButton(onClick = onEditClick) {
+                    Icon(
+                        imageVector = Icons.Default.Edit,
+                        contentDescription = "edit",
+                        tint = LocalCustomColorsPalette.current.onPrimaryContainer
+                    )
+                }
+            }
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(bottom = 10.dp),
+                verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.Start
             ) {
                 Text(
-                    text = time,
+                    text = formatTime(
+                        timeMs = time,
+                        format = TimeFormat.HH_MM_SS
+                    ),
                     color = LocalCustomColorsPalette.current.onSurface,
-                    style = MaterialTheme.typography.titleLarge,
+                    style = MaterialTheme.typography.displayMedium,
                     modifier = Modifier.weight(1f)
                 )
                 Row(
                     horizontalArrangement = Arrangement.spacedBy(4.dp),
-                    verticalAlignment = Alignment.CenterVertically,
-                    modifier = Modifier.weight(2f)
+                    verticalAlignment = Alignment.CenterVertically
                 ) {
                     IconButton(onClick = onPlayPauseClick) {
                         Icon(
@@ -159,24 +179,27 @@ fun ItemTimerContent(
                             tint = LocalCustomColorsPalette.current.onPrimaryContainer
                         )
                     }
+                }
 
-                    IconButton(onClick = onStopClick) {
-                        Icon(
-                            painter = painterResource(id = R.drawable.ic_stop),
-                            contentDescription = "stop",
-                            tint = LocalCustomColorsPalette.current.onPrimaryContainer
-                        )
+            }
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth(),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.Start
+            ) {
+                RetryIconButton(
+                    onIconClick = {
+                        //todo
                     }
-                }
-
-                IconButton(onClick = onEditClick) {
-                    Icon(
-                        imageVector = Icons.Default.Edit,
-                        contentDescription = "edit",
-                        tint = LocalCustomColorsPalette.current.onPrimaryContainer
-                    )
-                }
-
+                )
+                Spacer(modifier = Modifier.width(10.dp))
+                NotificationIconButton(
+                    isMuted = false, //todo
+                    onIconClick = {
+                        //todo
+                    }
+                )
             }
         }
     }
@@ -188,7 +211,7 @@ fun TimerCardPreviewLight() {
     MultiTimerTheme(darkTheme = false) {
         TimerCard(
             timerName = "Test",
-            time = "10:00",
+            time = 100000L,
             isPlaying = true,
             onPlayPauseClick = {},
             onStopClick = {},
@@ -204,7 +227,7 @@ fun TimerCardPreviewDark() {
     MultiTimerTheme(darkTheme = true) {
         TimerCard(
             timerName = "",
-            time = "10:00",
+            time = 100000L,
             isPlaying = false,
             onPlayPauseClick = {},
             onStopClick = {},

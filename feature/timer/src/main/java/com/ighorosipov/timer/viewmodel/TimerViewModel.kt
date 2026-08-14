@@ -1,11 +1,15 @@
 package com.ighorosipov.timer.viewmodel
 
 import androidx.lifecycle.viewModelScope
+import com.ighorosipov.core_presentation.misc.BaseUIIntent
+import com.ighorosipov.core_presentation.navigation.Routes
 import com.ighorosipov.core_presentation.viewmodel.BaseViewModel
+import com.ighorosipov.domain.model.Timer
 import com.ighorosipov.domain.use_case.GetTimersUseCase
 import com.ighorosipov.timer.screen.timer.TimerScreenIntent
 import com.ighorosipov.timer.screen.timer.TimerState
 import com.ighorosipov.utils.Resource
+import com.ighorosipov.utils.TimerEditorScreenType
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -43,6 +47,24 @@ class TimerViewModel @Inject constructor(
             }
 
         }
+    }
+
+    fun onAddTimerClick() {
+        sendIntent(
+            intent = BaseUIIntent.Navigate(Routes.TimerEditorScreen(
+                screenType = TimerEditorScreenType.AddType)
+            )
+        )
+    }
+
+    fun onEditTimerClick(
+        timer: Timer
+    ) {
+        sendIntent(
+            intent = BaseUIIntent.Navigate(Routes.TimerEditorScreen(
+                screenType = TimerEditorScreenType.EditType(timerId = timer.id))
+            )
+        )
     }
 
 }
