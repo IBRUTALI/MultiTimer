@@ -56,7 +56,8 @@ fun BottomNavigation(
 
     val isBottomBarVisible = remember(backStackState) {
         when (currentRoute) {
-            is Routes.TimerEditorScreen -> false
+            is Routes.TimerEditorScreen.Add -> false
+            is Routes.TimerEditorScreen.Edit -> false
             null -> false
 
             else -> true

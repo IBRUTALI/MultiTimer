@@ -1,5 +1,7 @@
 package com.ighorosipov.utils
 
+import java.util.concurrent.TimeUnit
+
 enum class TimeFormat(val formatStr: String) {
     HH_MM_SS("%02d:%02d:%02d"),   // 00:00:00
     MM_SS("%02d:%02d"),           // 00:00
@@ -24,5 +26,21 @@ fun formatTime(
         TimeFormat.HH_MM -> format.formatStr.format(hours, minutes)
         TimeFormat.SS ->format.formatStr.format(totalSeconds)
         TimeFormat.MS -> format.formatStr.format(totalSeconds, millis)
+    }
+}
+
+fun getTimeLongFromString(
+    value: String,
+    timeUnit: TimeUnit
+): Long? {
+    val number = value.trim().toLongOrNull() ?: return null
+    if (number < 0) return null
+
+    return when (timeUnit) {
+        TimeUnit.HOURS -> TimeUnit.HOURS.toMillis(number)
+        TimeUnit.MINUTES -> TimeUnit.MINUTES.toMillis(number)
+        TimeUnit.SECONDS -> TimeUnit.SECONDS.toMillis(number)
+        TimeUnit.MILLISECONDS -> number
+        else -> null
     }
 }

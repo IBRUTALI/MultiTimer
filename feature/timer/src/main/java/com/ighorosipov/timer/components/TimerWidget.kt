@@ -22,11 +22,13 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -34,31 +36,47 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import java.util.concurrent.TimeUnit
+import com.ighorosipov.core_presentation.theme.LocalCustomColorsPalette
+import com.ighorosipov.core_presentation.theme.MultiTimerTheme
+import com.ighorosipov.utils.R
+import kotlin.math.abs
 
 @Composable
 fun TimerWidget(
     modifier: Modifier = Modifier,
-    limitItems: Int,
-    hoursText: @Composable (() -> Unit)? = null,
-    minutesText: @Composable (() -> Unit)? = null,
-    secondsText: @Composable (() -> Unit)? = null,
+    initialTime: Long = 0L,
+    limitItems: Int = 10,
     onTimeChange: (Long) -> Unit,
 ) {
+    var initialHours by remember {
+        mutableIntStateOf(
+            (initialTime / 3_600_000).toInt()
+        )
+    }
+    var initialMinutes by remember {
+        mutableIntStateOf(
+            ((initialTime / 60_000) % 60).toInt()
+        )
+    }
+    var initialSeconds by remember {
+        mutableIntStateOf(
+            ((initialTime / 1000) % 60).toInt()
+        )
+    }
+
     var hours by remember { mutableIntStateOf(0) }
     var minutes by remember { mutableIntStateOf(0) }
     var seconds by remember { mutableIntStateOf(0) }
-    val time by remember {
-        derivedStateOf {
-            TimeUnit.HOURS.toMillis(hours.toLong()) +
-                    TimeUnit.MINUTES.toMillis(minutes.toLong()) +
-                    TimeUnit.SECONDS.toMillis(seconds.toLong())
-        }
+
+    LaunchedEffect(hours, minutes, seconds) {
+        val currentTimeMs = hours * 3_600_000L + minutes * 60_000L + seconds * 1000L
+        onTimeChange(currentTimeMs)
     }
 
-    onTimeChange(time)
     Column(
         modifier = modifier
             .fillMaxWidth()
@@ -73,7 +91,8 @@ fun TimerWidget(
                 TimerList(
                     numbers = (0..99).toList(),
                     limitItems = limitItems,
-                    onTimeChange = {
+                    initialValue = initialHours,
+                    onValueChange = {
                         hours = it
                     }
                 )
@@ -81,12 +100,13 @@ fun TimerWidget(
                     modifier = Modifier
                         .fillMaxHeight()
                         .width(1.dp)
-                        .background(MaterialTheme.colorScheme.tertiary)
+                        .background(LocalCustomColorsPalette.current.onSurface)
                 )
                 TimerList(
                     numbers = (0..59).toList(),
                     limitItems = limitItems,
-                    onTimeChange = {
+                    initialValue = initialMinutes,
+                    onValueChange = {
                         minutes = it
                     }
                 )
@@ -94,12 +114,13 @@ fun TimerWidget(
                     modifier = Modifier
                         .fillMaxHeight()
                         .width(1.dp)
-                        .background(MaterialTheme.colorScheme.tertiary)
+                        .background(LocalCustomColorsPalette.current.onSurface)
                 )
                 TimerList(
                     numbers = (0..59).toList(),
                     limitItems = limitItems,
-                    onTimeChange = {
+                    initialValue = initialSeconds,
+                    onValueChange = {
                         seconds = it
                     }
                 )
@@ -111,7 +132,7 @@ fun TimerWidget(
                     .padding(horizontal = 5.dp)
                     .align(Alignment.Center)
                     .clip(CircleShape)
-                    .background(MaterialTheme.colorScheme.tertiary.copy(alpha = 0.2f))
+                    .background(LocalCustomColorsPalette.current.primary.copy(alpha = 0.5f))
             )
         }
         Row(
@@ -119,15 +140,27 @@ fun TimerWidget(
                 .fillMaxWidth(),
             horizontalArrangement = Arrangement.SpaceAround
         ) {
-            if (hoursText != null) {
-                hoursText()
-            }
-            if (minutesText != null) {
-                minutesText()
-            }
-            if (secondsText != null) {
-                secondsText()
-            }
+            Text(
+                text = stringResource(R.string.h),
+                modifier = Modifier
+                    .padding(top = 10.dp),
+                textAlign = TextAlign.Center,
+                style = MaterialTheme.typography.bodyMedium
+            )
+            Text(
+                text = stringResource(R.string.m),
+                modifier = Modifier
+                    .padding(top = 10.dp),
+                textAlign = TextAlign.Center,
+                style = MaterialTheme.typography.bodyMedium
+            )
+            Text(
+                text = stringResource(R.string.s),
+                modifier = Modifier
+                    .padding(top = 10.dp),
+                textAlign = TextAlign.Center,
+                style = MaterialTheme.typography.bodyMedium
+            )
         }
 
     }
@@ -139,38 +172,80 @@ fun TimerList(
     modifier: Modifier = Modifier,
     numbers: List<Int>,
     limitItems: Int,
-    onTimeChange: (Int) -> Unit,
+    initialValue: Int,
+    onValueChange: (Int) -> Unit,
 ) {
-    val listState =
-        rememberLazyListState(Int.MAX_VALUE / 2 - (Int.MAX_VALUE / 2) % numbers.size - 1)
-    val snapFlingBehavior = rememberSnapFlingBehavior(lazyListState = listState)
-    var itemHeightPixels by remember { mutableIntStateOf(0) }
     val itemCount = numbers.size
+    val repeatCount = 100
+    val middle = (repeatCount / 2) * itemCount
+    val startIndex = indexFor(
+        value = initialValue,
+        middle = middle,
+        numbers = numbers
+    )
+    val listState = rememberLazyListState(startIndex)
+    val snapFlingBehavior = rememberSnapFlingBehavior(listState)
+
+    var itemHeightPx by remember { mutableIntStateOf(0) }
+    LaunchedEffect(initialValue) {
+        val target = indexFor(
+            value = initialValue,
+            middle = middle,
+            numbers = numbers
+        )
+        if (listState.firstVisibleItemIndex != target) {
+            listState.animateScrollToItem(target)
+        }
+    }
+
+    LaunchedEffect(listState) {
+        snapshotFlow {
+            val layoutInfo = listState.layoutInfo
+            val visible = layoutInfo.visibleItemsInfo
+            if (visible.isEmpty()) return@snapshotFlow null
+
+            val center = layoutInfo.viewportStartOffset +
+                    (layoutInfo.viewportEndOffset - layoutInfo.viewportStartOffset) / 2
+
+            visible.minByOrNull { item ->
+                val itemCenter = item.offset + item.size / 2
+                abs(itemCenter - center)
+            }?.index
+        }.collect { index ->
+            if (index == null) return@collect
+            if (listState.isScrollInProgress) return@collect
+
+            val newValue = numbers[index % itemCount]
+            if (newValue != initialValue) {
+                onValueChange(newValue)
+            }
+        }
+    }
+
     LazyColumn(
         modifier = modifier
-            .height(pixelsToDp(pixels = itemHeightPixels * limitItems))
+            .height(pixelsToDp(pixels = itemHeightPx * limitItems))
             .width(90.dp),
         state = listState,
         flingBehavior = snapFlingBehavior
     ) {
-        items(Int.MAX_VALUE) { item ->
-            val actualIndex = item % itemCount
+        items(repeatCount * itemCount) { item ->
+            val value = numbers[item % itemCount]
             TimerCard(
-                title = numbers[actualIndex].toString(),
+                title = value.toString().padStart(2, '0'),
                 state = listState,
                 index = item,
                 rotation = 40f,
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(45.dp)
-                    .onSizeChanged { size -> itemHeightPixels = size.height }
+                    .onSizeChanged { size -> itemHeightPx = size.height }
                     .wrapContentHeight(align = Alignment.CenterVertically),
                 getSelectedTimeIndex = {
-                    onTimeChange(numbers[it % itemCount])
+                    onValueChange(numbers[it % itemCount])
                 }
             )
         }
-
     }
 }
 
@@ -183,8 +258,8 @@ fun TimerCard(
     modifier: Modifier = Modifier,
     getSelectedTimeIndex: (Int) -> Unit,
 ) {
-    val focusTextColor = MaterialTheme.colorScheme.onBackground
-    val noFocusTextColor = MaterialTheme.colorScheme.tertiary
+    val focusTextColor = LocalCustomColorsPalette.current.onSurface
+    val noFocusTextColor = LocalCustomColorsPalette.current.onSecondaryContainer.copy(alpha = 0.5f)
     val itemState by remember {
         derivedStateOf {
             calculateItemChanges(
@@ -246,4 +321,43 @@ private fun calculateItemChanges(
         textColor = textColor,
         rotation = defaultRotation
     )
+}
+
+private fun indexFor(
+    value: Int,
+    middle: Int,
+    numbers: List<Int>
+): Int {
+    val valueIndex = value.coerceIn(0, numbers.lastIndex)
+    return (middle + valueIndex - 1).coerceAtLeast(0)
+}
+
+@Composable
+@Preview
+private fun TimerWidgetPreviewLight() {
+    MultiTimerTheme(
+        darkTheme = false
+    ) {
+        TimerWidget(
+            modifier = Modifier.background(LocalCustomColorsPalette.current.surface),
+            initialTime = 3666666,
+            limitItems = 3,
+            onTimeChange = {}
+        )
+    }
+}
+
+@Composable
+@Preview
+private fun TimerWidgetPreviewDark() {
+    MultiTimerTheme(
+        darkTheme = true
+    ) {
+        TimerWidget(
+            modifier = Modifier.background(LocalCustomColorsPalette.current.surface),
+            initialTime = 3666666,
+            limitItems = 3,
+            onTimeChange = {}
+        )
+    }
 }

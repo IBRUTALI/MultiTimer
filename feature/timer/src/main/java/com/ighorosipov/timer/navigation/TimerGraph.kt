@@ -9,6 +9,7 @@ import com.ighorosipov.core_presentation.navigation.Routes
 import com.ighorosipov.timer.screen.add_timer.TimerEditorScreen
 import com.ighorosipov.timer.screen.timer.TimerScreen
 import com.ighorosipov.timer.screen.timer_details.TimerDetailsScreen
+import com.ighorosipov.utils.TimerEditorScreenType
 
 fun NavGraphBuilder.timerGraph(
     appState: MainAppState,
@@ -30,9 +31,18 @@ fun NavGraphBuilder.timerGraph(
             )
         }
 
-        composable<Routes.TimerEditorScreen> {
+        composable<Routes.TimerEditorScreen.Add> {
             TimerEditorScreen(
                 appState = appState,
+                screenType = TimerEditorScreenType.Add,
+                showSnackbar = showSnackbar
+            )
+        }
+
+        composable<Routes.TimerEditorScreen.Edit> {
+            TimerEditorScreen(
+                appState = appState,
+                screenType = TimerEditorScreenType.Edit,
                 showSnackbar = showSnackbar
             )
         }

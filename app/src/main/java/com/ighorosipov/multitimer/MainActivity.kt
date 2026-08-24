@@ -14,7 +14,6 @@ import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Snackbar
 import androidx.compose.material3.SnackbarHost
@@ -30,6 +29,7 @@ import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import com.ighorosipov.core_presentation.components.MainAppState
 import com.ighorosipov.core_presentation.components.rememberAppState
 import com.ighorosipov.core_presentation.navigation.BottomNavigation
+import com.ighorosipov.core_presentation.theme.LocalCustomColorsPalette
 import com.ighorosipov.core_presentation.theme.MultiTimerTheme
 import com.ighorosipov.multitimer.navigation.NavigationGraph
 import com.ighorosipov.multitimer.ui.MainActivityIntent
@@ -67,7 +67,7 @@ class MainActivity : ComponentActivity() {
                     topBar = {},
                     modifier = Modifier
                         .fillMaxSize(),
-                    containerColor = MaterialTheme.colorScheme.background,
+                    containerColor = LocalCustomColorsPalette.current.background,
                     bottomBar = {
                         BottomNavigation(
                             appState = appState
