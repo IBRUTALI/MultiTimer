@@ -14,4 +14,5 @@ internal object AppColors {
     val Purple = Color(0xFF9C27B0)
     val Pink = Color(0xFFE91E63)
     val Grey = Color(0xFF9E9E9E)
+
 }

@@ -1,6 +1,7 @@
 package com.ighorosipov.core_presentation.components
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -16,6 +17,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.semantics.Role
+import androidx.compose.ui.unit.dp
 import com.ighorosipov.core_presentation.theme.LocalCustomColorsPalette
 
 @Composable
@@ -29,7 +31,12 @@ fun BaseCheckBox(
     val imageVector = if (checkedState) Icons.Filled.CheckCircle else Icons.Outlined.Check
     val background = if (checkedState) LocalCustomColorsPalette.current.red else Color.Transparent
 
-    Column(modifier = modifier) {
+    Column(
+        modifier = modifier.border(
+            width = 1.dp,
+            color = LocalCustomColorsPalette.current.onPrimary
+        )
+    ) {
         Row(
             Modifier
                 .fillMaxWidth()

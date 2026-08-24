@@ -4,10 +4,9 @@ import com.ighorosipov.domain.model.Ringtone
 import com.ighorosipov.utils.TimerEditorScreenType
 
 data class TimerEditorState(
-    val screenType: TimerEditorScreenType = TimerEditorScreenType.AddType,
+    val screenType: TimerEditorScreenType = TimerEditorScreenType.Add,
     val timerName: String = "",
-    val customDurationEnabled: Boolean = false,
-    val customDurationText: String = "",
+    val initialTime: Long = 0,
     val time: Long = 0,
     val selectedColorIndex: Int = 0,
     val color: Int = 0,
