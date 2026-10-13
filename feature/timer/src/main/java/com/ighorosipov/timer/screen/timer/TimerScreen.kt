@@ -23,9 +23,8 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.ighorosipov.core_presentation.components.BaseToolbar
-import com.ighorosipov.core_presentation.components.IconParams
-import com.ighorosipov.core_presentation.components.IconPosition
 import com.ighorosipov.core_presentation.components.MainAppState
+import com.ighorosipov.core_presentation.components.ToolbarIcon
 import com.ighorosipov.core_presentation.components.handleGlobalIntent
 import com.ighorosipov.timer.components.TimerCard
 import com.ighorosipov.timer.viewmodel.TimerViewModel
@@ -71,13 +70,14 @@ fun TimerScreen(
         modifier = Modifier.fillMaxSize()
     ) {
         BaseToolbar(
-            iconParams = IconParams(
-                icon = R.drawable.ic_outline_add,
-                iconSize = 24,
-                iconPosition = IconPosition.END
+            endIcons = listOf(
+                ToolbarIcon(
+                    icon = R.drawable.ic_outline_add,
+                    iconSize = 24,
+                    onClick = viewModel::onAddTimerClick
+                )
             ),
-            title = stringResource(R.string.timer),
-            onIconClick = viewModel::onAddTimerClick
+            title = stringResource(R.string.timer)
         )
         if (state.timers.isEmpty()) {
             Box(
@@ -99,7 +99,7 @@ fun TimerScreen(
                 items(state.timers, key = { it.id }) { timer ->
                     TimerCard(
                         timerName = timer.name,
-                        time = timer.time,
+                        time = timer.durationMs,
                         isPlaying = true,
                         onPlayPauseClick = {
                             //todo

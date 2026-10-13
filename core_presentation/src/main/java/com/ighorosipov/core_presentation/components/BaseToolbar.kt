@@ -20,6 +20,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.ighorosipov.core_presentation.theme.LocalCustomColorsPalette
@@ -29,9 +30,9 @@ import com.ighorosipov.utils.R
 @Composable
 fun BaseToolbar(
     modifier: Modifier = Modifier,
-    iconParams: IconParams? = null,
     title: String? = null,
-    onIconClick: (() -> Unit)? = null,
+    startIcons: List<ToolbarIcon> = emptyList(),
+    endIcons: List<ToolbarIcon> = emptyList(),
 ) {
     Card(
         modifier = modifier.fillMaxWidth(),
@@ -43,66 +44,61 @@ fun BaseToolbar(
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(16.dp),
+                .padding(horizontal = 16.dp, vertical = 12.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            if (iconParams != null) {
-                when(iconParams.iconPosition) {
-                    IconPosition.START -> {
-                        Icon(
-                            painter = painterResource(id = iconParams.icon),
-                            contentDescription = null,
-                            tint = LocalCustomColorsPalette.current.onSurface,
-                            modifier = Modifier
-                                .size(iconParams.iconSize.dp)
-                                .clickable(
-                                    interactionSource = remember { MutableInteractionSource() },
-                                    indication = ripple(bounded = false, radius = iconParams.iconSize.dp)
-                                ) { onIconClick?.invoke() },
-                        )
-                        title?.let {
-                            Spacer(modifier = Modifier.width(16.dp))
-                            Text(
-                                text = title,
-                                style = MaterialTheme.typography.headlineLarge,
-                                color = LocalCustomColorsPalette.current.onSurface,
-                            )
-                        }
-                    }
-                    IconPosition.END -> {
-                        title?.let {
-                            Text(
-                                text = title,
-                                style = MaterialTheme.typography.headlineLarge,
-                                color = LocalCustomColorsPalette.current.onSurface,
-                            )
-                            Spacer(modifier = Modifier.weight(1f))
-                        }
-                        Icon(
-                            painter = painterResource(id = iconParams.icon),
-                            contentDescription = null,
-                            tint = LocalCustomColorsPalette.current.onSurface,
-                            modifier = Modifier
-                                .size(iconParams.iconSize.dp)
-                                .clickable(
-                                    interactionSource = remember { MutableInteractionSource() },
-                                    indication = ripple(bounded = false, radius = iconParams.iconSize.dp)
-                                ) { onIconClick?.invoke() },
-                        )
-                    }
+
+            startIcons.forEachIndexed { index, item ->
+                ToolbarIconView(item)
+                if (index != startIcons.lastIndex) {
+                    Spacer(modifier = Modifier.width(8.dp))
                 }
+            }
+
+            if (startIcons.isNotEmpty() && title != null) {
+                Spacer(modifier = Modifier.width(16.dp))
+            }
+
+            if (title != null) {
+                Text(
+                    text = title,
+                    style = MaterialTheme.typography.headlineLarge,
+                    color = LocalCustomColorsPalette.current.onSurface,
+                    modifier = Modifier.weight(1f),
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis
+                )
             } else {
-                title?.let {
-                    Text(
-                        text = title,
-                        style = MaterialTheme.typography.headlineLarge,
-                        color = LocalCustomColorsPalette.current.onSurface,
-                    )
+                Spacer(modifier = Modifier.weight(1f))
+            }
+
+            if (endIcons.isNotEmpty()) {
+                Spacer(modifier = Modifier.width(8.dp))
+                endIcons.forEachIndexed { index, item ->
+                    ToolbarIconView(item)
+                    if (index != endIcons.lastIndex) {
+                        Spacer(modifier = Modifier.width(8.dp))
+                    }
                 }
             }
         }
-
     }
+}
+
+@Composable
+private fun ToolbarIconView(item: ToolbarIcon) {
+    Icon(
+        painter = painterResource(id = item.icon),
+        contentDescription = item.contentDescription,
+        tint = LocalCustomColorsPalette.current.onSurface,
+        modifier = Modifier
+            .size(item.iconSize.dp)
+            .clickable(
+                enabled = item.onClick != null,
+                interactionSource = remember { MutableInteractionSource() },
+                indication = ripple(bounded = false, radius = item.iconSize.dp)
+            ) { item.onClick?.invoke() }
+    )
 }
 
 @Composable
@@ -110,9 +106,15 @@ fun BaseToolbar(
 fun BaseToolbarPreviewLight() {
     MultiTimerTheme(darkTheme = false) {
         BaseToolbar(
-            iconParams = IconParams(
-                icon = R.drawable.ic_cancel,
-                iconSize = 24
+            startIcons = listOf(
+                ToolbarIcon(
+                    icon = R.drawable.ic_cancel,
+                    iconSize = 24
+                ),
+                ToolbarIcon(
+                    icon = R.drawable.ic_outline_add,
+                    iconSize = 24
+                )
             ),
             title = "Title"
         )
@@ -124,10 +126,15 @@ fun BaseToolbarPreviewLight() {
 fun BaseToolbarPreviewDark() {
     MultiTimerTheme(darkTheme = true) {
         BaseToolbar(
-            iconParams = IconParams(
-                icon = R.drawable.ic_cancel,
-                iconSize = 24,
-                iconPosition = IconPosition.END
+            endIcons = listOf(
+                ToolbarIcon(
+                    icon = R.drawable.ic_cancel,
+                    iconSize = 24
+                ),
+                ToolbarIcon(
+                    icon = R.drawable.ic_apply,
+                    iconSize = 24
+                )
             ),
             title = "Title"
         )

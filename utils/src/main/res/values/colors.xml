@@ -10,4 +10,9 @@
     <color name="notificationGreen">#FF22FF00</color>
     <color name="notificationText">#FF224B53</color>
     <color name="elem_main">#000000</color>
+    <color name="elem_primary">#FFBCD6</color>
+    <color name="elem_secondary">#460028</color>
+    <color name="elem_on_primary">#84FFF4</color>
+    <color name="elem_on_secondary">#FF00625C</color>
+    <color name="elem_background">#190910</color>
 </resources>

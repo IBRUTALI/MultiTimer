@@ -1,6 +1,7 @@
 package com.ighorosipov.core_presentation.components
 
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -24,6 +25,8 @@ fun BaseContentCard(
         contentColor = LocalCustomColorsPalette.current.primary
     ),
     title: String? = null,
+    containerPadding: PaddingValues = PaddingValues(horizontal = 12.dp),
+    contentPadding: PaddingValues = PaddingValues(vertical = 12.dp, horizontal = 12.dp),
     content: ContentCardScope.() -> Unit,
 ) {
     val scope = ContentCardScope().apply(content)
@@ -31,7 +34,7 @@ fun BaseContentCard(
     Card(
         modifier = modifier
             .fillMaxWidth()
-            .padding(horizontal = 12.dp),
+            .padding(containerPadding),
         shape = MaterialTheme.shapes.extraLarge,
         elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
         colors = colors
@@ -39,7 +42,8 @@ fun BaseContentCard(
         Column(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(vertical = 12.dp, horizontal = 12.dp)
+                .padding()
+                .padding(contentPadding)
         ) {
             title?.let {
                 Text(

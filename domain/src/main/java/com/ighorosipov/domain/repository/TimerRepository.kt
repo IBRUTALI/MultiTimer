@@ -2,6 +2,7 @@ package com.ighorosipov.domain.repository
 
 import com.ighorosipov.domain.model.Timer
 import com.ighorosipov.utils.Resource
+import kotlinx.coroutines.flow.Flow
 
 interface TimerRepository {
 
@@ -11,6 +12,8 @@ interface TimerRepository {
 
     suspend fun getTimers(): Resource<List<Timer>>
 
-    suspend fun deleteTimer(timer: Timer): Resource<Unit>
+    fun observeTimers(): Flow<List<Timer>>
+
+    suspend fun deleteTimer(timerId: String): Resource<Unit>
 
 }

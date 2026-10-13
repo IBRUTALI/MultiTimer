@@ -3,8 +3,10 @@ package com.ighorosipov.data.di
 import android.media.RingtoneManager
 import com.ighorosipov.data.core.room.TimerDao
 import com.ighorosipov.data.repository.RingtoneRepositoryImpl
+import com.ighorosipov.data.repository.TimerEngineImpl
 import com.ighorosipov.data.repository.TimerRepositoryImpl
 import com.ighorosipov.domain.repository.RingtoneRepository
+import com.ighorosipov.domain.repository.TimerEngine
 import com.ighorosipov.domain.repository.TimerRepository
 import dagger.Module
 import dagger.Provides
@@ -28,6 +30,12 @@ interface RepositoryModule  {
         @Singleton
         fun provideRingtoneRepository(ringtoneManager: RingtoneManager): RingtoneRepository {
             return RingtoneRepositoryImpl(ringtoneManager)
+        }
+
+        @Provides
+        @Singleton
+        fun provideTimerEngine(): TimerEngine {
+            return TimerEngineImpl()
         }
 
     }

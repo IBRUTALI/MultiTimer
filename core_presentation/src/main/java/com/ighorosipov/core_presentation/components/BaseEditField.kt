@@ -20,6 +20,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusManager
 import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.platform.LocalView
+import com.ighorosipov.core_presentation.theme.LocalCustomColorsPalette
 
 @Composable
 fun BaseEditField(
@@ -66,6 +67,7 @@ fun BaseEditField(
             placeholder = {
                 Text(
                     text = placeholder,
+                    color = LocalCustomColorsPalette.current.onSurface,
                     style = MaterialTheme.typography.bodyMedium
                 )
             },

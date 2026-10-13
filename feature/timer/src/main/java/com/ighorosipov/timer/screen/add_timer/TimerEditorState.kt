@@ -1,24 +1,24 @@
 package com.ighorosipov.timer.screen.add_timer
 
+import com.ighorosipov.core_presentation.misc.TimerColorPalette
 import com.ighorosipov.domain.model.Ringtone
 import com.ighorosipov.utils.TimerEditorScreenType
 
 data class TimerEditorState(
     val screenType: TimerEditorScreenType = TimerEditorScreenType.Add,
     val timerName: String = "",
-    val initialTime: Long = 0,
-    val time: Long = 0,
+    val initialDuration: Long = 0,
+    val duration: Long = 0,
     val selectedColorIndex: Int = 0,
-    val color: Int = 0,
-    val tone: String? = null,
+    val colors: List<String> = TimerColorPalette.colors,
     val ringtones: List<Ringtone> = emptyList(),
-    val selectedRingtoneIndex: Int = 0,
-    val selectedRingtoneUri: String = "",
-    val playingRingtone: Pair<Ringtone, Boolean> = Ringtone(
-        title = "",
-        uri = ""
-    ) to false
-)
+    val selectedRingtoneIndex: Int? = null,
+    val selectedRingtone: Ringtone? = null,
+    val soundIsMuted: Boolean = false
+) {
+    val selectedColorHex: String
+        get() = colors[selectedColorIndex]
+}
 
 sealed class TimerEditorScreenIntent {
     // todo

@@ -10,6 +10,7 @@ import androidx.navigation.compose.NavHost
 import com.ighorosipov.alarm.navigation.alarmGraph
 import com.ighorosipov.core_presentation.components.MainAppState
 import com.ighorosipov.core_presentation.navigation.Routes
+import com.ighorosipov.ringtone.navigation.ringtoneGraph
 import com.ighorosipov.stopwatch.navigation.stopwatchGraph
 import com.ighorosipov.timer.navigation.timerGraph
 import com.ighorosipov.world_time.navigation.worldTimeGraph
@@ -51,6 +52,11 @@ fun NavigationGraph(
         )
 
         timerGraph(
+            appState = appState,
+            showSnackbar = showSnackbar
+        )
+
+        ringtoneGraph(
             appState = appState,
             showSnackbar = showSnackbar
         )

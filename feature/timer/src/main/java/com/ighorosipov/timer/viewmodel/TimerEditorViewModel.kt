@@ -6,6 +6,9 @@ import androidx.navigation.toRoute
 import com.ighorosipov.core_presentation.misc.BaseUIIntent
 import com.ighorosipov.core_presentation.navigation.Routes
 import com.ighorosipov.core_presentation.viewmodel.BaseViewModel
+import com.ighorosipov.domain.model.Ringtone
+import com.ighorosipov.domain.model.Timer
+import com.ighorosipov.domain.repository.RingtoneRepository
 import com.ighorosipov.domain.repository.TimerRepository
 import com.ighorosipov.timer.screen.add_timer.TimerEditorScreenIntent
 import com.ighorosipov.timer.screen.add_timer.TimerEditorState
@@ -16,12 +19,14 @@ import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
+import java.util.UUID
 
 @HiltViewModel(assistedFactory = TimerEditorViewModel.Factory::class)
 class TimerEditorViewModel @AssistedInject constructor(
     savedStateHandle: SavedStateHandle,
     @Assisted private val screenType: TimerEditorScreenType,
-    private val repository: TimerRepository
+    private val repository: TimerRepository,
+    private val ringtoneRepository: RingtoneRepository
 ) : BaseViewModel<TimerEditorState, TimerEditorScreenIntent>(
     initialState = TimerEditorState()
 ) {
@@ -44,14 +49,18 @@ class TimerEditorViewModel @AssistedInject constructor(
                 )
             }
         }
+        savedStateHandle.get<String>("selected_ringtone_uri")?.let { uri ->
+            val title = savedStateHandle.get<String>("selected_ringtone_title") ?: "Ringtone"
+            updateState {
+                state.value.copy(
+                    selectedRingtone = Ringtone(title = title, uri = uri)
+                )
+            }
+        }
     }
 
     fun onBackClick() {
         sendIntent(BaseUIIntent.NavigateBack)
-    }
-
-    fun onInitialTimeClick(timeMs: Long) {
-
     }
 
     fun onTimerNameChange(value: String) {
@@ -65,9 +74,36 @@ class TimerEditorViewModel @AssistedInject constructor(
     fun onTimeChange(timeMs: Long) {
         updateState {
             state.value.copy(
-                time = timeMs
+                duration = timeMs
             )
         }
+    }
+
+    fun onSaveClick() {
+        viewModelScope.launch {
+            val timer = Timer(
+                id = UUID.randomUUID().toString(),
+                name = state.value.timerName,
+                durationMs = state.value.duration,
+                colorHex = state.value.selectedColorHex,
+                ringtoneUri = state.value.selectedRingtone?.uri
+            )
+            repository.insertTimer(
+                timer = timer
+            )
+        }
+    }
+
+    fun onColorChange(index: Int) {
+        updateState {
+            state.value.copy(
+                selectedColorIndex = index
+            )
+        }
+    }
+
+    private fun getRingtones() {
+
     }
 
     private fun loadTimer(timerId: String) {
@@ -77,27 +113,44 @@ class TimerEditorViewModel @AssistedInject constructor(
             ).also { result ->
                 when (result) {
                     is Resource.Error<*> -> {
-
-                    }
-
-                    is Resource.Loading<*> -> {
-
+                        //todo
                     }
 
                     is Resource.Success<*> -> {
                         val timer = result.data ?: return@launch
+                        val selectedColorIndex = state.value.colors.indexOf(timer.colorHex).takeIf { it != -1 } ?: 0
+                        val selectedRingtone = timer.ringtoneUri?.let { uri ->
+                            Ringtone(
+                                title = ringtoneRepository.findTitleByUri(uri) ?: "Unknown", //todo
+                                uri = uri
+                            )
+                        }
                         updateState {
                             state.value.copy(
                                 timerName = timer.name,
-                                time = timer.time,
-                                initialTime = timer.time,
-                                color = timer.color,
+                                duration = timer.durationMs,
+                                initialDuration = timer.durationMs,
+                                selectedColorIndex = selectedColorIndex,
+                                selectedRingtone = selectedRingtone
                             )
                         }
                     }
                 }
             }
         }
+    }
+
+    fun onSwitchSoundClick() {
+        updateState {
+            val soundIsMuted = state.value.soundIsMuted
+            state.value.copy(
+                soundIsMuted = !soundIsMuted
+            )
+        }
+    }
+
+    fun onSelectRingtoneClick() {
+        sendIntent(BaseUIIntent.Navigate(Routes.SelectRingtoneScreen))
     }
 
 }
