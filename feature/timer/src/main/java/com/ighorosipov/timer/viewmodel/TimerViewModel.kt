@@ -5,17 +5,20 @@ import com.ighorosipov.core_presentation.misc.BaseUIIntent
 import com.ighorosipov.core_presentation.navigation.Routes
 import com.ighorosipov.core_presentation.viewmodel.BaseViewModel
 import com.ighorosipov.domain.model.Timer
-import com.ighorosipov.domain.use_case.GetTimersUseCase
+import com.ighorosipov.domain.repository.TimerEngine
+import com.ighorosipov.domain.repository.TimerRepository
+import com.ighorosipov.timer.model.toUiModel
 import com.ighorosipov.timer.screen.timer.TimerScreenIntent
 import com.ighorosipov.timer.screen.timer.TimerState
-import com.ighorosipov.utils.Resource
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class TimerViewModel @Inject constructor(
-    private val getTimersUseCase: GetTimersUseCase
+    private val repository: TimerRepository,
+    private val engine: TimerEngine
 ) : BaseViewModel<TimerState, TimerScreenIntent>(TimerState()) {
 
     init {
@@ -24,27 +27,18 @@ class TimerViewModel @Inject constructor(
 
     private fun getTimers() {
         viewModelScope.launch {
-            getTimersUseCase().collect { resource ->
-                when (resource) {
-                    is Resource.Success -> {
-                        updateState {
-                            state.value.copy(
-                                timers = resource.data ?: emptyList()
-                            )
-                        }
-                    }
-
-                    is Resource.Loading -> {
-                        // todo
-                    }
-
-                    is Resource.Error -> {
-                        // todo
-                    }
+            combine(
+                repository.observeTimers(),
+                engine.states
+            ) { timers, runtime ->
+                timers.map { timer ->
+                    timer.toUiModel(runtime[timer.id])
                 }
-
+            }.collect { uiTimers ->
+                updateState {
+                    state.value.copy(timers = uiTimers)
+                }
             }
-
         }
     }
 

@@ -66,8 +66,11 @@ sealed class Routes {
 
         @Serializable
         data class Edit(val timerId: String) : Routes()
+
     }
     @Serializable
     data object TimerDetailsScreen : Routes()
 
+    @Serializable
+    data object SelectRingtoneScreen: Routes()
 }

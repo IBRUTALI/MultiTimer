@@ -1,6 +1,5 @@
 package com.ighorosipov.data.di
 
-import com.ighorosipov.domain.use_case.StartTimerUseCase
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -25,9 +24,6 @@ interface DispatchersModule {
         @MainDispatcher
         @Provides
         fun provideMainDispatcher(): CoroutineDispatcher = Dispatchers.Main
-
-        @Provides
-        fun provideStartTimerUseCase(): StartTimerUseCase = StartTimerUseCase()
 
     }
 

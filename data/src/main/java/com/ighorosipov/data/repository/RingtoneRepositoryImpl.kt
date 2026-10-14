@@ -9,7 +9,7 @@ class RingtoneRepositoryImpl @Inject constructor(
     private val ringtoneManager: RingtoneManager
 ): RingtoneRepository {
 
-    override suspend fun getSounds(): List<Ringtone> {
+    override suspend fun getRingtones(): List<Ringtone> {
         val cursor = ringtoneManager.cursor
         return (0 until cursor.count).map {
             cursor.moveToPosition(it)
@@ -18,6 +18,11 @@ class RingtoneRepositoryImpl @Inject constructor(
                 uri = ringtoneManager.getRingtoneUri(it).toString()
             )
         }
+    }
+
+    override suspend fun findTitleByUri(uri: String?): String? {
+        if (uri == null) return null
+        return getRingtones().find { it.uri == uri }?.title
     }
 
 }

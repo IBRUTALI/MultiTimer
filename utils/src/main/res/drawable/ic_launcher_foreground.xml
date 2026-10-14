@@ -7,22 +7,22 @@
     <group
         android:pivotX="64"
         android:pivotY="64"
-        android:scaleX="0.7"
-        android:scaleY="0.7">
+        android:scaleX="0.5"
+        android:scaleY="0.5">
 
         <path
-            android:fillColor="#1E1B1A"
+            android:fillColor="@color/elem_secondary"
             android:pathData="M64,4
             A60,60 0 1,1 63.99,4" />
 
         <path
-            android:fillColor="#715954"
+            android:fillColor="@color/elem_background"
             android:pathData="M64,14
             A50,50 0 1,1 63.99,14" />
 
         <path
             android:fillColor="#00000000"
-            android:strokeColor="#534341"
+            android:strokeColor="@color/elem_primary"
             android:strokeWidth="2"
             android:pathData="M64,14
             A50,50 0 1,1 63.99,14" />
@@ -34,10 +34,10 @@
             android:rotation="0">
 
             <path
-                android:strokeColor="#F5DDD9"
-                android:strokeWidth="4"
-                android:strokeLineCap="round"
-                android:pathData="M64,17 L64,26"/>
+                android:strokeColor="@color/elem_on_primary"
+                android:strokeWidth="3"
+                android:strokeLineCap="square"
+                android:pathData="M64,16 L64,26"/>
         </group>
 
         <!-- 1 -->
@@ -47,10 +47,10 @@
             android:rotation="30">
 
             <path
-                android:strokeColor="#F5DDD9"
+                android:strokeColor="@color/elem_on_primary"
                 android:strokeWidth="2.5"
-                android:strokeLineCap="round"
-                android:pathData="M64,16 L64,22"/>
+                android:strokeLineCap="square"
+                android:pathData="M64,15 L64,22"/>
         </group>
 
         <!-- 2 -->
@@ -60,9 +60,9 @@
             android:rotation="60">
 
             <path
-                android:strokeColor="#F5DDD9"
+                android:strokeColor="@color/elem_on_primary"
                 android:strokeWidth="2.5"
-                android:strokeLineCap="round"
+                android:strokeLineCap="square"
                 android:pathData="M64,16 L64,22"/>
         </group>
 
@@ -73,10 +73,10 @@
             android:rotation="90">
 
             <path
-                android:strokeColor="#F5DDD9"
-                android:strokeWidth="4"
-                android:strokeLineCap="round"
-                android:pathData="M64,17 L64,26"/>
+                android:strokeColor="@color/elem_on_primary"
+                android:strokeWidth="3"
+                android:strokeLineCap="square"
+                android:pathData="M64,16 L64,26"/>
         </group>
 
         <!-- 4 -->
@@ -86,9 +86,9 @@
             android:rotation="120">
 
             <path
-                android:strokeColor="#F5DDD9"
+                android:strokeColor="@color/elem_on_primary"
                 android:strokeWidth="2.5"
-                android:strokeLineCap="round"
+                android:strokeLineCap="square"
                 android:pathData="M64,16 L64,22"/>
         </group>
 
@@ -99,9 +99,9 @@
             android:rotation="150">
 
             <path
-                android:strokeColor="#F5DDD9"
+                android:strokeColor="@color/elem_on_primary"
                 android:strokeWidth="2.5"
-                android:strokeLineCap="round"
+                android:strokeLineCap="square"
                 android:pathData="M64,16 L64,22"/>
         </group>
 
@@ -112,10 +112,10 @@
             android:rotation="180">
 
             <path
-                android:strokeColor="#F5DDD9"
-                android:strokeWidth="4"
-                android:strokeLineCap="round"
-                android:pathData="M64,17 L64,26"/>
+                android:strokeColor="@color/elem_on_primary"
+                android:strokeWidth="3"
+                android:strokeLineCap="square"
+                android:pathData="M64,16 L64,26"/>
         </group>
 
         <!-- 7 -->
@@ -125,9 +125,9 @@
             android:rotation="210">
 
             <path
-                android:strokeColor="#F5DDD9"
+                android:strokeColor="@color/elem_on_primary"
                 android:strokeWidth="2.5"
-                android:strokeLineCap="round"
+                android:strokeLineCap="square"
                 android:pathData="M64,16 L64,22"/>
         </group>
 
@@ -138,9 +138,9 @@
             android:rotation="240">
 
             <path
-                android:strokeColor="#F5DDD9"
+                android:strokeColor="@color/elem_on_primary"
                 android:strokeWidth="2.5"
-                android:strokeLineCap="round"
+                android:strokeLineCap="square"
                 android:pathData="M64,16 L64,22"/>
         </group>
 
@@ -151,10 +151,10 @@
             android:rotation="270">
 
             <path
-                android:strokeColor="#F5DDD9"
-                android:strokeWidth="4"
-                android:strokeLineCap="round"
-                android:pathData="M64,17 L64,26"/>
+                android:strokeColor="@color/elem_on_primary"
+                android:strokeWidth="3"
+                android:strokeLineCap="square"
+                android:pathData="M64,16 L64,26"/>
         </group>
 
         <!-- 10 -->
@@ -164,9 +164,9 @@
             android:rotation="300">
 
             <path
-                android:strokeColor="#F5DDD9"
+                android:strokeColor="@color/elem_on_primary"
                 android:strokeWidth="2.5"
-                android:strokeLineCap="round"
+                android:strokeLineCap="square"
                 android:pathData="M64,16 L64,22"/>
         </group>
 
@@ -177,26 +177,26 @@
             android:rotation="330">
 
             <path
-                android:strokeColor="#F5DDD9"
+                android:strokeColor="@color/elem_on_primary"
                 android:strokeWidth="2.5"
-                android:strokeLineCap="round"
+                android:strokeLineCap="square"
                 android:pathData="M64,16 L64,22"/>
         </group>
 
         <path
-            android:strokeColor="#FFDAD4"
-            android:strokeWidth="5"
-            android:strokeLineCap="round"
+            android:strokeColor="@color/elem_on_primary"
+            android:strokeWidth="2"
+            android:strokeLineCap="square"
             android:pathData="M64,64 L64,42" />
 
         <path
-            android:strokeColor="#FFDAD4"
-            android:strokeWidth="4"
-            android:strokeLineCap="round"
-            android:pathData="M64,64 L88,76" />
+            android:strokeColor="@color/elem_on_primary"
+            android:strokeWidth="2"
+            android:strokeLineCap="square"
+            android:pathData="M66,66 L92,80" />
 
         <path
-            android:fillColor="#332F2F"
+            android:fillColor="@color/elem_primary"
             android:pathData="M64,59
             A5,5 0 1,1 63.99,59" />
 

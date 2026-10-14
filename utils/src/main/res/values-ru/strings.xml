@@ -21,6 +21,8 @@
     <!-- StopwatchScreen -->
 
     <!-- TimerScreen -->
+    <string name="off">Выключено</string>
+    <string name="unknown">Неизвестно</string>
     <string name="timer_details">Таймер</string>
 
     <!-- AddTimerScreen -->

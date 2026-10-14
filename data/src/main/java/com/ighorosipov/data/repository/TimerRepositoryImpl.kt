@@ -1,10 +1,13 @@
 package com.ighorosipov.data.repository
 
 import com.ighorosipov.data.core.room.TimerDao
-import com.ighorosipov.data.mapper.TimerMapper
+import com.ighorosipov.data.mapper.toDomain
+import com.ighorosipov.data.mapper.toEntity
 import com.ighorosipov.domain.model.Timer
 import com.ighorosipov.domain.repository.TimerRepository
 import com.ighorosipov.utils.Resource
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 
 class TimerRepositoryImpl @Inject constructor(
@@ -13,7 +16,7 @@ class TimerRepositoryImpl @Inject constructor(
 
     override suspend fun insertTimer(timer: Timer): Resource<Unit> {
         return try {
-            dao.insertTimer(timerEntity = TimerMapper().timerToTimerEntity(timer))
+            dao.insertTimer(timerEntity = timer.toEntity())
             Resource.Success(Unit)
         } catch (e: Exception) {
             Resource.Error(e.localizedMessage ?: "An unexpected error occurred", null)
@@ -23,7 +26,7 @@ class TimerRepositoryImpl @Inject constructor(
     override suspend fun getTimerById(timerId: String): Resource<Timer> {
         return try {
             val timerEntity = dao.getTimerById(timerId = timerId)
-            Resource.Success(data = TimerMapper().timerEntityToTimer(timerEntity))
+            Resource.Success(data = timerEntity.toDomain())
         } catch (e: Exception) {
             Resource.Error(e.localizedMessage ?: "An unexpected error occurred", null)
         }
@@ -33,16 +36,20 @@ class TimerRepositoryImpl @Inject constructor(
         return try {
             val listOfTimerEntity = dao.getTimers()
             Resource.Success(data = listOfTimerEntity.map {  timerEntity ->
-                TimerMapper().timerEntityToTimer(timerEntity)
+                timerEntity.toDomain()
             })
         } catch (e: Exception) {
             Resource.Error(e.localizedMessage ?: "An unexpected error occurred", null)
         }
     }
 
-    override suspend fun deleteTimer(timer: Timer): Resource<Unit> {
+    override fun observeTimers(): Flow<List<Timer>> {
+        return dao.observeTimers().map { list -> list.map { it.toDomain() } }
+    }
+
+    override suspend fun deleteTimer(timerId: String): Resource<Unit> {
         return try {
-            dao.deleteTimer(timerEntity = TimerMapper().timerToTimerEntity(timer))
+            dao.deleteTimer(timerId = timerId)
             Resource.Success(Unit)
         } catch (e: Exception) {
             Resource.Error(e.localizedMessage ?: "An unexpected error occurred", null)

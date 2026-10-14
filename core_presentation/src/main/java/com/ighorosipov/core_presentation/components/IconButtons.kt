@@ -57,6 +57,7 @@ fun RetryIconButton(
 @Composable
 fun NotificationIconButton(
     modifier: Modifier = Modifier,
+    enabled: Boolean = true,
     onIconClick: () -> Unit,
     isMuted: Boolean,
     iconSize: Int = 24,
@@ -66,6 +67,7 @@ fun NotificationIconButton(
         modifier = modifier
             .size(iconSize.dp)
             .clickable(
+                enabled = enabled,
                 interactionSource = remember { MutableInteractionSource() },
                 indication = ripple(bounded = false, radius = iconSize.dp)
             ) { onIconClick() },
