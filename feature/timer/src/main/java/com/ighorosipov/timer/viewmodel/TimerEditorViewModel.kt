@@ -50,9 +50,9 @@ class TimerEditorViewModel @AssistedInject constructor(
             }
         }
         savedStateHandle.get<String>("selected_ringtone_uri")?.let { uri ->
-            val title = savedStateHandle.get<String>("selected_ringtone_title") ?: "Ringtone"
+            val title = savedStateHandle.get<String>("selected_ringtone_title") ?: "Unknown"
             updateState {
-                state.value.copy(
+                copy(
                     selectedRingtone = Ringtone(title = title, uri = uri)
                 )
             }
@@ -65,7 +65,7 @@ class TimerEditorViewModel @AssistedInject constructor(
 
     fun onTimerNameChange(value: String) {
         updateState {
-            state.value.copy(
+            copy(
                 timerName = value
             )
         }
@@ -73,7 +73,7 @@ class TimerEditorViewModel @AssistedInject constructor(
 
     fun onTimeChange(timeMs: Long) {
         updateState {
-            state.value.copy(
+            copy(
                 duration = timeMs
             )
         }
@@ -90,13 +90,22 @@ class TimerEditorViewModel @AssistedInject constructor(
             )
             repository.insertTimer(
                 timer = timer
-            )
+            ).also { result ->
+                when(result) {
+                    is Resource.Error<*> -> {
+
+                    }
+                    is Resource.Success<*> -> {
+                        sendIntent(BaseUIIntent.NavigateBack)
+                    }
+                }
+            }
         }
     }
 
     fun onColorChange(index: Int) {
         updateState {
-            state.value.copy(
+            copy(
                 selectedColorIndex = index
             )
         }
@@ -126,7 +135,7 @@ class TimerEditorViewModel @AssistedInject constructor(
                             )
                         }
                         updateState {
-                            state.value.copy(
+                            copy(
                                 timerName = timer.name,
                                 duration = timer.durationMs,
                                 initialDuration = timer.durationMs,
@@ -142,8 +151,7 @@ class TimerEditorViewModel @AssistedInject constructor(
 
     fun onSwitchSoundClick() {
         updateState {
-            val soundIsMuted = state.value.soundIsMuted
-            state.value.copy(
+            copy(
                 soundIsMuted = !soundIsMuted
             )
         }

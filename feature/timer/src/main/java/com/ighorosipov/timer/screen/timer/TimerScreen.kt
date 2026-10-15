@@ -1,6 +1,7 @@
 package com.ighorosipov.timer.screen.timer
 
 import android.content.Context
+import androidx.compose.animation.core.spring
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -98,9 +99,12 @@ fun TimerScreen(
             ) {
                 items(state.timers, key = { it.id }) { timer ->
                     TimerCard(
+                        modifier = Modifier.animateItem(
+                            fadeOutSpec = spring(100f)
+                        ),
                         timerName = timer.name,
                         time = timer.durationMs,
-                        isPlaying = true,
+                        isPlaying = true, //todo
                         onPlayPauseClick = {
                             //todo
                         },
@@ -108,8 +112,9 @@ fun TimerScreen(
                             // todo
                         },
                         onDeleteClick = {
-                            false
-                            // todo
+                            viewModel.onDeleteTimer(
+                                timerId = timer.id
+                            )
                         },
                         onEditClick = {
                             // todo

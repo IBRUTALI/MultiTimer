@@ -34,6 +34,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.ighorosipov.core_presentation.components.BaseContentCard
 import com.ighorosipov.core_presentation.components.BaseToolbar
+import com.ighorosipov.core_presentation.components.ClockLoaderScreen
 import com.ighorosipov.core_presentation.components.MainAppState
 import com.ighorosipov.core_presentation.components.ToolbarIcon
 import com.ighorosipov.core_presentation.components.handleGlobalIntent
@@ -190,4 +191,7 @@ fun SelectRingtoneScreen(
             }
         }
     }
+    ClockLoaderScreen(
+        isLoading = state.isLoading
+    )
 }

@@ -26,16 +26,24 @@ class SelectRingtoneViewModel @Inject constructor(
 
     private fun loadRingtones() {
         viewModelScope.launch {
+            updateState {
+                copy(
+                    isLoading = true
+                )
+            }
             val ringtones = ringtoneRepository.getRingtones()
             updateState {
-                state.value.copy(ringtones = ringtones)
+                copy(
+                    isLoading = false,
+                    ringtones = ringtones
+                )
             }
         }
     }
 
     fun onRingtoneClick(ringtone: Ringtone) {
         updateState {
-            state.value.copy(selectedRingtone = ringtone)
+            copy(selectedRingtone = ringtone)
         }
     }
 
@@ -43,13 +51,15 @@ class SelectRingtoneViewModel @Inject constructor(
         viewModelScope.launch {
             if (state.value.playingRingtoneUri == ringtone.uri) {
                 playerRepository.stop()
-                updateState { state.value.copy(playingRingtoneUri = null) }
+                updateState {
+                    copy(playingRingtoneUri = null)
+                }
             } else {
                 if (playerRepository.isPlaying()) {
                     playerRepository.stop()
                 }
                 playerRepository.play(ringtone.uri)
-                updateState { state.value.copy(playingRingtoneUri = ringtone.uri) }
+                updateState { copy(playingRingtoneUri = ringtone.uri) }
             }
         }
     }
@@ -57,8 +67,8 @@ class SelectRingtoneViewModel @Inject constructor(
     fun onAddCustomRingtone(title: String, uri: String) {
         val customRingtone = Ringtone(title = title, uri = uri)
         updateState {
-            val updatedRingtones = listOf(customRingtone) + state.value.ringtones
-            state.value.copy(
+            val updatedRingtones = listOf(customRingtone) + ringtones
+            copy(
                 ringtones = updatedRingtones,
                 selectedRingtone = customRingtone
             )
@@ -80,13 +90,11 @@ class SelectRingtoneViewModel @Inject constructor(
     }
 
     private fun stopPlayer() {
-        try {
             if (playerRepository.isPlaying()) {
                 viewModelScope.launch {
                     playerRepository.stop()
                 }
             }
-        } catch (_: Exception) {}
     }
 
     override fun onCleared() {

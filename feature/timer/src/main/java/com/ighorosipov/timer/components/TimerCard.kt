@@ -25,8 +25,11 @@ import androidx.compose.material3.rememberSwipeToDismissBoxState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.key
 import androidx.compose.runtime.mutableFloatStateOf
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.runtime.setValue
 import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
@@ -54,59 +57,72 @@ fun TimerCard(
     onDeleteClick: () -> Boolean,
     onEditClick: () -> Unit
 ) {
-    val dismissState = rememberSwipeToDismissBoxState(
-        confirmValueChange = { value ->
-            if (value == SwipeToDismissBoxValue.EndToStart) {
-                onDeleteClick()
-            } else {
-                false
-            }
-        }
-    )
-    SwipeToDismissBox(
-        modifier = modifier,
-        state = dismissState,
-        enableDismissFromStartToEnd = true,
-        enableDismissFromEndToStart = false,
-        backgroundContent = {
-            val density = LocalDensity.current
-            var offsetPx by remember { mutableFloatStateOf(0f) }
+    var dismissGeneration by remember { mutableIntStateOf(0) }
 
-            LaunchedEffect(dismissState) {
-                snapshotFlow {
-                    runCatching { dismissState.requireOffset() }.getOrDefault(0f)
-                }.collect { offsetPx = it }
-            }
-
-            val revealedWidth = with(density) {
-                (offsetPx.toDp() - 5.dp).coerceAtLeast(0.dp)
-            }
-            Box(
-                Modifier
-                    .fillMaxHeight()
-                    .width(revealedWidth)
-                    .background(
-                        color = LocalCustomColorsPalette.current.errorContainer,
-                        shape = MaterialTheme.shapes.medium
-                    ),
-                contentAlignment = Alignment.Center
-            ) {
-                Icon(
-                    imageVector = Icons.Default.Delete,
-                    contentDescription = "Delete",
-                    tint = LocalCustomColorsPalette.current.onErrorContainer
-                )
-            }
-        }
-    ) {
-        ItemTimerContent(
-            timerName = timerName,
-            time = time,
-            isPlaying = isPlaying,
-            onPlayPauseClick = onPlayPauseClick,
-            onStopClick = onStopClick,
-            onEditClick = onEditClick
+    key(dismissGeneration) {
+        val dismissState = rememberSwipeToDismissBoxState(
+            confirmValueChange = { it == SwipeToDismissBoxValue.StartToEnd }
         )
+        val currentOnDeleteClick by rememberUpdatedState(onDeleteClick)
+
+        LaunchedEffect(dismissState) {
+            snapshotFlow { dismissState.settledValue }
+                .collect { value ->
+                    if (value == SwipeToDismissBoxValue.StartToEnd) {
+                        val deleted = currentOnDeleteClick()
+                        if (!deleted) {
+                            dismissState.reset()
+                            dismissGeneration++
+                        }
+                    }
+                }
+        }
+
+        SwipeToDismissBox(
+            modifier = modifier,
+            state = dismissState,
+            enableDismissFromStartToEnd = true,
+            enableDismissFromEndToStart = false,
+            backgroundContent = {
+                val density = LocalDensity.current
+                var offsetPx by remember { mutableFloatStateOf(0f) }
+
+                LaunchedEffect(dismissState) {
+                    snapshotFlow {
+                        runCatching { dismissState.requireOffset() }.getOrDefault(0f)
+                    }.collect { offsetPx = it }
+                }
+
+                val revealedWidth = with(density) {
+                    (offsetPx.toDp() - 5.dp).coerceAtLeast(0.dp)
+                }
+                Box(
+                    Modifier
+                        .fillMaxHeight()
+                        .width(revealedWidth)
+                        .background(
+                            color = LocalCustomColorsPalette.current.errorContainer,
+                            shape = MaterialTheme.shapes.medium
+                        ),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Icon(
+                        imageVector = Icons.Default.Delete,
+                        contentDescription = "Delete",
+                        tint = LocalCustomColorsPalette.current.onErrorContainer
+                    )
+                }
+            }
+        ) {
+            ItemTimerContent(
+                timerName = timerName,
+                time = time,
+                isPlaying = isPlaying,
+                onPlayPauseClick = onPlayPauseClick,
+                onStopClick = onStopClick,
+                onEditClick = onEditClick
+            )
+        }
     }
 }
 
