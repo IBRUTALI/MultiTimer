@@ -12,6 +12,7 @@ import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
+import kotlinx.coroutines.CoroutineDispatcher
 import javax.inject.Singleton
 
 @Module
@@ -22,14 +23,26 @@ interface RepositoryModule  {
 
         @Provides
         @Singleton
-        fun provideTimerRepository(timerDao: TimerDao): TimerRepository {
-            return TimerRepositoryImpl(timerDao)
+        fun provideTimerRepository(
+            timerDao: TimerDao,
+            @IODispatcher dispatcher: CoroutineDispatcher
+        ): TimerRepository {
+            return TimerRepositoryImpl(
+                dao = timerDao,
+                dispatcher = dispatcher
+            )
         }
 
         @Provides
         @Singleton
-        fun provideRingtoneRepository(ringtoneManager: RingtoneManager): RingtoneRepository {
-            return RingtoneRepositoryImpl(ringtoneManager)
+        fun provideRingtoneRepository(
+            ringtoneManager: RingtoneManager,
+            @IODispatcher dispatcher: CoroutineDispatcher
+        ): RingtoneRepository {
+            return RingtoneRepositoryImpl(
+                ringtoneManager = ringtoneManager,
+                dispatcher = dispatcher
+            )
         }
 
         @Provides

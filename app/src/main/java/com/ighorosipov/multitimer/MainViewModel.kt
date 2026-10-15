@@ -18,7 +18,7 @@ class MainViewModel @Inject constructor(
 
     private fun startSplashCondition() {
         updateState {
-            state.value.copy(
+            copy(
                 splashCondition = false
             )
         }

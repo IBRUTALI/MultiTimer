@@ -58,6 +58,7 @@ fun BottomNavigation(
         when (currentRoute) {
             is Routes.TimerEditorScreen.Add -> false
             is Routes.TimerEditorScreen.Edit -> false
+            is Routes.SelectRingtoneScreen -> false
             null -> false
 
             else -> true

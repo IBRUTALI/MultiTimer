@@ -10,6 +10,7 @@ import com.ighorosipov.domain.repository.TimerRepository
 import com.ighorosipov.timer.model.toUiModel
 import com.ighorosipov.timer.screen.timer.TimerScreenIntent
 import com.ighorosipov.timer.screen.timer.TimerState
+import com.ighorosipov.utils.Resource
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.launch
@@ -17,7 +18,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class TimerViewModel @Inject constructor(
-    private val repository: TimerRepository,
+    private val timerRepository: TimerRepository,
     private val engine: TimerEngine
 ) : BaseViewModel<TimerState, TimerScreenIntent>(TimerState()) {
 
@@ -28,7 +29,7 @@ class TimerViewModel @Inject constructor(
     private fun getTimers() {
         viewModelScope.launch {
             combine(
-                repository.observeTimers(),
+                timerRepository.observeTimers(),
                 engine.states
             ) { timers, runtime ->
                 timers.map { timer ->
@@ -36,7 +37,7 @@ class TimerViewModel @Inject constructor(
                 }
             }.collect { uiTimers ->
                 updateState {
-                    state.value.copy(timers = uiTimers)
+                    copy(timers = uiTimers)
                 }
             }
         }
@@ -60,6 +61,28 @@ class TimerViewModel @Inject constructor(
                 )
             )
         )
+    }
+
+    fun onDeleteTimer(
+        timerId: String
+    ): Boolean {
+        var deleteResult = false
+        viewModelScope.launch {
+            timerRepository.deleteTimer(
+                timerId = timerId
+            ).also { result ->
+                deleteResult = when(result) {
+                    is Resource.Error<*> -> {
+                        false
+                    }
+
+                    is Resource.Success<*> -> {
+                        true
+                    }
+                }
+            }
+        }
+        return deleteResult
     }
 
 }
