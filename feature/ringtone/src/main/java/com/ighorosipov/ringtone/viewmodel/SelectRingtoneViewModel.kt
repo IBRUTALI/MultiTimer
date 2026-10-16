@@ -3,6 +3,8 @@ package com.ighorosipov.ringtone.viewmodel
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import com.ighorosipov.core_presentation.misc.BaseUIIntent
+import com.ighorosipov.core_presentation.misc.RingtoneResult
+import com.ighorosipov.core_presentation.misc.RingtoneResultBus
 import com.ighorosipov.core_presentation.viewmodel.BaseViewModel
 import com.ighorosipov.domain.model.Ringtone
 import com.ighorosipov.domain.repository.PlayerRepository
@@ -15,9 +17,10 @@ import javax.inject.Inject
 
 @HiltViewModel
 class SelectRingtoneViewModel @Inject constructor(
-    private val savedStateHandle: SavedStateHandle,
+    savedStateHandle: SavedStateHandle,
     private val ringtoneRepository: RingtoneRepository,
-    private val playerRepository: PlayerRepository
+    private val playerRepository: PlayerRepository,
+    private val resultBus: RingtoneResultBus
 ) : BaseViewModel<SelectRingtoneState, SelectRingtoneScreenIntent>(SelectRingtoneState()) {
 
     init {
@@ -78,8 +81,12 @@ class SelectRingtoneViewModel @Inject constructor(
     fun onSaveClick() {
         stopPlayer()
         state.value.selectedRingtone?.let { ringtone ->
-            savedStateHandle["selected_ringtone_uri"] = ringtone.uri
-            savedStateHandle["selected_ringtone_title"] = ringtone.title
+            resultBus.emit(
+                RingtoneResult(
+                    uri = ringtone.uri,
+                    title = ringtone.title
+                )
+            )
         }
         sendIntent(BaseUIIntent.NavigateBack)
     }
@@ -90,11 +97,11 @@ class SelectRingtoneViewModel @Inject constructor(
     }
 
     private fun stopPlayer() {
-            if (playerRepository.isPlaying()) {
-                viewModelScope.launch {
-                    playerRepository.stop()
-                }
+        if (playerRepository.isPlaying()) {
+            viewModelScope.launch {
+                playerRepository.stop()
             }
+        }
     }
 
     override fun onCleared() {

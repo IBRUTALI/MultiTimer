@@ -4,6 +4,7 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
 import com.ighorosipov.core_presentation.misc.BaseUIIntent
+import com.ighorosipov.core_presentation.misc.RingtoneResultBus
 import com.ighorosipov.core_presentation.navigation.Routes
 import com.ighorosipov.core_presentation.viewmodel.BaseViewModel
 import com.ighorosipov.domain.model.Ringtone
@@ -18,6 +19,8 @@ import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import java.util.UUID
 
@@ -26,7 +29,8 @@ class TimerEditorViewModel @AssistedInject constructor(
     savedStateHandle: SavedStateHandle,
     @Assisted private val screenType: TimerEditorScreenType,
     private val repository: TimerRepository,
-    private val ringtoneRepository: RingtoneRepository
+    private val ringtoneRepository: RingtoneRepository,
+    private val resultBus: RingtoneResultBus
 ) : BaseViewModel<TimerEditorState, TimerEditorScreenIntent>(
     initialState = TimerEditorState()
 ) {
@@ -49,14 +53,18 @@ class TimerEditorViewModel @AssistedInject constructor(
                 )
             }
         }
-        savedStateHandle.get<String>("selected_ringtone_uri")?.let { uri ->
-            val title = savedStateHandle.get<String>("selected_ringtone_title") ?: "Unknown"
-            updateState {
-                copy(
-                    selectedRingtone = Ringtone(title = title, uri = uri)
-                )
+        resultBus.events
+            .onEach { result ->
+                updateState {
+                    copy(
+                        selectedRingtone = Ringtone(
+                            title = result.title,
+                            uri = result.uri
+                        )
+                    )
+                }
             }
-        }
+            .launchIn(viewModelScope)
     }
 
     fun onBackClick() {
@@ -80,7 +88,14 @@ class TimerEditorViewModel @AssistedInject constructor(
     }
 
     fun onSaveClick() {
+        if (state.value.isSaving) return
         viewModelScope.launch {
+            updateState {
+                copy(
+                    isSaving = true,
+                    isLoading = true
+                )
+            }
             val timer = Timer(
                 id = UUID.randomUUID().toString(),
                 name = state.value.timerName,
@@ -91,11 +106,20 @@ class TimerEditorViewModel @AssistedInject constructor(
             repository.insertTimer(
                 timer = timer
             ).also { result ->
-                when(result) {
+                when (result) {
                     is Resource.Error<*> -> {
-
+                        updateState {
+                            copy(
+                                isSaving = false,
+                                isLoading = false
+                            )
+                        }
                     }
+
                     is Resource.Success<*> -> {
+                        updateState {
+                            copy(isLoading = false)
+                        }
                         sendIntent(BaseUIIntent.NavigateBack)
                     }
                 }
@@ -127,10 +151,12 @@ class TimerEditorViewModel @AssistedInject constructor(
 
                     is Resource.Success<*> -> {
                         val timer = result.data ?: return@launch
-                        val selectedColorIndex = state.value.colors.indexOf(timer.colorHex).takeIf { it != -1 } ?: 0
+                        val selectedColorIndex =
+                            state.value.colors.indexOf(timer.colorHex).takeIf { it != -1 } ?: 0
                         val selectedRingtone = timer.ringtoneUri?.let { uri ->
                             Ringtone(
-                                title = ringtoneRepository.findTitleByUri(uri) ?: "Unknown", //todo
+                                title = ringtoneRepository.findTitleByUri(uri)
+                                    ?: "Unknown", //todo
                                 uri = uri
                             )
                         }

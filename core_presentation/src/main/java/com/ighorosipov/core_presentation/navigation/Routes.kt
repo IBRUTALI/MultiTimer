@@ -68,9 +68,13 @@ sealed class Routes {
         data class Edit(val timerId: String) : Routes()
 
     }
+
     @Serializable
     data object TimerDetailsScreen : Routes()
 
     @Serializable
-    data object SelectRingtoneScreen: Routes()
+    data object SelectRingtoneScreen : Routes() {
+        const val SELECTED_RINGTONE_URI = "SELECTED_RINGTONE_URI"
+        const val SELECTED_RINGTONE_TITLE = "SELECTED_RINGTONE_TITLE"
+    }
 }

@@ -5,6 +5,7 @@ import com.ighorosipov.domain.model.Ringtone
 import com.ighorosipov.utils.TimerEditorScreenType
 
 data class TimerEditorState(
+    val isLoading: Boolean = false,
     val screenType: TimerEditorScreenType = TimerEditorScreenType.Add,
     val timerName: String = "",
     val initialDuration: Long = 0,
@@ -14,7 +15,8 @@ data class TimerEditorState(
     val ringtones: List<Ringtone> = emptyList(),
     val selectedRingtoneIndex: Int? = null,
     val selectedRingtone: Ringtone? = null,
-    val soundIsMuted: Boolean = false
+    val soundIsMuted: Boolean = false,
+    val isSaving: Boolean = false
 ) {
     val selectedColorHex: String
         get() = colors[selectedColorIndex]
