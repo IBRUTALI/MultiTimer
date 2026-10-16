@@ -36,6 +36,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.ighorosipov.core_presentation.components.BaseContentCard
 import com.ighorosipov.core_presentation.components.BaseEditField
 import com.ighorosipov.core_presentation.components.BaseToolbar
+import com.ighorosipov.core_presentation.components.ClockLoaderScreen
 import com.ighorosipov.core_presentation.components.MainAppState
 import com.ighorosipov.core_presentation.components.RingtoneButton
 import com.ighorosipov.core_presentation.components.ToolbarIcon
@@ -192,7 +193,7 @@ fun TimerEditorScreen(
                 item {
                     RingtoneButton(
                         title = state.selectedRingtone?.title,
-                        isMuted = state.selectedRingtone == null,
+                        isMuted = state.soundIsMuted,
                         onSwitchClick = viewModel::onSwitchSoundClick,
                         onClick = viewModel::onSelectRingtoneClick
                     )
@@ -200,6 +201,7 @@ fun TimerEditorScreen(
             }
         )
     }
+    ClockLoaderScreen(isLoading = state.isLoading)
 }
 
 private fun handleIntent(

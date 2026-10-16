@@ -204,12 +204,14 @@ fun ItemTimerContent(
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.Start
             ) {
-                RetryIconButton(
-                    onIconClick = {
-                        //todo
-                    }
-                )
-                Spacer(modifier = Modifier.width(10.dp))
+                if (isPlaying) {
+                    RetryIconButton(
+                        onIconClick = {
+                            //todo
+                        }
+                    )
+                    Spacer(modifier = Modifier.width(10.dp))
+                }
                 NotificationIconButton(
                     isMuted = false, //todo
                     onIconClick = {

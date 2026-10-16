@@ -1,7 +1,15 @@
 package com.ighorosipov.timer.screen.timer
 
 import android.content.Context
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.core.FastOutSlowInEasing
+import androidx.compose.animation.core.Spring
 import androidx.compose.animation.core.spring
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.slideInVertically
+import androidx.compose.animation.slideOutHorizontally
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -17,6 +25,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -30,6 +41,8 @@ import com.ighorosipov.core_presentation.components.handleGlobalIntent
 import com.ighorosipov.timer.components.TimerCard
 import com.ighorosipov.timer.viewmodel.TimerViewModel
 import com.ighorosipov.utils.R
+import kotlinx.coroutines.delay
+import kotlin.time.Duration.Companion.milliseconds
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -92,34 +105,58 @@ fun TimerScreen(
                 )
             }
         } else {
+            var pendingDeletion by remember { mutableStateOf<String?>(null) }
             LazyColumn(
                 modifier = Modifier
                     .padding(horizontal = 12.dp),
                 verticalArrangement = Arrangement.spacedBy(10.dp)
             ) {
                 items(state.timers, key = { it.id }) { timer ->
-                    TimerCard(
-                        modifier = Modifier.animateItem(
-                            fadeOutSpec = spring(100f)
-                        ),
-                        timerName = timer.name,
-                        time = timer.durationMs,
-                        isPlaying = true, //todo
-                        onPlayPauseClick = {
-                            //todo
-                        },
-                        onStopClick = {
-                            // todo
-                        },
-                        onDeleteClick = {
-                            viewModel.onDeleteTimer(
-                                timerId = timer.id
-                            )
-                        },
-                        onEditClick = {
-                            // todo
+                    val isPending = pendingDeletion == timer.id
+
+                    LaunchedEffect(isPending) {
+                        if (isPending) {
+                            delay(240.milliseconds)
+                            viewModel.onDeleteTimer(timer.id)
                         }
-                    )
+                    }
+
+                    AnimatedVisibility(
+                        visible = !isPending,
+                        enter = fadeIn(tween(200)) +
+                                slideInVertically(tween(200)) { it / 2 },
+                        exit = slideOutHorizontally(
+                            targetOffsetX = { fullWidth -> fullWidth },
+                            animationSpec = tween(220, easing = FastOutSlowInEasing)
+                        ) + fadeOut(tween(180)),
+                        modifier = Modifier.animateItem(
+                            fadeInSpec = null,
+                            fadeOutSpec = null,
+                            placementSpec = spring(
+                                dampingRatio = Spring.DampingRatioNoBouncy,
+                                stiffness = Spring.StiffnessMediumLow
+                            )
+                        )
+                    ) {
+                        TimerCard(
+                            timerName = timer.name,
+                            time = timer.durationMs,
+                            isPlaying = true, //todo
+                            onPlayPauseClick = {
+                                //todo
+                            },
+                            onStopClick = {
+                                // todo
+                            },
+                            onDeleteClick = {
+                                pendingDeletion = timer.id
+                                true
+                            },
+                            onEditClick = {
+                                // todo
+                            }
+                        )
+                    }
                 }
             }
         }
