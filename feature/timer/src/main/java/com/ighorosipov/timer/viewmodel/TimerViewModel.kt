@@ -4,9 +4,12 @@ import androidx.lifecycle.viewModelScope
 import com.ighorosipov.core_presentation.misc.BaseUIIntent
 import com.ighorosipov.core_presentation.navigation.Routes
 import com.ighorosipov.core_presentation.viewmodel.BaseViewModel
-import com.ighorosipov.domain.model.Timer
-import com.ighorosipov.domain.repository.TimerEngine
-import com.ighorosipov.domain.repository.TimerRepository
+import com.ighorosipov.domain.timer.TimerStateObserver
+import com.ighorosipov.domain.timer.repository.TimerEngine
+import com.ighorosipov.domain.timer.repository.TimerRepository
+import com.ighorosipov.domain.timer.use_case.PauseTimerUseCase
+import com.ighorosipov.domain.timer.use_case.StartTimerUseCase
+import com.ighorosipov.domain.timer.use_case.StopTimerUseCase
 import com.ighorosipov.timer.model.toUiModel
 import com.ighorosipov.timer.screen.timer.TimerScreenIntent
 import com.ighorosipov.timer.screen.timer.TimerState
@@ -18,6 +21,10 @@ import javax.inject.Inject
 
 @HiltViewModel
 class TimerViewModel @Inject constructor(
+    private val startTimerUseCase: StartTimerUseCase,
+    private val pauseTimerUseCase: PauseTimerUseCase,
+    private val stopTimerUseCase: StopTimerUseCase,
+    private val timerStateObserver: TimerStateObserver,
     private val timerRepository: TimerRepository,
     private val engine: TimerEngine
 ) : BaseViewModel<TimerState, TimerScreenIntent>(TimerState()) {
@@ -30,7 +37,7 @@ class TimerViewModel @Inject constructor(
         viewModelScope.launch {
             combine(
                 timerRepository.observeTimers(),
-                engine.states
+                timerStateObserver.states()
             ) { timers, runtime ->
                 timers.map { timer ->
                     timer.toUiModel(runtime[timer.id])
@@ -52,12 +59,12 @@ class TimerViewModel @Inject constructor(
     }
 
     fun onEditTimerClick(
-        timer: Timer
+        timerId: String
     ) {
         sendIntent(
             intent = BaseUIIntent.Navigate(
                 Routes.TimerEditorScreen.Edit(
-                    timerId = timer.id
+                    timerId = timerId
                 )
             )
         )
@@ -83,6 +90,27 @@ class TimerViewModel @Inject constructor(
             }
         }
         return deleteResult
+    }
+
+    fun onPlayPauseClick(timerId: String) {
+        viewModelScope.launch {
+            val timer = state.value.timers.find { it.id == timerId } ?: return@launch // todo null handle
+            val isRunning = timerStateObserver.isRunning(timer.id)
+            if (isRunning) {
+                pauseTimerUseCase(timer.id)
+            } else {
+                startTimerUseCase(
+                    id = timer.id,
+                    durationMs = timer.durationMs,
+                    name = timer.name,
+                    ringtoneUri = timer.ringtoneUri
+                )
+            }
+        }
+    }
+
+    fun onStopClick(timerId: String) {
+
     }
 
 }

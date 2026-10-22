@@ -25,5 +25,4 @@ interface TimerDao {
     @Query("DELETE FROM timer WHERE id = :timerId")
     suspend fun deleteTimer(timerId: String)
 
-
 }

@@ -40,9 +40,12 @@
             </intent-filter>
         </activity>
         <service
-            android:name="com.ighorosipov.data.services.timer.TimerService"
-            android:exported="false"
-            android:foregroundServiceType="specialUse">
+            android:name="com.ighorosipov.data.timer.service.TimerService"
+            android:foregroundServiceType="specialUse"
+            android:exported="false">
+            <property
+                android:name="android.app.PROPERTY_SPECIAL_USE_FGS_SUBTYPE"
+                android:value="timer" />
         </service>
     </application>
 

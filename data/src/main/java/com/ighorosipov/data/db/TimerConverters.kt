@@ -2,7 +2,7 @@ package com.ighorosipov.data.db
 
 import androidx.room.TypeConverter
 import com.google.gson.Gson
-import com.ighorosipov.domain.model.Ringtone
+import com.ighorosipov.domain.ringtone.model.Ringtone
 
 class TimerConverters {
 

@@ -1,8 +1,8 @@
 package com.ighorosipov.timer.model
 
-import com.ighorosipov.domain.model.Timer
-import com.ighorosipov.domain.model.TimerRuntimeState
-import com.ighorosipov.domain.model.TimerStatus
+import com.ighorosipov.domain.timer.model.Timer
+import com.ighorosipov.domain.timer.model.TimerRuntimeState
+import com.ighorosipov.domain.timer.model.TimerStatus
 
 data class TimerUiModel(
     val id: String,
