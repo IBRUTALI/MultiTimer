@@ -3,8 +3,8 @@ package com.ighorosipov.data.di
 import android.content.Context
 import android.media.AudioAttributes
 import android.media.MediaPlayer
-import com.ighorosipov.data.repository.PlayerRepositoryImpl
-import com.ighorosipov.domain.repository.PlayerRepository
+import com.ighorosipov.data.timer.repository.PlayerRepositoryImpl
+import com.ighorosipov.domain.player.repository.PlayerRepository
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn

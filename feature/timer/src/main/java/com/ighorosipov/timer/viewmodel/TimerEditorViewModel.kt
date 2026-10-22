@@ -7,10 +7,10 @@ import com.ighorosipov.core_presentation.misc.BaseUIIntent
 import com.ighorosipov.core_presentation.misc.RingtoneResultBus
 import com.ighorosipov.core_presentation.navigation.Routes
 import com.ighorosipov.core_presentation.viewmodel.BaseViewModel
-import com.ighorosipov.domain.model.Ringtone
-import com.ighorosipov.domain.model.Timer
-import com.ighorosipov.domain.repository.RingtoneRepository
-import com.ighorosipov.domain.repository.TimerRepository
+import com.ighorosipov.domain.ringtone.model.Ringtone
+import com.ighorosipov.domain.timer.model.Timer
+import com.ighorosipov.domain.ringtone.repository.RingtoneRepository
+import com.ighorosipov.domain.timer.repository.TimerRepository
 import com.ighorosipov.timer.screen.add_timer.TimerEditorScreenIntent
 import com.ighorosipov.timer.screen.add_timer.TimerEditorState
 import com.ighorosipov.utils.Resource

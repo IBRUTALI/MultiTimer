@@ -38,6 +38,8 @@ import com.ighorosipov.core_presentation.components.BaseToolbar
 import com.ighorosipov.core_presentation.components.MainAppState
 import com.ighorosipov.core_presentation.components.ToolbarIcon
 import com.ighorosipov.core_presentation.components.handleGlobalIntent
+import com.ighorosipov.domain.timer.model.TimerStatus
+import com.ighorosipov.domain.timer.model.isIdle
 import com.ighorosipov.timer.components.TimerCard
 import com.ighorosipov.timer.viewmodel.TimerViewModel
 import com.ighorosipov.utils.R
@@ -140,20 +142,20 @@ fun TimerScreen(
                     ) {
                         TimerCard(
                             timerName = timer.name,
-                            time = timer.durationMs,
-                            isPlaying = true, //todo
+                            time =  if (timer.status.isIdle()) timer.durationMs else timer.remainingMs,
+                            isPlaying = timer.status == TimerStatus.RUNNING,
                             onPlayPauseClick = {
-                                //todo
+                                viewModel.onPlayPauseClick(timerId = timer.id)
                             },
                             onStopClick = {
-                                // todo
+                                viewModel.onStopClick(timerId = timer.id)
                             },
                             onDeleteClick = {
                                 pendingDeletion = timer.id
                                 true
                             },
                             onEditClick = {
-                                // todo
+                                viewModel.onEditTimerClick(timerId = timer.id)
                             }
                         )
                     }

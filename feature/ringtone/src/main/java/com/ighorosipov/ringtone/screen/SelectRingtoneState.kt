@@ -1,6 +1,6 @@
 package com.ighorosipov.ringtone.screen
 
-import com.ighorosipov.domain.model.Ringtone
+import com.ighorosipov.domain.ringtone.model.Ringtone
 
 data class SelectRingtoneState(
     val isLoading: Boolean = false,

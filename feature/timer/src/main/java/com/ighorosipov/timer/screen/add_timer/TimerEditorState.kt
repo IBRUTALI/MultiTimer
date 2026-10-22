@@ -1,7 +1,7 @@
 package com.ighorosipov.timer.screen.add_timer
 
 import com.ighorosipov.core_presentation.misc.TimerColorPalette
-import com.ighorosipov.domain.model.Ringtone
+import com.ighorosipov.domain.ringtone.model.Ringtone
 import com.ighorosipov.utils.TimerEditorScreenType
 
 data class TimerEditorState(

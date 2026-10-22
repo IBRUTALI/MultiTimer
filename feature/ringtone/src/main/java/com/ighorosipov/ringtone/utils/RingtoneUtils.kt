@@ -9,7 +9,7 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.platform.LocalContext
-import com.ighorosipov.domain.model.Ringtone
+import com.ighorosipov.domain.ringtone.model.Ringtone
 
 @Composable
 fun CustomRingtonePicker(

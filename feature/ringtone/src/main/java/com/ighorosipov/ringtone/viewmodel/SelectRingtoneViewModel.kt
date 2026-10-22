@@ -6,9 +6,9 @@ import com.ighorosipov.core_presentation.misc.BaseUIIntent
 import com.ighorosipov.core_presentation.misc.RingtoneResult
 import com.ighorosipov.core_presentation.misc.RingtoneResultBus
 import com.ighorosipov.core_presentation.viewmodel.BaseViewModel
-import com.ighorosipov.domain.model.Ringtone
-import com.ighorosipov.domain.repository.PlayerRepository
-import com.ighorosipov.domain.repository.RingtoneRepository
+import com.ighorosipov.domain.ringtone.model.Ringtone
+import com.ighorosipov.domain.player.repository.PlayerRepository
+import com.ighorosipov.domain.ringtone.repository.RingtoneRepository
 import com.ighorosipov.ringtone.screen.SelectRingtoneScreenIntent
 import com.ighorosipov.ringtone.screen.SelectRingtoneState
 import dagger.hilt.android.lifecycle.HiltViewModel
