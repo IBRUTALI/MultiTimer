@@ -6,5 +6,6 @@ data class TimerRuntimeState(
     val remainingMs: Long,
     val durationMs: Long,
     val ringtoneUri: String?,
+    val colorHex: String,
     val status: TimerStatus
 )

@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <plurals name="timers_amount">
+        <item quantity="one">и еще %1$d таймер</item>
+        <item quantity="few">и еще %1$d таймера</item>
+        <item quantity="many">и еще %1$d таймеров</item>
+        <item quantity="other">и еще %1$d таймеров</item>
+    </plurals>
+</resources>

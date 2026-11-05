@@ -10,4 +10,5 @@ object TimerServiceActions {
     const val EXTRA_DURATION_MS = "extra_duration_ms"
     const val EXTRA_NAME = "extra_name"
     const val EXTRA_RINGTONE_URI = "extra_ringtone_uri"
+    const val EXTRA_COLOR_HEX = "extra_color_hex"
 }

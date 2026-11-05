@@ -12,6 +12,8 @@ import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
+const val TIMER_RUNTIME_REPOSITORY_TAG = "TIMER_RUNTIME_REPOSITORY_TAG"
+
 class TimerRuntimeRepositoryImpl @Inject constructor(
     private val dao: TimerRuntimeDao,
     @IODispatcher private val dispatcher: CoroutineDispatcher
@@ -41,16 +43,17 @@ class TimerRuntimeRepositoryImpl @Inject constructor(
                         remainingMs = state.remainingMs,
                         durationMs = state.durationMs,
                         ringtoneUri = state.ringtoneUri,
+                        colorHex = state.colorHex,
                         status = state.status.name,
                         updatedAt = System.currentTimeMillis()
                     )
                 )
             } catch (e: SQLiteConstraintException) {
                 e.printStackTrace()
-                Log.d("RuntimeRepo", "Skipped persist for orphan ${state.id}")
+                Log.d(TIMER_RUNTIME_REPOSITORY_TAG, "Skipped persist for orphan ${state.id}")
             } catch (e: Exception) {
                 e.printStackTrace()
-                Log.e("RuntimeRepo", "Persist failed", e)
+                Log.e(TIMER_RUNTIME_REPOSITORY_TAG, "Persist failed")
             }
         }
     }

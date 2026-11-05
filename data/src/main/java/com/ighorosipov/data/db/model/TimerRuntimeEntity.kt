@@ -25,5 +25,6 @@ data class TimerRuntimeEntity(
     val durationMs: Long,
     val ringtoneUri: String?,
     val status: String,
+    val colorHex: String,
     val updatedAt: Long
 )

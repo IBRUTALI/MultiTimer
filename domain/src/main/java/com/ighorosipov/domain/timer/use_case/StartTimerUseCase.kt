@@ -10,7 +10,14 @@ class StartTimerUseCase @Inject constructor(
         id: String,
         durationMs: Long,
         name: String,
-        ringtoneUri: String?
+        ringtoneUri: String?,
+        colorHex: String
     ) =
-        controller.start(id, durationMs, name, ringtoneUri)
+        controller.start(
+            id = id,
+            durationMs = durationMs,
+            name = name,
+            ringtoneUri = ringtoneUri,
+            colorHex = colorHex
+        )
 }

@@ -42,5 +42,23 @@
 
     <!-- TimerDetailsScreen -->
 
+    <!-- TimerNotification -->
+    <string name="channel_ongoing_name">Active timers</string>
+    <string name="channel_ongoing_desc">Shows currently running timers</string>
+    <string name="channel_finished_name">Timer finished</string>
+    <string name="channel_finished_desc">Notifications when timers complete</string>
+    <string name="notif_active_timers_format">%1$d active timers</string>
+    <string name="notif_single_active_timer">1 active timer</string>
+    <string name="notif_overflow_format">and %1$d more timers</string>
+    <string name="notif_collapsed_overflow_format">and %1$d active timers</string>
+    <string name="notif_stop_all">Stop all</string>
+    <string name="notif_play">Start</string>
+    <string name="notif_pause">Pause</string>
+    <string name="notif_reset">Reset</string>
+    <string name="notif_finished_title">Timer finished: %1$s</string>
+    <string name="notif_finished_text">Elapsed: %1$s</string>
+    <string name="timer_running">Timer running</string>
+    <string name="timer_starting">Starting…</string>
+
 
 </resources>

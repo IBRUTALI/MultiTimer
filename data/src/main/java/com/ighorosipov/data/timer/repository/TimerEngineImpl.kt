@@ -22,7 +22,7 @@ class TimerEngineImpl @Inject constructor() : TimerEngine {
 
     override fun hasRunning(): Boolean = _states.value.values.any { it.status.isRunning() }
 
-    override fun start(id: String, durationMs: Long, name: String, ringtoneUri: String?) {
+    override fun start(id: String, durationMs: Long, name: String, ringtoneUri: String?, colorHex: String) {
         _states.update { map ->
             val current = map[id]
             val remaining = when {
@@ -35,6 +35,7 @@ class TimerEngineImpl @Inject constructor() : TimerEngine {
                 remainingMs = remaining,
                 durationMs = durationMs,
                 ringtoneUri = ringtoneUri,
+                colorHex = colorHex,
                 status = TimerStatus.RUNNING
             ))
         }

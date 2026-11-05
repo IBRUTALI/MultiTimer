@@ -15,4 +15,12 @@
     <color name="elem_on_primary">#84FFF4</color>
     <color name="elem_on_secondary">#FF00625C</color>
     <color name="elem_background">#190910</color>
+    <color name="stop_all_red">#E53935</color>
+    <color name="button_dark_bg">#2B2B2B</color>
+    <color name="button_light_bg">#FFFFFF</color>
+    <color name="text_dark_on_light">#222222</color>
+    <color name="text_darker">#000000</color>
+    <color name="text_secondary">#888888</color>
+    <color name="divider_color">#1F000000</color>
+    <color name="text_primary">#000000</color>
 </resources>

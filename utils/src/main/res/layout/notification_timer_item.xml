@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/timer_item_root"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:gravity="center_vertical"
+    android:background="@drawable/timer_row_background"
+    android:paddingHorizontal="14dp"
+    android:paddingVertical="5dp"
+    android:layout_marginBottom="8dp">
+
+    <!-- Left: label + time stacked -->
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/tv_timer_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:textColor="#333333"
+            android:textSize="12sp"
+            tools:text="Timer" />
+
+        <TextView
+            android:id="@+id/tv_timer_time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="#000000"
+            android:textSize="22sp"
+            android:textStyle="bold"
+            tools:text="42:18" />
+    </LinearLayout>
+
+    <FrameLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+
+        <ImageButton
+            android:id="@+id/btn_play_pause"
+            android:layout_width="36dp"
+            android:layout_height="36dp"
+            android:layout_marginEnd="8dp"
+            android:background="@drawable/circle_button_light"
+            android:scaleType="centerInside"
+            android:contentDescription="@string/notif_pause"
+            tools:src="@drawable/ic_pause_dark" />
+    </FrameLayout>
+
+    <ImageButton
+        android:id="@+id/btn_reset"
+        android:layout_width="36dp"
+        android:layout_height="36dp"
+        android:background="@drawable/circle_button_dark"
+        android:scaleType="centerInside"
+        android:src="@drawable/ic_stop_white"
+        android:contentDescription="@string/notif_reset" />
+
+</LinearLayout>

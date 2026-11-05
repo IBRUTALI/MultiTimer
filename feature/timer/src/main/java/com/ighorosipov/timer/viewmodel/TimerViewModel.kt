@@ -103,7 +103,8 @@ class TimerViewModel @Inject constructor(
                     id = timer.id,
                     durationMs = timer.durationMs,
                     name = timer.name,
-                    ringtoneUri = timer.ringtoneUri
+                    ringtoneUri = timer.ringtoneUri,
+                    colorHex = timer.colorHex
                 )
             }
         }

@@ -10,6 +10,7 @@ fun TimerRuntimeEntity.toDomain() = TimerRuntimeState(
     remainingMs = remainingMs,
     durationMs = durationMs,
     ringtoneUri = ringtoneUri,
+    colorHex = colorHex,
     status = TimerStatus.valueOf(status)
 )
 
@@ -19,6 +20,7 @@ fun TimerRuntimeState.toEntity() = TimerRuntimeEntity(
     remainingMs = remainingMs,
     durationMs = durationMs,
     ringtoneUri = ringtoneUri,
+    colorHex = colorHex,
     status = status.name,
     updatedAt = System.currentTimeMillis()
 )
