@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/timer_item_root_compact"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/timer_row_background"
+    android:gravity="center_vertical"
+    android:orientation="horizontal"
+    android:paddingHorizontal="12dp"
+    android:paddingVertical="6dp">
+
+    <TextView
+        android:id="@+id/tv_timer_name_compact"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:ellipsize="end"
+        android:maxLines="1"
+        android:textColor="#333333"
+        android:textSize="13sp"
+        tools:text="Deep work — 42:18" />
+
+    <ImageButton
+        android:id="@+id/btn_play_pause_compact"
+        android:layout_width="32dp"
+        android:layout_height="32dp"
+        android:layout_marginStart="8dp"
+        android:background="@drawable/circle_button_light"
+        android:contentDescription="@string/notif_pause"
+        android:scaleType="centerInside"
+        tools:src="@drawable/ic_pause_dark" />
+
+    <ImageButton
+        android:id="@+id/btn_reset_compact"
+        android:layout_width="32dp"
+        android:layout_height="32dp"
+        android:layout_marginStart="6dp"
+        android:background="@drawable/circle_button_dark"
+        android:contentDescription="@string/notif_reset"
+        android:scaleType="centerInside"
+        android:src="@drawable/ic_stop_white" />
+
+</LinearLayout>

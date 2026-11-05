@@ -38,8 +38,25 @@
     <string name="s">С</string>
     <string name="color">Цвет</string>
     <string name="notification_sound">Звук уведомления</string>
+    <string name="channel_ongoing_name">Активные таймеры</string>
+    <string name="channel_finished_name">Время вышло</string>
+    <string name="notif_single_active_timer">1 активный таймер</string>
+    <string name="notif_stop_all">Остановить все</string>
+    <string name="notif_play">Старт</string>
+    <string name="notif_pause">Пауза</string>
+    <string name="notif_reset">Сброс</string>
 
     <!-- TimerDetailsScreen -->
+
+    <!-- TimerNotification -->
+    <string name="channel_ongoing_desc">Показывает запущенные таймеры</string>
+    <string name="channel_finished_desc">Уведомления о завершении таймеров</string>
+    <string name="notif_overflow_format">и ещё %1$d таймер</string>
+    <string name="notif_collapsed_overflow_format">и ещё %1$d активных таймеров</string>
+    <string name="notif_finished_title">Таймер завершён: %1$s</string>
+    <string name="notif_finished_text">Прошло: %1$s</string>
+    <string name="timer_running">Таймер запущен</string>
+    <string name="timer_starting">Запуск…</string>
 
 
 </resources>

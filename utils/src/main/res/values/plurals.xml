@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <plurals name="timers_amount">
+        <item quantity="one">and %1$d more timers</item>
+        <item quantity="few">and %1$d more timers</item>
+        <item quantity="many">and %1$d more timers</item>
+        <item quantity="other">and %1$d more timers</item>
+    </plurals>
+</resources>

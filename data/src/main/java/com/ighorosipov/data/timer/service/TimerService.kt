@@ -80,8 +80,15 @@ class TimerService : Service() {
                 val duration = intent.getLongExtra(TimerServiceActions.EXTRA_DURATION_MS, 0L)
                 val name = intent.getStringExtra(TimerServiceActions.EXTRA_NAME).orEmpty()
                 val ringtone = intent.getStringExtra(TimerServiceActions.EXTRA_RINGTONE_URI)
+                val colorHex = intent.getStringExtra(TimerServiceActions.EXTRA_COLOR_HEX).orEmpty()
 
-                engine.start(id, duration, name, ringtone)
+                engine.start(
+                    id = id,
+                    durationMs = duration,
+                    name = name,
+                    ringtoneUri = ringtone,
+                    colorHex = colorHex
+                )
                 startForegroundIfNeeded()
                 ensureTicker()
                 startPersistenceLoop()

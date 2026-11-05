@@ -13,13 +13,20 @@ class AndroidTimerController @Inject constructor(
     @ApplicationContext private val context: Context
 ) : TimerController {
 
-    override fun start(id: String, durationMs: Long, name: String, ringtoneUri: String?) {
+    override fun start(
+        id: String,
+        durationMs: Long,
+        name: String,
+        ringtoneUri: String?,
+        colorHex: String
+    ) {
         val intent = Intent(context, TimerService::class.java).apply {
             action = TimerServiceActions.START
             putExtra(TimerServiceActions.EXTRA_TIMER_ID, id)
             putExtra(TimerServiceActions.EXTRA_DURATION_MS, durationMs)
             putExtra(TimerServiceActions.EXTRA_NAME, name)
             ringtoneUri?.let { putExtra(TimerServiceActions.EXTRA_RINGTONE_URI, it) }
+            putExtra(TimerServiceActions.EXTRA_COLOR_HEX, colorHex)
         }
         ContextCompat.startForegroundService(context, intent)
     }
