@@ -1,6 +1,6 @@
 package com.ighorosipov.data.timer.mapper
 
-import com.ighorosipov.data.db.model.TimerEntity
+import com.ighorosipov.data.timer.db.model.TimerEntity
 import com.ighorosipov.domain.timer.model.Timer
 
 fun TimerEntity.toDomain(): Timer {

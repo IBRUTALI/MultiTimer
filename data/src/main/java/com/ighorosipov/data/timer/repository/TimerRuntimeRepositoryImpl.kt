@@ -3,7 +3,7 @@ package com.ighorosipov.data.timer.repository
 import android.database.sqlite.SQLiteConstraintException
 import android.util.Log
 import com.ighorosipov.data.core.room.TimerRuntimeDao
-import com.ighorosipov.data.db.model.TimerRuntimeEntity
+import com.ighorosipov.data.timer.db.model.TimerRuntimeEntity
 import com.ighorosipov.data.di.IODispatcher
 import com.ighorosipov.data.timer.mapper.toDomain
 import com.ighorosipov.domain.timer.model.TimerRuntimeState

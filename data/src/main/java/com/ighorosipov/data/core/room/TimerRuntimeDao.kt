@@ -3,7 +3,7 @@ package com.ighorosipov.data.core.room
 import androidx.room.Dao
 import androidx.room.Query
 import androidx.room.Upsert
-import com.ighorosipov.data.db.model.TimerRuntimeEntity
+import com.ighorosipov.data.timer.db.model.TimerRuntimeEntity
 
 @Dao
 interface TimerRuntimeDao {

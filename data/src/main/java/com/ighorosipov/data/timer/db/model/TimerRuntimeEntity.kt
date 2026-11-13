@@ -1,4 +1,4 @@
-package com.ighorosipov.data.db.model
+package com.ighorosipov.data.timer.db.model
 
 import androidx.room.Entity
 import androidx.room.ForeignKey

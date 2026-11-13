@@ -6,9 +6,9 @@ import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
-import com.ighorosipov.data.db.TimerConverters
-import com.ighorosipov.data.db.model.TimerEntity
-import com.ighorosipov.data.db.model.TimerRuntimeEntity
+import com.ighorosipov.data.timer.db.TimerConverters
+import com.ighorosipov.data.timer.db.model.TimerEntity
+import com.ighorosipov.data.timer.db.model.TimerRuntimeEntity
 import java.util.concurrent.Executors
 
 @Database(

@@ -71,7 +71,7 @@ dependencies {
     implementation(project(":data"))
     implementation(project(":domain"))
     implementation(project(":utils"))
-    implementation(project(":core_presentation"))
+    implementation(project(":core-presentation"))
     implementation(project(":feature:timer"))
     implementation(project(":feature:alarm"))
     implementation(project(":feature:player"))

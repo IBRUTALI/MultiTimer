@@ -50,7 +50,7 @@ dependencies {
     // Module
     implementation(project(":domain"))
     implementation(project(":utils"))
-    implementation(project(":core_presentation"))
+    implementation(project(":core-presentation"))
 
     implementation(libs.androidx.material.icons.core)
     implementation(libs.androidx.core.ktx)
