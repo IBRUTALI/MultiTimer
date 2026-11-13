@@ -4,7 +4,7 @@ import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
-import com.ighorosipov.data.db.model.TimerEntity
+import com.ighorosipov.data.timer.db.model.TimerEntity
 import kotlinx.coroutines.flow.Flow
 
 @Dao

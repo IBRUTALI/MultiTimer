@@ -9,7 +9,6 @@ import com.ighorosipov.domain.timer.notification.NotificationTarget
 import dagger.hilt.android.qualifiers.ApplicationContext
 import javax.inject.Inject
 
-const val ACTION_OPEN_TIMER = "ACTION_OPEN_TIMER"
 
 class ActivityIntentProviderImpl @Inject constructor(
     @ApplicationContext private val context: Context
@@ -19,10 +18,11 @@ class ActivityIntentProviderImpl @Inject constructor(
         val uri = when (target) {
             NotificationTarget.Timers -> "multitimer://timers".toUri()
             is NotificationTarget.TimerDetail -> "multitimer://timer?id=${target.id}".toUri()
+            NotificationTarget.Stopwatch -> "multitimer://stopwatch".toUri()
         }
 
         val intent = Intent(Intent.ACTION_VIEW, uri).apply {
-            setPackage(context.packageName)  // ← ограничиваем своим пакетом
+            setPackage(context.packageName)
             flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP
         }
 
@@ -37,5 +37,6 @@ class ActivityIntentProviderImpl @Inject constructor(
     private fun NotificationTarget.requestCode(): Int = when (this) {
         is NotificationTarget.Timers -> 0
         is NotificationTarget.TimerDetail -> id.hashCode()
+        is NotificationTarget.Stopwatch -> 1
     }
 }

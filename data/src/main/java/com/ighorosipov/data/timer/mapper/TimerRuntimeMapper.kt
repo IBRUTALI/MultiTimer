@@ -1,6 +1,6 @@
 package com.ighorosipov.data.timer.mapper
 
-import com.ighorosipov.data.db.model.TimerRuntimeEntity
+import com.ighorosipov.data.timer.db.model.TimerRuntimeEntity
 import com.ighorosipov.domain.timer.model.TimerRuntimeState
 import com.ighorosipov.domain.timer.model.TimerStatus
 

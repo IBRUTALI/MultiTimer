@@ -53,6 +53,7 @@ dependencies {
     // Module
     implementation(project(":domain"))
     implementation(project(":utils"))
+    implementation(project(":core-android-service"))
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)

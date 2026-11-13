@@ -1,4 +1,4 @@
-package com.ighorosipov.data.db
+package com.ighorosipov.data.timer.db
 
 import androidx.room.TypeConverter
 import com.google.gson.Gson

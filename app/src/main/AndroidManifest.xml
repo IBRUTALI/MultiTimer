@@ -7,6 +7,7 @@
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE_SPECIAL_USE" />
     <uses-permission android:name="com.android.alarm.permission.SET_ALARM" />
     <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW"/>
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
 
     <application
         android:name=".App"
@@ -39,6 +40,7 @@
                     />
             </intent-filter>
         </activity>
+
         <service
             android:name="com.ighorosipov.data.timer.service.TimerService"
             android:foregroundServiceType="specialUse"
@@ -47,6 +49,16 @@
                 android:name="android.app.PROPERTY_SPECIAL_USE_FGS_SUBTYPE"
                 android:value="timer" />
         </service>
+
+        <service
+            android:name="com.ighorosipov.data.stopwatch.service.StopwatchService"
+            android:foregroundServiceType="specialUse"
+            android:exported="false">
+            <property
+                android:name="android.app.PROPERTY_SPECIAL_USE_FGS_SUBTYPE"
+                android:value="stopwatch" />
+        </service>
+
     </application>
 
 </manifest>
