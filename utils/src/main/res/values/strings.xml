@@ -16,12 +16,22 @@
     <string name="ok" translatable="false">OK</string>
     <string name="off">Off</string>
     <string name="unknown">Unknown</string>
+    <string name="notification_permission_granted">Permission for notifications has been granted</string>
+    <string name="notification_permission_denied">Permission for notifications has been denied</string>
 
     <!-- AlarmScreen -->
 
     <!-- WorldTimeScreen -->
 
     <!-- StopwatchScreen -->
+    <string name="stopwatch_lap">Lap</string>
+    <string name="stopwatch_interval">Lap</string>
+    <string name="stopwatch_start">Start</string>
+    <string name="stopwatch_reset">Reset</string>
+    <string name="stopwatch_resume">Resume</string>
+    <string name="stopwatch_stop">Stop</string>
+    <string name="stopwatch_lap_time">Lap time</string>
+    <string name="stopwatch_total_time">Total time</string>
 
     <!-- TimerScreen -->
     <string name="timer_details">Таймер</string>

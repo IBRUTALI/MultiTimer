@@ -3,6 +3,7 @@ package com.ighorosipov.core_presentation.viewmodel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.ighorosipov.core_presentation.misc.BaseUIIntent
+import com.ighorosipov.core_presentation.misc.UiText
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asSharedFlow
@@ -42,6 +43,12 @@ abstract class BaseViewModel<State, Intent>(
     ) {
         viewModelScope.launch {
             _intents.emit(intent)
+        }
+    }
+
+    fun showSnackbar(text: String) {
+        viewModelScope.launch {
+            _globalIntents.emit(BaseUIIntent.Snackbar(UiText.DynamicString(text)))
         }
     }
 }

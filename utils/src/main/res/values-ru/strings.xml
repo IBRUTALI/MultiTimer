@@ -23,6 +23,7 @@
     <!-- TimerScreen -->
     <string name="off">Выключено</string>
     <string name="unknown">Неизвестно</string>
+    <string name="notification_permission_denied">Разрешение на уведомления отклонено</string>
     <string name="timer_details">Таймер</string>
 
     <!-- AddTimerScreen -->
@@ -57,6 +58,15 @@
     <string name="notif_finished_text">Прошло: %1$s</string>
     <string name="timer_running">Таймер запущен</string>
     <string name="timer_starting">Запуск…</string>
+    <string name="notification_permission_granted">Разрешение на уведомления получено</string>
+    <string name="stopwatch_lap">Круг</string>
+    <string name="stopwatch_start">Начать</string>
+    <string name="stopwatch_interval">Интервал</string>
+    <string name="stopwatch_lap_time">Время круга</string>
+    <string name="stopwatch_reset">Сбросить</string>
+    <string name="stopwatch_resume">Продолжить</string>
+    <string name="stopwatch_stop">Стоп</string>
+    <string name="stopwatch_total_time">Общее время</string>
 
 
 </resources>

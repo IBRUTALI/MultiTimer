@@ -1,11 +1,13 @@
 package com.ighorosipov.stopwatch.components
 
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import com.ighorosipov.core_presentation.theme.LocalCustomColorsPalette
 import com.ighorosipov.core_presentation.theme.MultiTimerTheme
 import com.ighorosipov.domain.stopwatch.model.StopwatchStatus
 import com.ighorosipov.stopwatch.screen.StopwatchState
+import com.ighorosipov.utils.R
 
 @Composable
 fun LeftControlButton(
@@ -15,7 +17,7 @@ fun LeftControlButton(
 ) {
     when {
         state.isIdle -> CircleButton(
-            text = "Lap",
+            text = stringResource(R.string.stopwatch_interval),
             enabled = false,
             containerColor = LocalCustomColorsPalette.current.surfaceVariant,
             contentColor = LocalCustomColorsPalette.current.onSurfaceVariant,
@@ -23,7 +25,7 @@ fun LeftControlButton(
         )
 
         state.isRunning -> CircleButton(
-            text = "Lap",
+            text = stringResource(R.string.stopwatch_lap),
             enabled = true,
             containerColor = LocalCustomColorsPalette.current.surfaceVariant,
             contentColor = LocalCustomColorsPalette.current.onSurfaceVariant,
@@ -31,7 +33,7 @@ fun LeftControlButton(
         )
 
         state.isPaused -> CircleButton(
-            text = "Reset",
+            text = stringResource(R.string.stopwatch_reset),
             enabled = true,
             containerColor = LocalCustomColorsPalette.current.surfaceVariant,
             contentColor = LocalCustomColorsPalette.current.onSurfaceVariant,
@@ -49,7 +51,7 @@ fun RightControlButton(
 ) {
     when {
         state.isIdle -> CircleButton(
-            text = "Start",
+            text = stringResource(R.string.stopwatch_start),
             enabled = true,
             containerColor = LocalCustomColorsPalette.current.primary,
             contentColor = LocalCustomColorsPalette.current.onPrimary,
@@ -57,7 +59,7 @@ fun RightControlButton(
         )
 
         state.isRunning -> CircleButton(
-            text = "Stop",
+            text = stringResource(R.string.stopwatch_stop),
             enabled = true,
             containerColor = LocalCustomColorsPalette.current.error,
             contentColor = LocalCustomColorsPalette.current.onError,
@@ -65,7 +67,7 @@ fun RightControlButton(
         )
 
         state.isPaused -> CircleButton(
-            text = "Resume",
+            text = stringResource(R.string.stopwatch_resume),
             enabled = true,
             containerColor = LocalCustomColorsPalette.current.primary,
             contentColor = LocalCustomColorsPalette.current.onPrimary,
