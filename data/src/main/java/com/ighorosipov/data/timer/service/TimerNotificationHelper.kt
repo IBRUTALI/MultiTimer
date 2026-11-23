@@ -1,7 +1,6 @@
 package com.ighorosipov.data.timer.service
 
 import android.app.Notification
-import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.app.PendingIntent
 import android.content.Context
@@ -12,7 +11,9 @@ import android.os.Build
 import android.view.View
 import android.widget.RemoteViews
 import androidx.core.app.NotificationCompat
+import androidx.core.content.getSystemService
 import androidx.core.graphics.toColorInt
+import com.ighorosipov.core_android_service.NotificationChannelHelper
 import com.ighorosipov.domain.timer.TimerServiceActions
 import com.ighorosipov.domain.timer.model.TimerRuntimeState
 import com.ighorosipov.domain.timer.model.TimerStatus
@@ -30,14 +31,11 @@ class TimerNotificationHelper @Inject constructor(
     private val activityIntentProvider: ActivityIntentProvider
 ) {
     companion object {
-        const val CHANNEL_ONGOING = "timers_ongoing"
-        const val CHANNEL_FINISHED = "timers_finished"
         const val ONGOING_ID = 1001
         const val MAX_VISIBLE_TIMERS = 5
     }
 
-    private val manager =
-        context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+    private val manager = context.getSystemService<NotificationManager>()
 
     fun buildOngoingNotification(states: List<TimerRuntimeState>): Notification {
         val active = states.filter {
@@ -53,7 +51,7 @@ class TimerNotificationHelper @Inject constructor(
         val expandedView = buildExpandedView(states)
         val collapsedView = buildCollapsedView(states)
 
-        return NotificationCompat.Builder(context, CHANNEL_ONGOING)
+        return NotificationCompat.Builder(context, NotificationChannelHelper.CHANNEL_ONGOING_LOW)
             .setSmallIcon(R.drawable.ic_timer_small)
             .setOngoing(true)
             .setOnlyAlertOnce(true)
@@ -65,6 +63,7 @@ class TimerNotificationHelper @Inject constructor(
             .setContentIntent(openAppIntent())
             .build()
     }
+
 
     private fun buildExpandedView(states: List<TimerRuntimeState>): RemoteViews {
         val view = RemoteViews(context.packageName, R.layout.notification_timer_expanded)
@@ -261,22 +260,23 @@ class TimerNotificationHelper @Inject constructor(
     }
 
     fun buildPlaceholderNotification(): Notification =
-        NotificationCompat.Builder(context, CHANNEL_ONGOING)
-            .setSmallIcon(R.drawable.ic_time)
+        NotificationCompat.Builder(context, NotificationChannelHelper.CHANNEL_ONGOING_LOW)
+            .setSmallIcon(R.drawable.ic_timer_small)
             .setContentTitle("MultiTimer")
             .setContentText("Запуск...")
             .setOngoing(true)
             .setOnlyAlertOnce(true)
+            .setForegroundServiceBehavior(NotificationCompat.FOREGROUND_SERVICE_IMMEDIATE)
             .setContentIntent(openAppIntent())
             .build()
 
     fun notifyOngoing(notification: Notification) {
-        manager.notify(ONGOING_ID, notification)
+        manager?.notify(ONGOING_ID, notification)
     }
 
     fun showFinishedNotification(timer: TimerRuntimeState) {
-        val notification = NotificationCompat.Builder(context, CHANNEL_FINISHED)
-            .setSmallIcon(R.drawable.ic_launcher_foreground)
+        val notification = NotificationCompat.Builder(context, NotificationChannelHelper.CHANNEL_ALERT_HIGH)
+            .setSmallIcon(R.drawable.ic_timer_small)
             .setContentTitle(timer.name.ifBlank { "Timer" })
             .setContentText("Time is up")
             .setPriority(NotificationCompat.PRIORITY_HIGH)
@@ -285,29 +285,7 @@ class TimerNotificationHelper @Inject constructor(
             .setContentIntent(openAppIntent())
             .build()
 
-        manager.notify(timer.id.hashCode(), notification)
-    }
-
-    fun createChannels() {
-        val ongoing = NotificationChannel(
-            CHANNEL_ONGOING,
-            "Активные таймеры",
-            NotificationManager.IMPORTANCE_LOW
-        ).apply {
-            description = "Показывает запущенные таймеры"
-            setShowBadge(false)
-        }
-
-        val finished = NotificationChannel(
-            CHANNEL_FINISHED,
-            "Таймер завершён",
-            NotificationManager.IMPORTANCE_HIGH
-        ).apply {
-            enableVibration(true)
-            vibrationPattern = longArrayOf(0, 500, 250, 500)
-        }
-
-        manager.createNotificationChannels(listOf(ongoing, finished))
+        manager?.notify(timer.id.hashCode(), notification)
     }
 
     private fun openAppIntent(): PendingIntent {
