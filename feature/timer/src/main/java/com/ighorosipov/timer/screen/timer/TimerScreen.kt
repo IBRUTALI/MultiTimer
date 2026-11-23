@@ -38,6 +38,7 @@ import com.ighorosipov.core_presentation.components.BaseToolbar
 import com.ighorosipov.core_presentation.components.MainAppState
 import com.ighorosipov.core_presentation.components.ToolbarIcon
 import com.ighorosipov.core_presentation.components.handleGlobalIntent
+import com.ighorosipov.core_presentation.theme.LocalCustomColorsPalette
 import com.ighorosipov.domain.timer.model.TimerStatus
 import com.ighorosipov.domain.timer.model.isIdle
 import com.ighorosipov.timer.components.TimerCard
@@ -103,6 +104,7 @@ fun TimerScreen(
                 Text(
                     modifier = Modifier,
                     text = stringResource(R.string.no_timers),
+                    color = LocalCustomColorsPalette.current.onBackground,
                     style = MaterialTheme.typography.titleSmall
                 )
             }
