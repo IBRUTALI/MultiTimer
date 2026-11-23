@@ -11,8 +11,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.SnackbarDuration
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -25,12 +23,15 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.ighorosipov.core_presentation.components.MainAppState
 import com.ighorosipov.core_presentation.components.handleGlobalIntent
+import com.ighorosipov.core_presentation.permission.NotificationPermissionController
+import com.ighorosipov.core_presentation.permission.rememberNotificationPermissionController
 import com.ighorosipov.core_presentation.theme.LocalCustomColorsPalette
-import com.ighorosipov.stopwatch.components.LapItem
+import com.ighorosipov.stopwatch.components.LapsList
 import com.ighorosipov.stopwatch.components.LeftControlButton
 import com.ighorosipov.stopwatch.components.RightControlButton
 import com.ighorosipov.stopwatch.components.StopwatchDial
 import com.ighorosipov.stopwatch.viewmodel.StopwatchViewModel
+import com.ighorosipov.utils.R
 
 @Composable
 fun StopwatchScreen(
@@ -45,6 +46,11 @@ fun StopwatchScreen(
 ) {
     val context = LocalContext.current
     val state by viewModel.state.collectAsStateWithLifecycle()
+
+    val permissionController = rememberNotificationPermissionController(
+        onGranted = { viewModel.showSnackbar(context.getString(R.string.notification_permission_granted)) },
+        onDenied = { viewModel.showSnackbar(context.getString(R.string.notification_permission_denied)) }
+    )
 
     LaunchedEffect(Unit) {
         viewModel.globalIntents.collect { intent ->
@@ -62,7 +68,9 @@ fun StopwatchScreen(
             handleIntent(
                 appState = appState,
                 context = context,
-                intent = intent
+                intent = intent,
+                permissionController = permissionController,
+                onPermissionGranted = viewModel::onPermissionGranted
             )
         }
     }
@@ -90,22 +98,33 @@ private fun StopwatchContent(
         modifier = Modifier
             .fillMaxSize()
             .background(LocalCustomColorsPalette.current.background)
-            .padding(horizontal = 24.dp),
-        horizontalAlignment = Alignment.CenterHorizontally
+            .padding(horizontal = 24.dp)
     ) {
-        Spacer(modifier = Modifier.height(48.dp))
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .weight(1f),
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            Spacer(modifier = Modifier.height(24.dp))
+            StopwatchDial(
+                timeMs = state.elapsedMs,
+                progress = state.progress,
+                isRunning = state.isRunning,
+                modifier = Modifier.size(230.dp)
+            )
+            Spacer(modifier = Modifier.height(24.dp))
+            LapsList(
+                laps = state.laps
+            )
+        }
 
-        StopwatchDial(
-            timeMs = state.elapsedMs,
-            progress = state.progress,
-            isRunning = state.isRunning,
-            modifier = Modifier.size(280.dp)
-        )
-
-        Spacer(modifier = Modifier.height(48.dp))
+        Spacer(modifier = Modifier.height(24.dp))
 
         Row(
-            modifier = Modifier.fillMaxWidth(),
+            modifier = Modifier
+                .fillMaxWidth()
+                .weight(0.2f),
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
             LeftControlButton(
@@ -121,24 +140,21 @@ private fun StopwatchContent(
                 onResumeClick = onResumeClick
             )
         }
-
-        Spacer(modifier = Modifier.height(24.dp))
-
-        LazyColumn(
-            modifier = Modifier.fillMaxWidth(),
-            reverseLayout = true
-        ) {
-            items(state.laps, key = { it.index }) { lap ->
-                LapItem(lap = lap)
-            }
-        }
     }
 }
 
 private fun handleIntent(
     appState: MainAppState,
     context: Context,
-    intent: StopwatchScreenIntent
+    intent: StopwatchScreenIntent,
+    permissionController: NotificationPermissionController,
+    onPermissionGranted: () -> Unit
 ) {
-    //todo
+    when(intent) {
+        is StopwatchScreenIntent.RequestNotificationPermission -> {
+            permissionController.requestPermission {
+                onPermissionGranted()
+            }
+        }
+    }
 }

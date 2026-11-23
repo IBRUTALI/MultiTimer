@@ -18,6 +18,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.ighorosipov.core_presentation.theme.LocalCustomColorsPalette
 import com.ighorosipov.core_presentation.theme.MultiTimerTheme
+import com.ighorosipov.utils.TimeFormat
 import com.ighorosipov.utils.formatTime
 
 @Composable
@@ -49,8 +50,11 @@ fun StopwatchDial(
         }
         Column(horizontalAlignment = Alignment.CenterHorizontally) {
             Text(
-                text = formatTime(timeMs),
-                fontSize = 56.sp,
+                text = formatTime(
+                    timeMs = timeMs,
+                    format = TimeFormat.MM_SS_MS
+                ),
+                fontSize = 44.sp,
                 fontWeight = FontWeight.Bold,
                 color = MaterialTheme.colorScheme.onBackground
             )

@@ -4,6 +4,7 @@ import java.util.concurrent.TimeUnit
 
 enum class TimeFormat(val formatStr: String) {
     HH_MM_SS("%02d:%02d:%02d"),   // 00:00:00
+    MM_SS_MS("%02d:%02d:%02d"),   // 00:00:00
     MM_SS("%02d:%02d"),           // 00:00
     HH_MM("%02d:%02d"),           // 00:00
     SS("%02d"),                   // 00
@@ -18,10 +19,11 @@ fun formatTime(
     val hours = totalSeconds / 3600
     val minutes = (totalSeconds % 3600) / 60
     val seconds = totalSeconds % 60
-    val millis = (timeMs % 1000) / 100
+    val millis = (timeMs % 1000) / 10
 
     return when (format) {
         TimeFormat.HH_MM_SS -> format.formatStr.format(hours, minutes, seconds)
+        TimeFormat.MM_SS_MS -> format.formatStr.format(minutes, seconds, millis)
         TimeFormat.MM_SS -> format.formatStr.format(minutes + hours * 60, seconds)
         TimeFormat.HH_MM -> format.formatStr.format(hours, minutes)
         TimeFormat.SS ->format.formatStr.format(totalSeconds)

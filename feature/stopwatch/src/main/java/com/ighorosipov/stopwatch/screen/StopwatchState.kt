@@ -14,5 +14,5 @@ data class StopwatchState(
 }
 
 sealed class StopwatchScreenIntent {
-    // todo
+    data object RequestNotificationPermission: StopwatchScreenIntent()
 }

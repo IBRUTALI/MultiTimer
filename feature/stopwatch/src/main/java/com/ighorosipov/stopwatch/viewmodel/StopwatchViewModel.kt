@@ -2,6 +2,7 @@ package com.ighorosipov.stopwatch.viewmodel
 
 import androidx.lifecycle.viewModelScope
 import com.ighorosipov.core_presentation.viewmodel.BaseViewModel
+import com.ighorosipov.domain.permission.PermissionGateway
 import com.ighorosipov.domain.stopwatch.StopwatchStateObserver
 import com.ighorosipov.domain.stopwatch.model.StopwatchStatus
 import com.ighorosipov.domain.stopwatch.use_case.LapStopwatchUseCase
@@ -25,7 +26,8 @@ class StopwatchViewModel @Inject constructor(
     private val resumeStopwatchUseCase: ResumeStopwatchUseCase,
     private val lapStopwatchUseCase: LapStopwatchUseCase,
     private val stopStopwatchUseCase: StopStopwatchUseCase,
-    private val stateObserver: StopwatchStateObserver
+    private val stateObserver: StopwatchStateObserver,
+    private val permissionGateway: PermissionGateway
 ) : BaseViewModel<StopwatchState, StopwatchScreenIntent>(StopwatchState()) {
 
     init {
@@ -57,7 +59,15 @@ class StopwatchViewModel @Inject constructor(
     }
 
     fun onStart() {
-        startStopwatchUseCase(SINGLE_STOPWATCH_ID, name = "Stopwatch", colorHex = "#6750A4")
+        if (permissionGateway.hasNotificationPermission()) {
+            startStopwatchUseCase(
+                id = SINGLE_STOPWATCH_ID,
+                name = "Stopwatch",
+                colorHex = "#6750A4"
+            )
+        } else {
+            sendIntent(StopwatchScreenIntent.RequestNotificationPermission)
+        }
     }
 
     fun onPause() {
@@ -74,5 +84,13 @@ class StopwatchViewModel @Inject constructor(
 
     fun onReset() {
         stopStopwatchUseCase(SINGLE_STOPWATCH_ID)
+    }
+
+    fun onPermissionGranted() {
+        startStopwatchUseCase(
+            id = SINGLE_STOPWATCH_ID,
+            name = "Stopwatch",
+            colorHex = "#6750A4"
+        )
     }
 }
