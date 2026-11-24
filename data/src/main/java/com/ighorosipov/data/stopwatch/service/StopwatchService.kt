@@ -15,7 +15,6 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import javax.inject.Inject
-import kotlin.time.Duration.Companion.milliseconds
 
 @AndroidEntryPoint
 class StopwatchService : BaseForegroundService() {
@@ -82,24 +81,19 @@ class StopwatchService : BaseForegroundService() {
 
     private fun ensureTicker() {
         if (tickerJob?.isActive == true) return
+
         tickerJob = serviceScope.launch(Dispatchers.Default) {
             updateNotification()
+
             var last = SystemClock.elapsedRealtime()
-            var lastNotifUpdate = SystemClock.elapsedRealtime()
 
             while (true) {
-                delay(250L.milliseconds)
+                delay(1000L)
+
                 val now = SystemClock.elapsedRealtime()
                 val delta = now - last
                 last = now
-
                 engine.tick(delta)
-
-                if (now - lastNotifUpdate >= 500L) {
-                    try { updateNotification() } catch (e: Exception) {}
-                    lastNotifUpdate = now
-                }
-
                 if (!engine.hasRunning()) break
             }
             tickerJob = null

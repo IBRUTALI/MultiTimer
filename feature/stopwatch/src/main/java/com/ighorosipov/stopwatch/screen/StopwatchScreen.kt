@@ -23,6 +23,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.ighorosipov.core_presentation.components.MainAppState
 import com.ighorosipov.core_presentation.components.handleGlobalIntent
+import com.ighorosipov.core_presentation.components.rememberSmoothElapsedMs
 import com.ighorosipov.core_presentation.permission.NotificationPermissionController
 import com.ighorosipov.core_presentation.permission.rememberNotificationPermissionController
 import com.ighorosipov.core_presentation.theme.LocalCustomColorsPalette
@@ -94,6 +95,12 @@ private fun StopwatchContent(
     onLapClick: () -> Unit,
     onResetClick: () -> Unit
 ) {
+
+    val smoothMs = rememberSmoothElapsedMs(
+        isRunning = state.isRunning,
+        engineElapsedMs = state.elapsedMs
+    )
+
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -108,8 +115,8 @@ private fun StopwatchContent(
         ) {
             Spacer(modifier = Modifier.height(24.dp))
             StopwatchDial(
-                timeMs = state.elapsedMs,
-                progress = state.progress,
+                timeMs = smoothMs,
+                progress = if (smoothMs > 0) ((smoothMs % 60_000L) / 60_000f) else 0f,
                 isRunning = state.isRunning,
                 modifier = Modifier.size(230.dp)
             )
