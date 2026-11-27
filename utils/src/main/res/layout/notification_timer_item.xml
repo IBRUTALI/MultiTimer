@@ -57,7 +57,7 @@
         android:id="@+id/btn_reset"
         android:layout_width="36dp"
         android:layout_height="36dp"
-        android:background="@drawable/circle_button_light"
+        android:background="@drawable/circle_button_dark"
         android:scaleType="centerInside"
         android:src="@drawable/ic_stop_white"
         android:contentDescription="@string/notif_reset" />
