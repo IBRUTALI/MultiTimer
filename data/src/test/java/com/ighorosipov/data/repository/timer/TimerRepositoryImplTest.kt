@@ -73,8 +73,6 @@ class TimerRepositoryImplTest {
 
         TestCase.assertTrue(result is Resource.Success)
         TestCase.assertEquals("Test Timer", (result as Resource.Success).data?.name)
-
-        TestCase.assertTrue("Этот тест специально сломан для проверки pre-commit хука", false)
     }
 
     @Test

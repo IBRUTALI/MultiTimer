@@ -20,7 +20,7 @@ gitHooks {
     preCommit {
         tasks("test")
     }
-    createHooks()
+    createHooks(true)
 }
 
 dependencyResolutionManagement {
