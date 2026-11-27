@@ -11,6 +11,18 @@ pluginManagement {
         gradlePluginPortal()
     }
 }
+
+plugins {
+    id("org.danilopianini.gradle-pre-commit-git-hooks") version "2.1.32"
+}
+
+gitHooks {
+    preCommit {
+        tasks("testDebugUnitTest")
+    }
+    createHooks()
+}
+
 dependencyResolutionManagement {
     repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
     repositories {

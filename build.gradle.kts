@@ -11,14 +11,5 @@ plugins {
     alias(libs.plugins.hilt) apply false
     alias(libs.plugins.ksp) apply false
     alias(libs.plugins.jetbrains.kotlin.jvm) apply false
-    alias(libs.plugins.githook) apply true
 }
 
-githook {
-    gradleCommand = file("./gradlew")
-    hooks {
-        create("pre-commit") {
-            task = "testDebugUnitTest"
-        }
-    }
-}

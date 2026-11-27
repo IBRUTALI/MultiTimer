@@ -27,7 +27,6 @@ material = "1.13.0"
 coreSplashscreen = "1.0.1"
 turbine = "1.2.1"
 coreKtxVersion = "1.7.0"
-githook = "1.2.1"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -76,5 +75,4 @@ ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
 hilt = { id = "com.google.dagger.hilt.android", version.ref = "hiltAndroid" }
 compose-compiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
 jetbrains-kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "jetbrainsKotlinJvm" }
-githook = { id = "com.star-zero.gradle.githook", version.ref = "githook" }
 
