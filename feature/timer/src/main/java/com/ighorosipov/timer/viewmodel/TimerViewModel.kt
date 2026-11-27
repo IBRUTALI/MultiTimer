@@ -4,8 +4,8 @@ import androidx.lifecycle.viewModelScope
 import com.ighorosipov.core_presentation.misc.BaseUIIntent
 import com.ighorosipov.core_presentation.navigation.Routes
 import com.ighorosipov.core_presentation.viewmodel.BaseViewModel
+import com.ighorosipov.domain.permission.PermissionGateway
 import com.ighorosipov.domain.timer.TimerStateObserver
-import com.ighorosipov.domain.timer.repository.TimerEngine
 import com.ighorosipov.domain.timer.repository.TimerRepository
 import com.ighorosipov.domain.timer.use_case.PauseTimerUseCase
 import com.ighorosipov.domain.timer.use_case.StartTimerUseCase
@@ -26,7 +26,7 @@ class TimerViewModel @Inject constructor(
     private val stopTimerUseCase: StopTimerUseCase,
     private val timerStateObserver: TimerStateObserver,
     private val timerRepository: TimerRepository,
-    private val engine: TimerEngine
+    private val permissionGateway: PermissionGateway
 ) : BaseViewModel<TimerState, TimerScreenIntent>(TimerState()) {
 
     init {
@@ -93,6 +93,14 @@ class TimerViewModel @Inject constructor(
     }
 
     fun onPlayPauseClick(timerId: String) {
+        if (permissionGateway.hasNotificationPermission()) {
+            playPause(timerId = timerId)
+        } else {
+            sendIntent(TimerScreenIntent.RequestNotificationPermission(timerId = timerId))
+        }
+    }
+
+    private fun playPause(timerId: String) {
         viewModelScope.launch {
             val timer = state.value.timers.find { it.id == timerId } ?: return@launch // todo null handle
             val isRunning = timerStateObserver.isRunning(timer.id)
@@ -112,6 +120,10 @@ class TimerViewModel @Inject constructor(
 
     fun onStopClick(timerId: String) {
 
+    }
+
+    fun onPermissionGranted(timerId: String) {
+        playPause(timerId = timerId)
     }
 
 }

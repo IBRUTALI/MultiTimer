@@ -38,6 +38,8 @@ import com.ighorosipov.core_presentation.components.BaseToolbar
 import com.ighorosipov.core_presentation.components.MainAppState
 import com.ighorosipov.core_presentation.components.ToolbarIcon
 import com.ighorosipov.core_presentation.components.handleGlobalIntent
+import com.ighorosipov.core_presentation.permission.NotificationPermissionController
+import com.ighorosipov.core_presentation.permission.rememberNotificationPermissionController
 import com.ighorosipov.core_presentation.theme.LocalCustomColorsPalette
 import com.ighorosipov.domain.timer.model.TimerStatus
 import com.ighorosipov.domain.timer.model.isIdle
@@ -62,6 +64,11 @@ fun TimerScreen(
     val context = LocalContext.current
     val state by viewModel.state.collectAsState()
 
+    val permissionController = rememberNotificationPermissionController(
+        onGranted = { viewModel.showSnackbar(context.getString(R.string.notification_permission_granted)) },
+        onDenied = { viewModel.showSnackbar(context.getString(R.string.notification_permission_denied)) }
+    )
+
     LaunchedEffect(Unit) {
         viewModel.globalIntents.collect { intent ->
             handleGlobalIntent(
@@ -78,7 +85,9 @@ fun TimerScreen(
             handleIntent(
                 appState = appState,
                 context = context,
-                intent = intent
+                intent = intent,
+                permissionController = permissionController,
+                onPermissionGranted = viewModel::onPermissionGranted
             )
         }
     }
@@ -171,7 +180,15 @@ fun TimerScreen(
 private fun handleIntent(
     appState: MainAppState,
     context: Context,
-    intent: TimerScreenIntent
+    intent: TimerScreenIntent,
+    permissionController: NotificationPermissionController,
+    onPermissionGranted: (String) -> Unit
 ) {
-    //todo
+    when(intent) {
+        is TimerScreenIntent.RequestNotificationPermission -> {
+            permissionController.requestPermission {
+                onPermissionGranted(intent.timerId)
+            }
+        }
+    }
 }

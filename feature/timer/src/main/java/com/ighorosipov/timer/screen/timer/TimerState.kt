@@ -7,5 +7,5 @@ data class TimerState(
 )
 
 sealed class TimerScreenIntent {
-    // todo
+    data class RequestNotificationPermission(val timerId: String): TimerScreenIntent()
 }
