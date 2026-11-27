@@ -5,11 +5,14 @@ coreKtx = "1.15.0"
 junit = "4.13.2"
 junitVersion = "1.1.5"
 espressoCore = "3.5.1"
+kotlinxCoroutinesTest = "1.11.0"
 lifecycleRuntimeKtx = "2.10.0"
 activityCompose = "1.11.0"
 composeBom = "2025.11.00"
 materialIconsExtended = "1.7.8"
 navigationCompose = "2.8.4"
+robolectric = "4.18.1"
+roomTesting = "2.8.5"
 serialization = "1.6.3"
 hiltAndroid = "2.58"
 hiltAndroidCompiler = "2.58"
@@ -22,9 +25,13 @@ jetbrainsKotlinJvm = "2.2.21"
 appcompat = "1.7.1"
 material = "1.13.0"
 coreSplashscreen = "1.0.1"
+turbine = "1.2.1"
+coreKtxVersion = "1.7.0"
+githook = "1.2.1"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
+androidx-room-testing = { module = "androidx.room:room-testing", version.ref = "roomTesting" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }
 androidx-junit = { group = "androidx.test.ext", name = "junit", version.ref = "junitVersion" }
 androidx-espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "espressoCore" }
@@ -41,9 +48,11 @@ androidx-material3 = { group = "androidx.compose.material3", name = "material3" 
 androidx-hilt-navigation-compose = { module = "androidx.hilt:hilt-navigation-compose", version.ref = "hiltLifecycleViewmodel" }
 androidx-material-icons-extended = { module = "androidx.compose.material:material-icons-extended", version.ref = "materialIconsExtended" }
 androidx-navigation-compose = { module = "androidx.navigation:navigation-compose", version.ref = "navigationCompose" }
+kotlinx-coroutines-test = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-test", version.ref = "kotlinxCoroutinesTest" }
 kotlinx-serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "serialization" }
 hilt-android = { module = "com.google.dagger:hilt-android", version.ref = "hiltAndroid" }
 hilt-android-compiler = { module = "com.google.dagger:hilt-android-compiler", version.ref = "hiltAndroidCompiler" }
+robolectric = { module = "org.robolectric:robolectric", version.ref = "robolectric" }
 room-compiler = { module = "androidx.room:room-compiler", version.ref = "room-runtime" }
 room-ktx = { module = "androidx.room:room-ktx", version.ref = "room-runtime" }
 room-runtime = { module = "androidx.room:room-runtime", version.ref = "room-runtime" }
@@ -54,6 +63,8 @@ material = { group = "com.google.android.material", name = "material", version.r
 androidx-material-icons-core = { group = "androidx.compose.material", name = "material-icons-core" }
 androidx-material3-window-size = { group = "androidx.compose.material3", name = "material3-window-size-class" }
 androidx-core-splashscreen = { module = "androidx.core:core-splashscreen", version.ref = "coreSplashscreen" }
+turbine = { module = "app.cash.turbine:turbine", version.ref = "turbine" }
+core-ktx = { group = "androidx.test", name = "core-ktx", version.ref = "coreKtxVersion" }
 
 
 [plugins]
@@ -65,4 +76,5 @@ ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
 hilt = { id = "com.google.dagger.hilt.android", version.ref = "hiltAndroid" }
 compose-compiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
 jetbrains-kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "jetbrainsKotlinJvm" }
+githook = { id = "com.star-zero.gradle.githook", version.ref = "githook" }
 
