@@ -18,7 +18,7 @@ plugins {
 
 gitHooks {
     preCommit {
-        tasks("testDebugUnitTest")
+        tasks("test")
     }
     createHooks()
 }
